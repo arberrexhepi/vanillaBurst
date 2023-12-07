@@ -1,0 +1,15 @@
+# Turn on Rewrite Engine
+RewriteEngine On
+
+# Ensure mod_rewrite is available
+<IfModule mod_rewrite.c>
+
+    # Skip rewriting for existing files
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # Serve "index.html" for all other requests not accessing a physical file
+    RewriteCond %{REQUEST_URI} !\.(js|css|jpg|jpeg|png|gif|svg|ico|html)$ [NC]
+    RewriteRule ^ index.html [L]
+
+</IfModule>
