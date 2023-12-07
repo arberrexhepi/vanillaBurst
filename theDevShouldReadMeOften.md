@@ -53,3 +53,30 @@
 6. Finalize and launch the game.
 
 This document serves as a guide for development and should be referred to often to maintain alignment with the game's vision.
+
+example file structure
+
+vanillaBurstGame
+|-- client
+    |-- views
+        |-- app
+            |-- functions
+                |-- sharedFunction1.js
+                |-- sharedFunction2.js
+            |-- ui
+                |-- nav.js
+                |-- modals.js
+            |-- score
+                |-- scoreTracker.js
+            |-- app.js
+            |-- app.html
+            |-- app.css
+        |-- level1
+            |-- level1.js
+            |-- level1.html
+            |-- level1.css
+        |-- level2
+            |-- level2.js
+            |-- level2.html
+            |-- level2.css
+        |-- ...

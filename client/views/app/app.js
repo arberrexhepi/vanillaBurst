@@ -3,7 +3,6 @@ window.app =  async function app(renderSchema, originBurst, runFunction) {
     await runFunction
 
 if(runFunction ==='functionBurst'){
-
             // Extract HTML and CSS paths from renderSchema's appRequest properties
             const { htmlPath, cssPath } = window.renderSchema.customFunctions.app;
 

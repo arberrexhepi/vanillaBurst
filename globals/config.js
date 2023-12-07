@@ -14,17 +14,15 @@ window.baseUrlStyles = "/css/styles/";
 
 // Define the routeParts based on the views
 window.schemaParts = {
-  'app': ['levelsPackage'],
-  'level1': false,
-  'level2': false,
-
+  'app': null, //['uiPackage', 'scorePackage'], // Main app view with UI and score functionality
+  'level1': null, //['level1SpecificPackage'], // Level 1 specific functionality
+  'level2': null // ['level2SpecificPackage'], // Level 2 specific functionality
+  // Add additional levels as needed
 };
 
+// Define packages for shared and specific functionalities
+window.uiPackage = ['nav', 'modals']; // Shared UI elements
+window.scorePackage = ['scoreTracker']; // Shared score tracking functionality
 
-
-// Define shared parts, common functionalities used across views, modular approach
-//Config is concatted in schema.js, but because this will be used as a array spread in custom usage and in viewRequests, it's better to keep the name of the view in this package
-window.levelsPackage = ['level1','level2']; 
-
-//window.uiPackage = ['nav, score']; //calls navConfig, scoreConfig, and schema.js spreads the object to ie appConfig, we'll implement this later..TODO
-
+window.level1SpecificPackage = ['puzzle1', 'challenge1']; // Specific components for Level 1
+window.level2SpecificPackage = ['puzzle2', 'challenge2']; // Specific components for Level 2

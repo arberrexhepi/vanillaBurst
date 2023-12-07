@@ -1,19 +1,18 @@
 //only sets 1 route (the one on initial path), and is never called again until a full page reload
 function getRoute() {
     const path = window.location.pathname;
-    const search = window.location.search;
 
     if (path === "/"+appRoute || path === "/" || path === "") {
         return appRoute;
     } else {
-        if(search.includes("?burst=")){
-            const routeFilter = search.split('=');
+        if(path !== undefined){
+            const routeFilter = path.split('/');
             return routeFilter[1]; // Assuming the route is the second part of the URL
+        }else{
+            return appRoute; //fallback to default
         }
-        if(search.includes("?") && !search.includes("?burst=")){
-            const routeFilter = search.split('?');
-            return routeFilter[1]; // Assuming the route is the second part of the URL
-        }
+   
+    
     }
 }
 window.route = getRoute();
