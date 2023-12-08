@@ -1,12 +1,11 @@
-function singlePromise(renderSchema, passedFunction, serverResult, burstOrigin, originBurst) {
-    console.log("singlePromise for function " + JSON.stringify(window.passedFunction));
+window.singlePromise = async function singlePromise(renderSchema, passedFunction, serverResult, originBurst) {
     renderSchema = window.renderSchema;
     serverResult = window.serverResult;
     passedFunction = window.passedFunction;
-    burstOrigin = window.burstOrigin;
     originBurst = window.originBurst;
 
     if (passedFunction) {
+
         var customFunction = passedFunction;
         var customFunctionName = customFunction.functionFile;
 
@@ -14,7 +13,6 @@ function singlePromise(renderSchema, passedFunction, serverResult, burstOrigin, 
         var customFunctionDirectory = customFunction.dir;
         var customFunctionUrl = baseCustomFunctionDirectory + customFunctionDirectory + customFunctionName + '.js';
 
-        console.log(customFunction);
 
         if (customFunctionName && customFunction.render === "burst") {
             const existingScript = document.querySelector(`head script[src="${customFunctionUrl}"]`);
@@ -26,7 +24,7 @@ function singlePromise(renderSchema, passedFunction, serverResult, burstOrigin, 
                 script.id = customFunctionName;
                 script.onload = () => {
                     window.preloaderAnimation();
-                    console.log(customFunctionUrl);
+                   // console.log(customFunctionUrl);
                     executeFunction();
                 };
                 script.onerror = () => {
@@ -35,27 +33,55 @@ function singlePromise(renderSchema, passedFunction, serverResult, burstOrigin, 
                 document.head.appendChild(script);
             } else {
                 // Script already exists; execute the function immediately if it exists
-                console.log(`Script already loaded: ${customFunctionUrl}`);
+                //console.log(`Script already loaded: ${customFunctionUrl}`);
                 executeFunction();
+                  
             }
         }
     }
 
     async function executeFunction() {
+
         if (typeof window[customFunctionName] === 'function') {
+            vanillaShortcuts(customFunctionName, passedFunction);
+
             if (serverResult) {
-                console.log(JSON.stringify(serverResult));
-                window.burstOrigin = burstOrigin;
+               // console.log(JSON.stringify(serverResult));
                 window.serverResult = serverResult;
-                await window[customFunctionName](renderSchema, passedFunction, serverResult, burstOrigin, originBurst);
+                await window[customFunctionName](renderSchema, passedFunction, serverResult, originBurst);
             } else {
-                await window[customFunctionName](renderSchema, passedFunction, burstOrigin, originBurst);
+                await window[customFunctionName](renderSchema, passedFunction, originBurst);
+                
             }
+              
             window.removeLoader();
+            
         } else {
+       
             console.warn(`Function ${customFunctionName} is not defined on the window object`);
         }
+      
     }
 }
 
 window.singlePromise = singlePromise;
+
+
+window.vanillaShortcuts = function vanillaShortcut(customFunctionName, passedFunction){
+    let shortcutOrigin;
+    //if string origin is
+    if(typeof passedFunction?.originBurst === "string"){
+        shortcutOrigin = passedFunction?.originBurst;
+    }else{
+        //make sure you have an object, including 'namespace' property
+        shortcutOrigin = passedFunction?.originBurst?.namespace;
+
+    }
+    //gets the whole schema for customFunction, ie window.somefunctionSchema will result in somefunction schema config from customFunctions in window.renderSchema (full view config)
+    window[customFunctionName+'Schema$'+shortcutOrigin] = passedFunction;
+
+    //gets the dataSchema for ie window.somefunctionDataSchema
+    if(passedFunction?.dataSchema !== undefined){
+        window[customFunctionName+'DataSchema$'+shortcutOrigin] = passedFunction.dataSchema;
+    }
+}

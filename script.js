@@ -8,6 +8,14 @@ window.vanillaApp = function vanillaApp(baseUrl) {
   window.$ = jQuery;
 
   window.onload = function() {    // Load script helper function
+    console.log('.');
+    console.log('.');
+    console.log('.');
+    console.info({Status: "build renderSchema"});
+    console.log('.');
+    console.log('.');
+    console.log('.');
+
     window.loadScript = function loadScript(url) {
       return fetch(url)
         .then(response => {
@@ -45,12 +53,10 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     
       // Map over parts to load scripts
       const scriptPromises = parts.map(part => {
-        const scriptUrl = `${window.baseUrl}schemas/${part}Config.js`;
-        console.log("Attempting to load script:", scriptUrl);
-    
+        const scriptUrl = `${window.baseUrl}schemas/${part}Config.js`;    
         // Use window.loadScript to load the script
         return window.loadScript(scriptUrl).catch(error => {
-          console.error(`Error loading script for part: ${part}`, error);
+          console.error(`Error loading [view]Config for part: ${part}`, error);
         });
       });
     
@@ -62,7 +68,9 @@ window.vanillaApp = function vanillaApp(baseUrl) {
       );
     
       // Load all scripts and then build the schema
-      return Promise.all(scriptPromises).then(() => {
+      return Promise.all(scriptPromises, parts).then(() => {
+        console.info("CONFIG PARTS PROMISED:", parts);
+
         if (typeof window.config === 'function') {
           const schema = window.config();
           window.schema = schema;
@@ -88,9 +96,10 @@ window.vanillaApp = function vanillaApp(baseUrl) {
       }).then(() => {
         // After routes.js is loaded, perform any additional actions if needed
         window.vanillaBurst(window.renderComplete, window.route, window.routeCycles);
+        
         console.log("Scripts states.js and routes.js loaded successfully.");
       }).catch(error => {
-        console.error("Script loading error in promise2: ", error);
+        console.error("Scripts states.js and routes.js could not be loaded successfully: ", error);
       });
     
       // // Load Stylesheet helper function
@@ -120,7 +129,17 @@ window.vanillaApp = function vanillaApp(baseUrl) {
 
     // Start the script loading process
     loadInitialScripts().then(schemaParts => {
-      promise1(schemaParts);
+      promise1(schemaParts).then((runFunction)=>{
+        if(window.runFunction===true && typeof window[renderSchema.landing] === 'function')
+        console.log('.');
+        console.log('.');
+        console.log('.');
+        console.log('.');
+        console.info({Status: "...loading vanillaBurst scripts..."});
+        console.log('.');
+        console.log('.');
+        console.log('.');
+      });
     });
   }
 };

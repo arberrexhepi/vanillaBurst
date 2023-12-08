@@ -17,8 +17,6 @@
 
 
     if (renderSchema) {
-      console.log("render.js: renderSchema is:" + JSON.stringify(renderSchema));
-
 
       runRoll = "rollBurst";
       window.runRoll = runRoll;
@@ -31,7 +29,6 @@
 
         if (getFunction.role == "rollCall" && getFunction.render == "burst") {
 
-          console.log(functionName);
           window.rollCall = functionName;
           await window.childFunction(renderSchema, rollCall, runRoll);
 

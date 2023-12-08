@@ -51,7 +51,7 @@
           
           // Create and append the script tag to the head
           if(!window.ranScripts || window.ranScripts === false){
-            console.log('appended scritps');
+           // console.log('appended scritps');
 
           
           const script = document.createElement('script');
@@ -87,7 +87,7 @@
                   $.getScript(url, function (data, textStatus, jqxhr) {
                     if (textStatus === "success") {
                       
-                     
+                     console.info("SUCCESSFULY LOADED VANILLABURST STATE FUNCTIONALITIES")
                       addScriptToHead(url); // Add the successfully loaded script to head
                       
                     
@@ -140,8 +140,12 @@
 
 
     function runState() {
-      console.log("Running state...");
-      console.log(loadParams);
+      console.log('.');
+      console.log('.');
+      console.log('.');
+      console.info({Status: "RUNNING STATE...", State: stateTag, DataBodyParams: loadParams});
+      console.table({Status: "Running state...", state: stateTag, DataParams: loadParams});
+
 
       function stateParams(loadParams, tagParam) {
 
@@ -166,7 +170,7 @@
             resource.data = result.data;
 
             resourceParent.customFunctions[tagParam].dataSchema = resource;
-            console.log("customFuncitons by tagParam aka stateTag has been updated with dynamic data", resourceParent);
+            //console.log("customFuncitons by tagParam aka stateTag has been updated with dynamic data", resourceParent);
 
 
           }
@@ -179,7 +183,8 @@
           return resourceParent;
         }
         else {
-          //console.log("no params");
+          console.warn('Consider Intent (no data params = no serverResult) for role:parent view "'+ tagParam+'"', schema[tagParam].customFunctions[tagParam])
+
           return resourceParent;
         }
 
@@ -187,7 +192,6 @@
 
 
       function processState(stateTag, stateTagPath, loadParams, historyCount) {
-        console.log(`Changing state to: ${stateTag}`);
 
         let tagParam = stateTag;
         let renderSchema = stateParams(loadParams, tagParam);
@@ -257,17 +261,19 @@
 
 
   window.renderView = async function renderView(renderSchema) {
-    console.log(renderSchema);
 
     await window.render(renderSchema);
     renderComplete = "true";
+    await window[renderSchema.landing];
+
     window.renderComplete = renderComplete;
     if(window.originBurst && window.originBurst?.signalBurst === undefined){
       window.originBurst['signalBurst'] = {'origin': history.state.stateTagName, 'signal': 'load', 'signalResult':undefined};
     }
-
+  
   }
 
+  window.changeState = stateDefine;
 
   //test from here
   window.signalBurst = function signalBurst(signalObject, signalFunction, signalResult) {

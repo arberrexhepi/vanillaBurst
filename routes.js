@@ -2,7 +2,7 @@
 function getRoute() {
     const path = window.location.pathname;
 
-    if (path === "/"+appRoute || path === "/" || path === "") {
+    if (path === "/"+appRoute) {
         return appRoute;
     } else {
         if(path !== undefined){
@@ -23,8 +23,8 @@ window.routeCycles = 0;
 //so i've set a counter to keep track of how many renders have occured. and since we only ever need 1 cycle it doesn't run the function after
 
 window.vanillaBurst = async function vanillaBurst(renderComplete, route, routeCycles){
-    routeCycles = window.routeCycles;
-     route = window.route;
+    routeCycles = window.routeCycles || routeCycles;
+     route = window.route || route;
      if(route === undefined){
         route = window.appRoute;
      }
@@ -63,7 +63,7 @@ function routeCall(route) {
         stateStatus = "done";
         loadParams = {};
         window.stateDefine(stateTag, stateTagPath, loadParams);
-    
+      
     
 }
 
@@ -102,7 +102,7 @@ function processRoute(route) {
     });
 }
 
-
+window.routeCall = routeCall;
 
 
 }

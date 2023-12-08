@@ -1,0 +1,17 @@
+#level1Container {
+    text-align: center;
+    padding: 20px;
+}
+
+#puzzleContainer {
+    margin: 20px auto;
+    width: 80%;
+    /* Add your styling for the puzzle container */
+}
+
+#solveButton {
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    /* Add more button styling */
+}

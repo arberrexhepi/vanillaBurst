@@ -1,16 +1,16 @@
 // final.js
 
-window.level2 = async function level2(renderSchema, originBurst, runFunction) {
-    runFunction = window.runFunction;
-    await runFunction;
- if (runFunction) {
+window.level2 = function level2(renderSchema, originBurst, runFunction) {
+ 
+ if (window.runFunction.level2 === "functionBurst") {
         // Logic for the final view
         console.log("Final view is rendered");
-
+        //call a function in here
         // Additional implementation...
     } else {
-        console.log("Final view: runFunction not set, halting execution.");
+        console.warn("level2 view: runFunction not set, halting execution.");
     }
 };
 
-// Additional final-specific logic...
+
+//define functions here

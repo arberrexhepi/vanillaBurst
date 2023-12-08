@@ -26,12 +26,14 @@ window.buildRollCall = async function buildRollCall(rollCall, renderSchema, runF
 levelsPackage = window.levelsPackage;
 renderSchema = window.renderSchema;
 await renderSchema;
-await runFunction
+await window.runFunction
 if(runFunction){
+  //runFunction = ''
   rollCall = window.rollCall;
  window.rollCall = rollCall;
  window.runRoll = 'rollBurst';
  await window.childFunction(renderSchema, rollCall, runRoll);
+ 
 
   }
 
@@ -40,17 +42,15 @@ if(runFunction){
 
 window.config = function config() {
   let schema = {};
-  console.log("Starting window.config execution.");
 
   for (let part in window.schemaParts) {
     if (window.schemaParts.hasOwnProperty(part)) {
-      console.log("Processing part:", part);
 
       let packageNames = window.schemaParts[part];
 
       // Skip if packageNames is false
       if (packageNames === false) {
-        console.log("Skipping schema build for part:", part);
+        console.warn("Consider Intent (not a view): skipped renderSchema build for part:", part);
         continue;
       }
 
@@ -66,7 +66,7 @@ window.config = function config() {
               functionNames.forEach(funcName => {
                 let funcNameConfig = funcName+'Config';
                 if (typeof window[funcNameConfig] === 'function') {
-                  console.log("Executing function:", funcNameConfig);
+                 // console.log("Executing function:", funcNameConfig);
                   let result = window[funcNameConfig](part);
                   if (result && typeof result === 'object') {
                     // Merge the function result into the partResults object
@@ -84,7 +84,7 @@ window.config = function config() {
       }
       
 
-      console.log("Function results for", part, ":", partResults);
+      //console.log("Function results for", part, ":", partResults);
 
       // Call the part's config function with the merged results
       let configFunctionName = `${part}Config`;
@@ -95,8 +95,8 @@ window.config = function config() {
       }
     }
   }
-
-  console.log("Completed window.config execution. Final schema:", schema);
+  console.log("renderSchema BUILD COMPLETED, see return table below")
+  console.table(schema);
   return schema;
 };
 

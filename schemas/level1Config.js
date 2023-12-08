@@ -8,7 +8,10 @@ window.level1Config = function level1Config() {
         'dir': 'client/views/level1/',
         'functionFile': 'level1',
         'render': 'pause',
-        'originBurst': 'level1'
+        'originBurst': 'level1',
+        'htmlPath': 'client/views/level1/level1.html',
+            'cssPath': 'client/views/level1/level1.css',
+            'targetDOM':'levelbox'
       },
     }
 
