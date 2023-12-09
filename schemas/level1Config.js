@@ -10,12 +10,14 @@ window.level1Config = function level1Config() {
         'render': 'pause',
         'originBurst': 'level1',
         'htmlPath': 'client/views/level1/level1.html',
-            'cssPath': 'client/views/level1/level1.css',
-            'targetDOM':'levelbox'
+        'cssPath': 'client/views/level1/level1.css',
+        'targetDOM':'levelbox',
+   
       },
     }
 
     level1Config = {...vanillaConfig('level1', passedConfig)}
+
 
   
   return level1Config;

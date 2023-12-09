@@ -80,3 +80,52 @@ vanillaBurstGame
             |-- level2.html
             |-- level2.css
         |-- ...
+
+
+
+vanillaBurst_CONFIG_RULE['non-view']
+Non-view custom functions should not include shared parts or call the vanillaConfig function for vanillaBurst scripts. They should only define properties relevant to their specific functionality.
+
+Non-View Custom Function Configs Analysis
+For non-view custom functions (e.g., level1, level2, etc.), the configuration should include only the properties necessary for their function and not shared parts or vanillaConfig function calls. Here's how these configs should be structured:
+
+Example Structure for Non-View Custom Function Config
+javascript
+Copy code
+window.customFunctionConfig = function customFunctionConfig() {
+    let customFunctionConfig = {
+        'customFunction': {
+            'dir': 'client/views/customFunction/',
+            'functionFile': 'customFunction',
+            'render': 'pause',
+            'originBurst': 'customFunction',
+            'htmlPath': 'client/views/customFunction/customFunction.html',
+            'cssPath': 'client/views/customFunction/customFunction.css',
+            'targetDOM': 'specificTargetDOM'
+        }
+    };
+
+    return customFunctionConfig;
+};
+
+vanillaBurst_CONFIG_RULE['view']
+window.customFunctionConfig = function customFunctionConfig() {
+    let customFunctionConfig ={}
+    let passedConfig = {
+        'customFunction': {
+            'role':'parent',
+            'dir': 'client/views/customFunction/',
+            'functionFile': 'customFunction',
+            'render': 'pause',
+            'originBurst': 'customFunction',
+            'htmlPath': 'client/views/customFunction/customFunction.html',
+            'cssPath': 'client/views/customFunction/customFunction.css',
+            'targetDOM': 'specificTargetDOM'
+        },
+        ...sharedParts
+    };
+    
+    customFunctionConfig = { ...window.vanillaConfig('app', passedConfig) };
+
+    return customFunctionConfig;
+};
