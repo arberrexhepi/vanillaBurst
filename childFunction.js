@@ -191,35 +191,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                     updateOriginBurst(renderSchema, functionName, passedFunction, serverResult);
 
 
-                    async function miniDOM(passedFunction) {
-
-                        let htmlPath;
-                        let cssPath;
-                        let targetDOM;
-
-                        if (passedFunction.htmlPath) {
-                            htmlPath = passedFunction.htmlPath;
-                        }
-                        if (passedFunction.cssPath) {
-                            cssPath = passedFunction.cssPath;
-                        }
-                        if (passedFunction.targetDOM) {
-                            targetDOM = passedFunction.targetDOM;
-                        }
-                        if (htmlPath !== undefined && targetDOM !== undefined) {
-                            window.vanillaDOM({ htmlPath, cssPath }, (htmlContent) => {
-
-
-                                // Apply the HTML content to the DOM
-                                document.getElementById(targetDOM).innerHTML = htmlContent;
-
-                                window.signalBurst('load', ['getSignal']);
-
-                            })
-                        }
-                    }
-
-                    miniDOM(passedFunction);
+             
 
 
                     // alert("new global origin");
@@ -410,6 +382,7 @@ window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
             const style = document.createElement('style');
             style.textContent = css;
             document.head.appendChild(style);
+            
         }
 
     } catch (error) {
@@ -417,3 +390,32 @@ window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
     }
 };
 
+
+async function miniDOM(thisHere, initView) {
+    passedFunction =thisHere;
+    let htmlPath;
+    let cssPath;
+    let targetDOM;
+alert(JSON.stringify(passedFunction))
+    if (passedFunction.htmlPath) {
+        htmlPath = thisHere.htmlPath;
+    }
+    if (passedFunction.cssPath) {
+        cssPath = thisHere.cssPath;
+    }
+    if (passedFunction.targetDOM) {
+        targetDOM = thisHere.targetDOM;
+    }
+ 
+        window.vanillaDOM({ htmlPath, cssPath }, (htmlContent) => {
+
+
+            // Apply the HTML content to the DOM
+            document.getElementById(targetDOM).innerHTML = htmlContent;
+
+            window.signalBurst('load', ['getSignal']);
+            initView();
+
+        })
+    
+}

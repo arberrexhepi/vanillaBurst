@@ -3,17 +3,22 @@
 window.level1 =  function level1(renderSchema, originBurst, runFunction) {
 
     if (runFunction === 'functionBurst') {
+        let passedFunction = window.renderSchema.customFunctions.level1;
 
+        miniDOM(passedFunction, initView);
 
-function initGame(DOMaction){
-    if(DOMaction === true){
-        alert("hi")
+function initView(){
+    const solveButton = document.getElementById('solveButton');
+    solveButton.addEventListener('click', yo);
 
-    }
+   
 }
 
     // Initialize level 1 specific elements or logic here
-    initLevel1Puzzle();
+   // initLevel1Puzzle();
+   function yo(){
+    alert('hi')
+   }
 
     // Event listener for the solve button
     function activateSolveButton(){
