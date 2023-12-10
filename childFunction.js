@@ -396,7 +396,6 @@ async function miniDOM(thisHere, initView) {
     let htmlPath;
     let cssPath;
     let targetDOM;
-alert(JSON.stringify(passedFunction))
     if (passedFunction.htmlPath) {
         htmlPath = thisHere.htmlPath;
     }
