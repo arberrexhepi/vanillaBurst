@@ -1,4 +1,4 @@
-# Mystery of the Elements Game Plan
+# Mystery of the Elements Game Plan!
 
 ## Game Overview
 - **Title:** Mystery of the Elements
