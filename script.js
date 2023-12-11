@@ -62,7 +62,7 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     
       // Also load the schema.js script
       scriptPromises.push(
-        window.loadScript(`${window.baseUrl}schema.js`).catch(error => {
+        window.loadScript(`${window.baseUrl}vanillaBurstScripts/schema.js`).catch(error => {
           console.error("Error loading schema.js script", error);
         })
       );
@@ -90,9 +90,9 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     // Function to handle second batch of promises
     function promise2(schema) {
       // Load states.js script
-      window.loadScript(`${window.baseUrl}states.js`).then(() => {
+      window.loadScript(`${window.baseUrl}vanillaBurstScripts/states.js`).then(() => {
         // After states.js is loaded, load routes.js script
-        return window.loadScript(`${window.baseUrl}routes.js`);
+        return window.loadScript(`${window.baseUrl}vanillaBurstScripts/routes.js`);
       }).then(() => {
         // After routes.js is loaded, perform any additional actions if needed
         window.vanillaBurst(window.renderComplete, window.route, window.routeCycles);
@@ -101,19 +101,7 @@ window.vanillaApp = function vanillaApp(baseUrl) {
       }).catch(error => {
         console.error("Scripts states.js and routes.js could not be loaded successfully: ", error);
       });
-    
-      // // Load Stylesheet helper function
-      // window.loadStyleSheet = function loadStyleSheet(path) {
-      //   var head = document.head;
-      //   var link = document.createElement("link");
-      //   link.type = "text/css";
-      //   link.rel = "stylesheet";
-      //   link.href = path;
-      //   head.appendChild(link);
-      // };
-    
-      // // Example of how to load a stylesheet
-      // // window.loadStyleSheet(window.baseUrl + "path/to/stylesheet.css");
+  
     }
     
 
@@ -121,12 +109,12 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     window.vanillaBurstScripts = [
       //window.baseUrl + 'globals/loader.js',
       window.baseUrl + 'globals/config.js',
-      window.baseUrl + 'serverRender.js',
-      window.baseUrl + 'singlePromise.js',
+      window.baseUrl + 'vanillaBurstScripts/serverRender.js',
+      window.baseUrl + 'vanillaBurstScripts/singlePromise.js',
       window.baseUrl + 'vanillaBurstScripts/signals.js',
       window.baseUrl + 'vanillaBurstScripts/dom.js',
-      window.baseUrl + 'childFunction.js',
-      window.baseUrl + 'render.js',
+      window.baseUrl + 'vanillaBurstScripts/childFunction.js',
+      window.baseUrl + 'vanillaBurstScripts/render.js',
     ];
 
     // Start the script loading process
