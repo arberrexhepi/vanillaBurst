@@ -11,11 +11,11 @@
   if(window.originBurst?.signalBurst !== undefined){
   
    
-    history.state['signalBurst']= {...history.state['signalBurst'], [history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
+    //history.state['signalBurst']= {...window.originBurst.signalBurst, [history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
     window.originBurst.signalBurst= {...window.originBurst.signalBurst,[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
 
   }else{
-    history.state['signalBurst'] = {[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
+    //history.state['signalBurst'] = {[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
     window.originBurst['signalBurst'] = {[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
   }
 

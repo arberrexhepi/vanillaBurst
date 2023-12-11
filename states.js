@@ -3,8 +3,8 @@ let ranScripts = false;
 window.ranScripts = ranScripts;
 let historyCount = 0;
 window.historyCount = historyCount;
-    newRequest = false;
-  window.newRequest = newRequest;
+newRequest = false;
+window.newRequest = newRequest;
 
 
 async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, schema) {
@@ -16,7 +16,7 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
   loadParams = window.loadParams;
   schema = window.schema;
 
-  
+
 
   function storeView(stateTag) {
     //approach to take to fetch already loaded views for quick render
@@ -31,10 +31,10 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
 
 
-  
+
   function preLoader(stateTag, stateTagPath, loadParams) {
 
-    
+
     console.log(`Preloading state: ${stateTag}`);
 
     const scriptUrls = schema[stateTag].scripts;
@@ -48,74 +48,74 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
       // Function to add script to the document's head
       function addScriptToHead(url) {
         // Check if the script tag with the given URL already exists
-        
+
         // Create and append the script tag to the head
-        if(!window.ranScripts || window.ranScripts === false){
+        if (!window.ranScripts || window.ranScripts === false) {
           console.log('appended scritps');
 
-        
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.setAttribute('name', 'burst');
-        script.src = url;
-    
-        document.head.appendChild(script);
+
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.setAttribute('name', 'burst');
+          script.src = url;
+
+          document.head.appendChild(script);
+        }
+
       }
-      
-    }
-    
+
 
       // First, load the preloader script
       return new Promise((resolve, reject) => {
 
-        if(window.ranScripts === true){
+        if (window.ranScripts === true) {
           runState(); // Call runState() explicitly
 
-        }else{
+        } else {
 
-        $.getScript(preloaderUrl, function (data, textStatus, jqxhr) {
-          if (textStatus === "success") {
-            addScriptToHead(preloaderUrl); // Add preloader script to head
+          $.getScript(preloaderUrl, function (data, textStatus, jqxhr) {
+            if (textStatus === "success") {
+              addScriptToHead(preloaderUrl); // Add preloader script to head
 
-            window.preloaderAnimation();
+              window.preloaderAnimation();
 
-            // Then, load the other scripts
-            Promise.all(scriptUrls.map(url => {
-              return new Promise((resolve, reject) => {
-                //const cacheBuster = Date.now(); in other wors cache can go here
-                //url = url + '?v=' + cacheBuster;
-                $.getScript(url, function (data, textStatus, jqxhr) {
-                  if (textStatus === "success") {
-                    
-                   
-                    addScriptToHead(url); // Add the successfully loaded script to head
-                    
-                  
-                    resolve(); // Resolve the promise for this URL
-                  } else {
-                    reject(new Error(`Failed to load script at ${url}`));
-                  }
+              // Then, load the other scripts
+              Promise.all(scriptUrls.map(url => {
+                return new Promise((resolve, reject) => {
+                  //const cacheBuster = Date.now(); in other wors cache can go here
+                  //url = url + '?v=' + cacheBuster;
+                  $.getScript(url, function (data, textStatus, jqxhr) {
+                    if (textStatus === "success") {
+
+
+                      addScriptToHead(url); // Add the successfully loaded script to head
+
+
+                      resolve(); // Resolve the promise for this URL
+                    } else {
+                      reject(new Error(`Failed to load script at ${url}`));
+                    }
+                  });
                 });
-              });
-            }))
-              .then(() => {
-                // Check if window.render is a function
-                if (typeof window.render === 'function') {
-                  window.ranScripts = true;
+              }))
+                .then(() => {
+                  // Check if window.render is a function
+                  if (typeof window.render === 'function') {
+                    window.ranScripts = true;
 
-                  runState(); // Call runState() explicitly
-                  handlePop();
-                  resolve(); // Resolve the outer promise
-                } else {
-                  reject(new Error('window.render is not a function'));
-                }
-              })
-              .catch(reject); // Reject the outer promise if any script fails to load
-          } else {
-            reject(new Error(`Failed to load preloader script at ${preloaderUrl}`));
-          }
-        });
-      }
+                    runState(); // Call runState() explicitly
+                    handlePop();
+                    resolve(); // Resolve the outer promise
+                  } else {
+                    reject(new Error('window.render is not a function'));
+                  }
+                })
+                .catch(reject); // Reject the outer promise if any script fails to load
+            } else {
+              reject(new Error(`Failed to load preloader script at ${preloaderUrl}`));
+            }
+          });
+        }
       });
     }
 
@@ -191,7 +191,7 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
       let tagParam = stateTag;
       let renderSchema = stateParams(loadParams, tagParam);
-      
+
       return {
         stateTagName: stateTag,
         stateTagPath: stateTagPath,
@@ -203,16 +203,16 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
     }
     function changeState(stateTag, stateTagPath, loadParams, historyCount) {
-      if(history.state && history.state.stateCount){
+      if (history.state && history.state.stateCount) {
 
         historyCount = history.state.stateCount;
         historyCount++;
       }
-    else{
-         historyCount = window.historyCount;
+      else {
+        historyCount = window.historyCount;
         historyCount++
-        
-    }
+
+      }
       let buildState = processState(stateTag, stateTagPath, loadParams, historyCount);
       window.historyCount = buildState.stateCount;
       history.pushState(buildState, buildState.stateTagName, '/' + buildState.stateTagPath);
@@ -225,7 +225,7 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
   }
   function handlePop() {
-   
+
 
     window.addEventListener('popstate', event => {
       //console.log('popstate detected');
@@ -239,13 +239,13 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
         console.log(popState);
         history.replaceState(popState, popState.stateTagName, '/' + popState.stateTagPath);
-        
-        
+
+
         let sendStateData = popState.stateTagData;
 
-            renderSchema = popState.stateTagParams;
-            console.log(renderSchema);
-            window.renderView(renderSchema);
+        renderSchema = popState.stateTagParams;
+        console.log(renderSchema);
+        window.renderView(renderSchema);
 
 
       }
@@ -262,69 +262,11 @@ window.renderView = async function renderView(renderSchema) {
   await window.render(renderSchema);
   renderComplete = "true";
   window.renderComplete = renderComplete;
-  if(window.originBurst && window.originBurst?.signalBurst === undefined){
-    window.originBurst['signalBurst'] = {[history.state.stateTagName]:{'origin': history.state.stateTagName, 'signal': 'load', 'signalResult':undefined}}
+  if (window.originBurst && window.originBurst?.signalBurst === undefined) {
+    window.originBurst['signalBurst'] = { [history.state.stateTagName]: { 'origin': history.state.stateTagName, 'signal': 'load', 'signalResult': undefined } }
+    // history.state['signalBurst'] = {[history.state.stateTagName]:{'origin': history.state.stateTagName, 'signal': 'load', 'signalResult':undefined}}
   }
-
 }
-
-
-// //test from here
-// window.signalBurst = function signalBurst(signalObject, signalFunction, signalResult) {
-//   signalResult = signalResult;
-//   if (signalObject === undefined) {
-//       return;
-//   }
- 
-//   if(signalResult === undefined){
-//     signalResult = window.originBurst?.signalBurst?.signalResult;
-//   }
-//   if(window.originBurst?.signalBurst !== undefined){
-  
-   
-//     history.state['signalBurst'] = {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
-//     window.originBurst.signalBurst= {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
-
-//   }else{
-//     history.state['signalBurst'] = {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult': signalResult};
-//     window.originBurst['signalBurst']= {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
-//   }
-
-//   if (Array.isArray(signalFunction) && signalFunction.length > 1) {
-//       let promiseChain = Promise.resolve();
-
-//       signalFunction.forEach(function (element) {
-//           promiseChain = promiseChain.then(function () {
-//               if (typeof window[element] === 'function') {
-//                   return window[element](); // Call the function if it's indeed a function
-//               } else {
-//                   console.error('signalBurst: No such function', element);
-//               }
-//           });
-//       });
-
-//   } else {
-//       if (typeof window[signalFunction] === 'function') {
-//           window[signalFunction]();
-//       } else {
-//           console.error('signalBurst: No such function', signalFunction);
-//       }
-//   }
-// }
-
-
-// window.getSignal = function getSignal(signalSend){
-//   if(window.originBurst?.signalBurst === undefined){
-    
-//     signalSend = undefined;
-//   }else{
-//       signalSend = window.originBurst.signalBurst
-//       history.state.signalBurst=signalSend;
-//   }
-//   return signalSend;
-// }
-
-
 
 
 

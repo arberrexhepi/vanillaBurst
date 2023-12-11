@@ -66,10 +66,10 @@ async function miniDOM(thisHere, initView) {
         targetDOM = thisHere.targetDOM;
     }
  
-    if(window.originBurst?.[functionFile]?.[functionFile]?.serverResult !==undefined){
+    if(window.originBurst?.[functionFile]?.[functionFile]?.htmlResult !==undefined){
         alert('hey')
 
-        document.getElementById(targetDOM).innerHTML = window.originBurst[functionFile][functionFile].serverResult;
+        document.getElementById(targetDOM).innerHTML = window.originBurst[functionFile][functionFile].htmlResult;
         initView();
     }else{
         continueDOM(htmlPath, cssPath);
@@ -81,9 +81,9 @@ async function miniDOM(thisHere, initView) {
             // Apply the HTML content to the DOM
             document.getElementById(targetDOM).innerHTML = htmlContent;
             if(window.originBurst?.[functionFile]?.[functionFile] !== undefined){
-                window.originBurst[functionFile][functionFile].serverResult = htmlContent
-                await window.originBurst[functionFile][functionFile].serverResult
-                window.signalBurst('load', ['getSignal'], htmlContent);
+                window.originBurst[functionFile][functionFile].htmlResult = htmlContent
+                await window.originBurst[functionFile][functionFile].htmlResult
+                //window.signalBurst('load', ['getSignal'], htmlContent);
             }else{
                 alert('yo')
 
