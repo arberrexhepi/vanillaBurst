@@ -123,6 +123,8 @@ window.vanillaApp = function vanillaApp(baseUrl) {
       window.baseUrl + 'globals/config.js',
       window.baseUrl + 'serverRender.js',
       window.baseUrl + 'singlePromise.js',
+      window.baseUrl + 'vanillaBurstScripts/signals.js',
+      window.baseUrl + 'vanillaBurstScripts/dom.js',
       window.baseUrl + 'childFunction.js',
       window.baseUrl + 'render.js',
     ];

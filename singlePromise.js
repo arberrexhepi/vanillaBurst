@@ -14,7 +14,7 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
         var customFunctionUrl = baseCustomFunctionDirectory + customFunctionDirectory + customFunctionName + '.js';
 
 
-        if (customFunctionName && customFunction.render === "burst") {
+        if (customFunctionName && customFunction.render === "burst" && customFunction.role) {
             const existingScript = document.querySelector(`head script[src="${customFunctionUrl}"]`);
             if (!existingScript) {
                 // Script not found, create and append the script tag to the head

@@ -19,135 +19,111 @@
 //         console.error('Error:', error);
 //     }
 // };
-window.vanillaDOM = async function({ htmlPath, cssPath, pathOrigin }, vanillaDOMcallback) {
-alert(htmlPath)
-    // Function to fetch and cache the resource
-    async function fetchAndCache(url) {
-        if ('caches' in window) {
-            const cache = await caches.open('vanillaDOMCache');
-            let response = await cache.match(url);
 
-            if (!response) {
-                response = await fetch(url);
-                cache.put(url, response.clone());
-            }
 
-            return response;
-        } else {
-            // Fallback to fetch if caches is not available
-            return fetch(url);
-        }
-    }
 
+window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
     try {
-        const htmlResponse =  await fetchAndCache(htmlPath);
-        const htmlContent =  await htmlResponse.text();
+        const htmlResponse = await fetch(htmlPath);
+        const htmlContent = await htmlResponse.text();
+
+        // Call the callback function with the HTML content
         if (typeof vanillaDOMcallback === 'function') {
-            window.htmlContent = htmlContent;
-            window.originBurst[pathOrigin][pathOrigin].htmlResult = htmlContent;
-            console.table({htmlrendered: window.originBurst[pathOrigin].htmlResult})
             vanillaDOMcallback(htmlContent);
         }
-
         if (cssPath) {
-            const cssResponse = await fetchAndCache(cssPath);
+            const cssResponse = await fetch(cssPath);
             const css = await cssResponse.text();
-            window.css = css;
             const style = document.createElement('style');
             style.textContent = css;
-            window.originBurst[pathOrigin][pathOrigin].cssResult= css;
             document.head.appendChild(style);
+            
         }
+
     } catch (error) {
         console.error('Error:', error);
     }
 };
 
 
-
-window.miniDOM = async function miniDOM(passedFunction) {
-//alert('yo')
+async function miniDOM(thisHere, initView) {
+    passedFunction =thisHere;
     let htmlPath;
     let cssPath;
     let targetDOM;
-    let pathOrigin;
-    //alert(JSON.stringify(passedFunction))
 
-    if (passedFunction.functionFile){
-        pathOrigin = passedFunction.functionFile;
+    if (passedFunction.functionFile) {
+        htmlPath = thisHere.htmlPath;
     }
 
-    if (passedFunction.htmlPath) {
-        htmlPath = passedFunction.htmlPath;
+    if (passedFunction.functionFile) {
+        functionFile = thisHere.functionFile;
     }
     if (passedFunction.cssPath) {
-        cssPath = passedFunction.cssPath;
+        cssPath = thisHere.cssPath;
     }
     if (passedFunction.targetDOM) {
-        targetDOM = passedFunction.targetDOM;
-    }
-    
-        //check originBurst and signal burst 
-        if(window.originBurst?.[pathOrigin].htmlResult === undefined && window.originBurst?.[pathOrigin].cssResult === undefined){
-            if (htmlPath !== undefined && targetDOM !== undefined) {
-        window.vanillaDOM({ htmlPath, cssPath, pathOrigin }, (htmlContent) => {
-
-alert('yo')
-alert(targetDOM)
-            // Apply the HTML content to the DOM
-            document.getElementById(targetDOM).innerHTML = htmlContent;
-           // document.getElementById(targetDOM).dispatchEvent(new Event('htmlContentLoaded'));
-            window[htmlPath+'domReady'] = true
-           
-           // window.signalBurst('load', ['getSignal']);
-           // document.getElementById(targetDOM).dispatchEvent(new Event('htmlContentLoaded'));
-        //    window.reRollFunctions()
-
-
-        })
-    
+        targetDOM = thisHere.targetDOM;
     }
  
+    if(window.originBurst?.[functionFile]?.[functionFile]?.serverResult !==undefined){
+        alert('hey')
+
+        document.getElementById(targetDOM).innerHTML = window.originBurst[functionFile][functionFile].serverResult;
+        initView();
     }else{
-        //document.getElementById(targetDOM).innerHTML = window.originBurst?.[pathOrigin].htmlResult ;
+        continueDOM(htmlPath, cssPath);
     }
-  
+
+     function continueDOM(htmlPath, cssPath){
+        window.vanillaDOM({ htmlPath, cssPath },async (htmlContent) => {
+            alert(htmlPath)
+            // Apply the HTML content to the DOM
+            document.getElementById(targetDOM).innerHTML = htmlContent;
+            if(window.originBurst?.[functionFile]?.[functionFile] !== undefined){
+                window.originBurst[functionFile][functionFile].serverResult = htmlContent
+                await window.originBurst[functionFile][functionFile].serverResult
+                window.signalBurst('load', ['getSignal'], htmlContent);
+            }else{
+                alert('yo')
+
+            }
+            initView();
+
+        })
+    }
+    
 }
 
 
-window.serverDOM = async function miniDOM(passedFunction, htmlContent) {
+///test an idea with this below maybe not connected to anything 
+window.checkDOM = function checkDOM(renderSchema){
+    renderSchema = window.renderSchema;
+    alert(JSON.stringify(renderSchema))
+    let thestate= history.state.stateTagName;
+    let functionFile;
 
-    alert('yo')
-        let htmlPath;
-        let cssPath;
-        let targetDOM;
-        let pathOrigin;
-        JSON.stringify(window.passedFunction)
+
+    let hasDOM = false;
+    let targetDOM = renderSchema.customFunctions[thestate].targetDOM;
+    alert(targetDOM);
+    if(window.originBurst?.[thestate]?.[thestate]?.serverResult!== undefined){
+        checkDOM = window.originBurst[thestate][thestate].serverResult;
+        if (checkDOM){
+            hasDOM = true;
+            document.getElementById(targetDOM).innerHTML = window.originBurst[thestate][thestate].serverResult;
     
-        if (passedFunction.functionFile){
-            pathOrigin = passedFunction.functionFile;
+            alert(hasDOM)
+          
+           // return hasDOM
+
         }
-    
-        if (passedFunction.htmlPath) {
-            htmlPath = passedFunction.htmlPath;
-        }
-        if (passedFunction.cssPath) {
-            cssPath = passedFunction.cssPath;
-        }
-        if (passedFunction.targetDOM) {
-            targetDOM = passedFunction.targetDOM;
-        }
-        if ( targetDOM !== undefined && htmlContent !==undefined) {
-            //check originBurst and signal burst 
-           
-    
-                document.getElementById(targetDOM).innerHTML = htmlContent;
-              
-    
-    
-        
-        }
-   
-        }
-      
-    
+    }else{
+        hasDOM = false;
+        alert(hasDOM)
+
+      //  return hasDOM;
+    }
+
+
+}

@@ -16,7 +16,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                 //passedFunction.render = "burst";
 
 
-                if (passedFunction.dataSchema && passedFunction.role == "parent") {
+                if (passedFunction.dataSchema && passedFunction.role == "parent" || passedFunction.role !=="rollCall") {
                     runFunction = "functionBurst";
                     data = passedFunction.dataSchema;
                     let runData = "serverBurst";
@@ -174,7 +174,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                         } else {
 
                             console.warn('Consider Intent (no new data = no originBurst serverResult changes)', landingKey + ' > ' + functionName)
-
+                            
 
                         }
 
@@ -366,55 +366,3 @@ window.reRollFunctions = async function () {
     }
 };
 
-
-window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
-    try {
-        const htmlResponse = await fetch(htmlPath);
-        const htmlContent = await htmlResponse.text();
-
-        // Call the callback function with the HTML content
-        if (typeof vanillaDOMcallback === 'function') {
-            vanillaDOMcallback(htmlContent);
-        }
-        if (cssPath) {
-            const cssResponse = await fetch(cssPath);
-            const css = await cssResponse.text();
-            const style = document.createElement('style');
-            style.textContent = css;
-            document.head.appendChild(style);
-            
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
-
-
-async function miniDOM(thisHere, initView) {
-    passedFunction =thisHere;
-    let htmlPath;
-    let cssPath;
-    let targetDOM;
-    if (passedFunction.htmlPath) {
-        htmlPath = thisHere.htmlPath;
-    }
-    if (passedFunction.cssPath) {
-        cssPath = thisHere.cssPath;
-    }
-    if (passedFunction.targetDOM) {
-        targetDOM = thisHere.targetDOM;
-    }
- 
-        window.vanillaDOM({ htmlPath, cssPath }, (htmlContent) => {
-
-
-            // Apply the HTML content to the DOM
-            document.getElementById(targetDOM).innerHTML = htmlContent;
-
-            window.signalBurst('load', ['getSignal']);
-            initView();
-
-        })
-    
-}
