@@ -11,12 +11,12 @@
   if(window.originBurst?.signalBurst !== undefined){
   
    
-    history.state['signalBurst'] = {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
-    window.originBurst.signalBurst= {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
+    history.state['signalBurst']= {...history.state['signalBurst'], [history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
+    window.originBurst.signalBurst= {...window.originBurst.signalBurst,[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
 
   }else{
-    history.state['signalBurst'] = {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult': signalResult};
-    window.originBurst['signalBurst']= {'origin': history.state.stateTagName, 'signal': signalObject, 'signalResult':signalResult};
+    history.state['signalBurst'] = {[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
+    window.originBurst['signalBurst'] = {[history.state.stateTagName] : { 'signal': signalObject, 'signalResult':signalResult}};
   }
 
   if (Array.isArray(signalFunction) && signalFunction.length > 1) {
@@ -47,7 +47,7 @@ window.getSignal = function getSignal(signalSend){
     
     signalSend = undefined;
   }else{
-      signalSend = window.originBurst.signalBurst
+     // signalSend = window.originBurst.signalBurst
       history.state.signalBurst=signalSend;
   }
   return signalSend;
