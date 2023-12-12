@@ -1,12 +1,12 @@
-window.level1Request = async function level1Request(renderSchema, levelsPackage, runFunction) {
+window.level1Request = async function level1Request(renderSchema, uiPackage, runFunction) {
    runFunction = window.runFunction;
-   renderSchema = window.renderSchema
-   await runFunction;
-   if(runFunction){
-  
+  await runFunction;
+
+  if (runFunction) {
+    
     rollCall = [
        'level1',
-      // ...levelsPackage
+       ...window.uiPackage
        ];
 
      
@@ -16,4 +16,3 @@ window.level1Request = async function level1Request(renderSchema, levelsPackage,
    
    
 }
-   

@@ -46,28 +46,28 @@ window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
 };
 
 
-async function miniDOM(thisHere, initView) {
-    passedFunction =thisHere;
+async function miniDOM(domConfig, domFunction, initView) {
+    passedFunction = domConfig.customFunctions[domFunction];
     let htmlPath;
     let cssPath;
     let targetDOM;
 
     if (passedFunction.functionFile) {
-        htmlPath = thisHere.htmlPath;
+        htmlPath = passedFunction.htmlPath;
     }
 
     if (passedFunction.functionFile) {
-        functionFile = thisHere.functionFile;
+        functionFile = passedFunction.functionFile;
     }
     if (passedFunction.cssPath) {
-        cssPath = thisHere.cssPath;
+        cssPath = passedFunction.cssPath;
     }
     if (passedFunction.targetDOM) {
-        targetDOM = thisHere.targetDOM;
+        targetDOM = passedFunction.targetDOM;
     }
  
     if(window.originBurst?.[functionFile]?.[functionFile]?.htmlResult !==undefined){
-        alert('hey')
+        //alert('hey')
 
         document.getElementById(targetDOM).innerHTML = window.originBurst[functionFile][functionFile].htmlResult;
         initView();
@@ -77,7 +77,7 @@ async function miniDOM(thisHere, initView) {
 
      function continueDOM(htmlPath, cssPath){
         window.vanillaDOM({ htmlPath, cssPath },async (htmlContent) => {
-            alert(htmlPath)
+           // alert(htmlPath)
             // Apply the HTML content to the DOM
             document.getElementById(targetDOM).innerHTML = htmlContent;
             if(window.originBurst?.[functionFile]?.[functionFile] !== undefined){
@@ -85,7 +85,7 @@ async function miniDOM(thisHere, initView) {
                 await window.originBurst[functionFile][functionFile].htmlResult
                 //window.signalBurst('load', ['getSignal'], htmlContent);
             }else{
-                alert('yo')
+               // alert('yo')
 
             }
             initView();
@@ -99,28 +99,28 @@ async function miniDOM(thisHere, initView) {
 ///test an idea with this below maybe not connected to anything 
 window.checkDOM = function checkDOM(renderSchema){
     renderSchema = window.renderSchema;
-    alert(JSON.stringify(renderSchema))
+   // alert(JSON.stringify(renderSchema))
     let thestate= history.state.stateTagName;
     let functionFile;
 
 
     let hasDOM = false;
     let targetDOM = renderSchema.customFunctions[thestate].targetDOM;
-    alert(targetDOM);
+   // alert(targetDOM);
     if(window.originBurst?.[thestate]?.[thestate]?.serverResult!== undefined){
         checkDOM = window.originBurst[thestate][thestate].serverResult;
         if (checkDOM){
             hasDOM = true;
             document.getElementById(targetDOM).innerHTML = window.originBurst[thestate][thestate].serverResult;
     
-            alert(hasDOM)
+           // alert(hasDOM)
           
            // return hasDOM
 
         }
     }else{
         hasDOM = false;
-        alert(hasDOM)
+        //alert(hasDOM)
 
       //  return hasDOM;
     }

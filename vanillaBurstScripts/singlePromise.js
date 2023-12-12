@@ -14,7 +14,7 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
         var customFunctionUrl = baseCustomFunctionDirectory + customFunctionDirectory + customFunctionName + '.js';
 
 
-        if (customFunctionName && customFunction.render === "burst" && customFunction.role) {
+        if (customFunctionName && customFunction.render === "burst") {
             const existingScript = document.querySelector(`head script[src="${customFunctionUrl}"]`);
             if (!existingScript) {
                 // Script not found, create and append the script tag to the head
@@ -25,7 +25,8 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
                 script.onload = () => {
                     window.preloaderAnimation();
                    // console.log(customFunctionUrl);
-                    executeFunction();
+                    executeFunction(customFunctionName);
+                    
                 };
                 script.onerror = () => {
                     console.error('Error loading script:', customFunctionUrl);
@@ -33,15 +34,16 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
                 document.head.appendChild(script);
             } else {
                 // Script already exists; execute the function immediately if it exists
-                //console.log(`Script already loaded: ${customFunctionUrl}`);
-                executeFunction();
+                console.log(`Script already loaded: ${customFunctionUrl}`);
+                executeFunction(customFunctionName);
                   
             }
         }
     }
 
-    async function executeFunction() {
-
+    async function executeFunction(customFunctionName) {
+       // alert(customFunctionName)
+//alert('executing function customFunctionName')
         if (typeof window[customFunctionName] === 'function') {
             vanillaShortcuts(customFunctionName, passedFunction);
 
@@ -55,6 +57,7 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
             }
               
             window.removeLoader();
+            console.info(`Function ${customFunctionName} has been executed`);
             
         } else {
        

@@ -23,11 +23,11 @@ window.vanillaConfig = function vanillaConfig(landing, passedConfig) {
 
 
 window.buildRollCall = async function buildRollCall(rollCall, renderSchema, runFunction){
-levelsPackage = window.levelsPackage;
+
 renderSchema = window.renderSchema;
 await renderSchema;
 await window.runFunction
-if(runFunction){
+if(runFunction === 'functionBurst'){
   //runFunction = ''
   rollCall = window.rollCall;
  window.rollCall = rollCall;
@@ -47,60 +47,46 @@ window.config = function config() {
     if (window.schemaParts.hasOwnProperty(part)) {
 
       let packageNames = window.schemaParts[part];
-
-      // Skip if packageNames is false
-      if (packageNames === false) {
-        console.warn("Consider Intent (not a view): skipped renderSchema build for part:", part);
-        continue;
-      }
+      if (packageNames === false) continue; // Skip non-views
 
       let partResults = {};
+      let partConfig = window[`${part}Config`] ? window[`${part}Config`]() : {};
+      let customFunctions = partConfig.customFunctions || {};
+
       if (Array.isArray(packageNames)) {
         packageNames.forEach(packageName => {
-          // Split packageName if it contains comma-separated values
-          let individualPackageNames = packageName.includes(',') ? packageName.split(',').map(name => name.trim()) : [packageName];
-      
+          let individualPackageNames = packageName.includes(',') ?
+            packageName.split(',').map(name => name.trim()) : [packageName];
+
           individualPackageNames.forEach(individualPackageName => {
             let functionNames = window[individualPackageName];
             if (Array.isArray(functionNames)) {
               functionNames.forEach(funcName => {
-                let funcNameConfig = funcName+'Config';
+                let funcNameConfig = `${funcName}Config`;
                 if (typeof window[funcNameConfig] === 'function') {
-                 // console.log("Executing function:", funcNameConfig);
                   let result = window[funcNameConfig](part);
                   if (result && typeof result === 'object') {
-                    // Merge the function result into the partResults object
-                    Object.assign(partResults, result);
+                    // Directly merge into the customFunctions object
+                    Object.assign(customFunctions, result);
                   }
                 } else {
-                  console.error("Function not found:", funcNameConfig);
+                  console.error(`Function ${funcNameConfig} not found.`);
                 }
               });
-            } else {
-              console.error("Package not found or is not an array:", individualPackageName);
             }
           });
         });
       }
-      
 
-      //console.log("Function results for", part, ":", partResults);
-
-      // Call the part's config function with the merged results
-      let configFunctionName = `${part}Config`;
-      if (typeof window[configFunctionName] === 'function') {
-        schema[part] = window[configFunctionName](partResults) || undefined;
-      } else {
-        schema[part] = undefined;
-      }
+      // Assign the constructed customFunctions to the partConfig
+      partConfig.customFunctions = customFunctions;
+      schema[part] = partConfig;
     }
   }
-  console.log("renderSchema BUILD COMPLETED, see return table below")
-  console.table(schema);
+
+  console.log("Schema built:", schema);
   return schema;
 };
-
-
 
 
 

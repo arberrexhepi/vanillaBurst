@@ -1,23 +1,24 @@
 // challenge.js
 
-window.level1 =  function level1(renderSchema, originBurst, runFunction) {
+window.level1 = async function level1() {
 
     if (window.runFunction === 'functionBurst') {
 
-        let passedFunction = window.renderSchema.customFunctions.level1;
+        window.miniDOM(window.level1Config(passedConfig), 'level1', initView);
 
-        miniDOM(passedFunction, initView);
 
-        function initView(){
+        function initView() {
             const solveButton = document.getElementById('solveButton');
             solveButton.addEventListener('click', yo);
 
-        
+
         }
 
-   function yo(){
-    alert('hi')
-   }
+        function yo() {
+            alert('hi')
+            console.log('ran from shared function 2');
+
+        }
 
     }
 };

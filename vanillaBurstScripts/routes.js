@@ -1,6 +1,6 @@
 //only sets 1 route (the one on initial path), and is never called again until a full page reload
 document.addEventListener('load', function(){
-    alert('hi')
+    //alert('hi')
 })
 function getRoute() {
     const path = window.location.pathname;

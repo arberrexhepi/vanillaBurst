@@ -1,18 +1,16 @@
- window.appRequest = async function appRequest(renderSchema, sharedFunction1Package, runFunction) {
+window.appRequest = async function appRequest(renderSchema, appviewPackage, runFunction) {
   runFunction = window.runFunction;
-  renderSchema = window.renderSchema
   await runFunction;
-  if(runFunction){
-   rollCall = [
 
+  if (runFunction) {
+    
+    rollCall = [
       'app',
-      //window.sharedFunction1Package[0],
+      ...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
+    ];
 
-      'sharedFunction1'
-      ];
-      window.buildRollCall(renderSchema, rollCall, runFunction)
-      //await window.sharedFunction1;
+    await window.buildRollCall(renderSchema, rollCall, runFunction)
 
-    }
-  
-  };
+  }
+
+};

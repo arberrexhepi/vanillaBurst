@@ -60,7 +60,9 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                     let functionName = passedFunction.functionFile;
 
                     await arrayRoll(passedFunction, functionName);
-                });
+                }).catch(error => {
+                    console.error(element, error);
+                  });;
             });
         }
         else {
