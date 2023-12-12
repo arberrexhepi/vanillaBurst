@@ -1,5 +1,4 @@
 
-
 window.config = function config() {
   let schema = {};
 
@@ -9,11 +8,24 @@ window.config = function config() {
       let packageNames = window.schemaParts[part];
       if (packageNames === false) continue; // Skip non-views
 
-      let partResults = {};
       let partConfig = window[`${part}Config`] ? window[`${part}Config`]() : {};
       let customFunctions = partConfig.customFunctions || {};
 
-      if (Array.isArray(packageNames)) {
+      // If packageNames is a string, treat it as a direct function config call
+      if (typeof packageNames === 'string') {
+        let funcNameConfig = `${packageNames}Config`;
+        if (typeof window[funcNameConfig] === 'function') {
+          let result = window[funcNameConfig]();
+          if (result && typeof result === 'object') {
+            Object.assign(customFunctions, result);
+          }
+        } else {
+          console.error(`Function ${funcNameConfig} not found.`);
+        }
+      }
+
+      // If packageNames is an array, process it as a package
+      else if (Array.isArray(packageNames)) {
         packageNames.forEach(packageName => {
           let individualPackageNames = packageName.includes(',') ?
             packageName.split(',').map(name => name.trim()) : [packageName];
@@ -47,6 +59,7 @@ window.config = function config() {
   console.log("Schema built:", schema);
   return schema;
 };
+
 
 
 window.vanillaConfig = function vanillaConfig(landing, passedConfig) {
