@@ -144,7 +144,12 @@ window.runClose = function runClose() {
   }
 
 
-  window.vanillaGo = function vanillaGo(stateKey) {
+  //stateKey sends to history, vanillaGoRoute calls an option route, no route is called if no vanillaGoRoute, preventing from forward overwrites creating mismath between history and originburst index
+  window.vanillaGo = async function vanillaGo(stateKey, vanillaGoRoute) {
+    if (vanillaGoRoute === undefined) {
+        vanillaGoRoute = stateKey;
+    }
+  
     // Check if the stateKey exists in your tracking object
     if (window.originBurst[stateKey]) {
       // Calculate the position of the state in your tracking object
@@ -153,8 +158,16 @@ window.runClose = function runClose() {
       const stepsToGoBack = -(statePosition + 1);
       // Use history.go() to navigate to the state
       history.go(stepsToGoBack);
+  
+      // Check if vanillaGoRoute is not equal to stateKey before calling window.routeCall
+      if (vanillaGoRoute !== stateKey) {
+        setTimeout(function () {
+          window.routeCall(vanillaGoRoute);
+        }, 20); // Then run a route to call
+      }
     } else {
       console.error("State not found in the tracking object");
     }
-  }
+  };
+  
   

@@ -11,8 +11,9 @@ window.sharedFunction2 = async function sharedFunction2(runFunction){
 
             async function quitGameButton() {
 
-               window.vanillaGo("app");
+               await window.vanillaGo("app");
                
+
             }
 
         }
