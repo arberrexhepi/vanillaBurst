@@ -1,5 +1,6 @@
 // User defined
 window.baseUrl = "/";
+ fetch(baseUrl+'index.html');
 
 // vanillaBurst App
 window.renderComplete = "false";
@@ -88,7 +89,7 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     
 
     // Function to handle second batch of promises
-    function promise2(schema) {
+    async function promise2(schema) {
       // Load states.js script
       window.loadScript(`${window.baseUrl}vanillaBurstScripts/states.js`).then(() => {
         // After states.js is loaded, load routes.js script
@@ -101,7 +102,6 @@ window.vanillaApp = function vanillaApp(baseUrl) {
       }).catch(error => {
         console.error("Scripts states.js and routes.js could not be loaded successfully: ", error);
       });
-  
     }
     
 

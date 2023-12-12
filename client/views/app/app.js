@@ -2,8 +2,9 @@ window.app = async function app() {
 
     if (window.runFunction === 'functionBurst') {
 
+        window.domFunction='app'
 
-        window.miniDOM(window.appConfig(passedConfig), 'app', initView);
+        window.miniDOM(window.appConfig(), 'app', initView);
 
         function initView() {
             const startButton = document.getElementById('startGameButton');

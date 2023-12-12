@@ -1,4 +1,4 @@
-window.level1Request = async function level1Request(renderSchema, uiPackage, runFunction) {
+window.level1Request = async function level1Request(renderSchema, runFunction) {
    runFunction = window.runFunction;
   await runFunction;
 

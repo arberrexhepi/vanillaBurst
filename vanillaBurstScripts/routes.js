@@ -110,3 +110,51 @@ window.routeCall = routeCall;
 
 }
 
+//go back to position
+window.runClose = function runClose() {
+    if (history.state?.stateTagName !== window.appRoute) {
+      if (history.state && typeof history.state.stateCount === 'number') {
+        history.go(-(history.state.stateCount) + 1);
+
+
+      } else {
+        console.log("no previous page")
+      }
+    }
+
+
+  }
+
+
+  window.navigateToStateByProperty = function navigateToStateByProperty(propertyName, propertyValue) {
+    const historyStack = window.originBurst;
+    
+    for (let i = 0; i < historyStack.length; i++) {
+      const state = historyStack[i].app;
+      alert(state)
+    //   if (state.hasOwnProperty(propertyName) && state[propertyName] === propertyValue) {
+    //     // Found the desired state, navigate to it
+    //     window.history.go(i - historyStack.length + 1);
+    //     return;
+    //   }
+     }
+    
+    // State with the specified property value not found
+    //console.error("State not found");
+  }
+
+
+  window.vanillaGo = function vanillaGo(stateKey) {
+    // Check if the stateKey exists in your tracking object
+    if (window.originBurst[stateKey]) {
+      // Calculate the position of the state in your tracking object
+      const statePosition = Object.keys(window.originBurst).indexOf(stateKey);
+      // Calculate how many steps to go back in the history stack
+      const stepsToGoBack = -(statePosition + 1);
+      // Use history.go() to navigate to the state
+      history.go(stepsToGoBack);
+    } else {
+      console.error("State not found in the tracking object");
+    }
+  }
+  

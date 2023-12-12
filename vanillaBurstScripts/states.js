@@ -24,14 +24,6 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
   };
 
-
-
-  jquery = 'https://code.jquery.com/jquery-3.5.1.min.js';
-  datetimepicker = 'https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.js';
-
-
-
-
   function preLoader(stateTag, stateTagPath, loadParams) {
 
 

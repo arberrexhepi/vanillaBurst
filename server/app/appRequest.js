@@ -1,4 +1,6 @@
-window.appRequest = async function appRequest(renderSchema, appviewPackage, runFunction) {
+window.appRequest = async function appRequest(renderSchema, runFunction) {
+
+
   runFunction = window.runFunction;
   await runFunction;
 

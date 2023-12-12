@@ -4,7 +4,8 @@ window.level1 = async function level1() {
 
     if (window.runFunction === 'functionBurst') {
 
-        window.miniDOM(window.level1Config(passedConfig), 'level1', initView);
+        window.domFunction='level1'
+         window.miniDOM(window.level1Config(), domFunction, initView);
 
 
         function initView() {

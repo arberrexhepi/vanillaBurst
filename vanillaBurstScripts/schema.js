@@ -1,44 +1,4 @@
 
-window.vanillaConfig = function vanillaConfig(landing, passedConfig) {
-  let landingRequest = landing + 'Request';
-  let buildConfig = {};
-  buildConfig[landing] = {
-      'landing': landing,
-      'scripts': window.vanillaBurstScripts, // Array of required script paths
-      'preloader': window.baseUrl + 'preloader.js', // Assuming this path is correct
-      'customFunctions': {
-          [landingRequest]: {
-              'role': 'rollCall',
-              'dir': 'server/'+landing+'/',
-              'functionFile': landingRequest,
-              'render': 'burst',
-              'originBurst': landing
-          },
-          ...passedConfig
-      }
-  };
-  //alert(JSON.stringify(buildConfig[landing]));
-  return buildConfig[landing];
-};
-
-
-window.buildRollCall = async function buildRollCall(rollCall, renderSchema, runFunction){
-
-renderSchema = window.renderSchema;
-await renderSchema;
-await window.runFunction
-if(runFunction === 'functionBurst'){
-  //runFunction = ''
-  rollCall = window.rollCall;
- window.rollCall = rollCall;
- window.runRoll = 'rollBurst';
- await window.childFunction(renderSchema, rollCall, runRoll);
- 
-
-  }
-
-}
-
 
 window.config = function config() {
   let schema = {};
@@ -89,8 +49,42 @@ window.config = function config() {
 };
 
 
+window.vanillaConfig = function vanillaConfig(landing, passedConfig) {
+  let landingRequest = landing + 'Request';
+  let buildConfig = {};
+  buildConfig[landing] = {
+      'landing': landing,
+      'scripts': window.vanillaBurstScripts, // Array of required script paths
+      'preloader': window.baseUrl + 'preloader.js', // Assuming this path is correct
+      'customFunctions': {
+          [landingRequest]: {
+              'role': 'rollCall',
+              'dir': 'server/'+landing+'/',
+              'functionFile': landingRequest,
+              'render': 'burst',
+              'originBurst': landing
+          },
+          ...passedConfig
+      }
+  };
+  //alert(JSON.stringify(buildConfig[landing]));
+  return buildConfig[landing];
+};
 
 
+window.buildRollCall = async function buildRollCall(rollCall, renderSchema, runFunction){
 
+renderSchema = window.renderSchema;
+await renderSchema;
+await window.runFunction
+if(runFunction === 'functionBurst'){
+  //runFunction = ''
+  rollCall = window.rollCall;
+ window.rollCall = rollCall;
+ window.runRoll = 'rollBurst';
+ await window.childFunction(renderSchema, rollCall, runRoll);
+ 
 
+  }
 
+}

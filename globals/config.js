@@ -28,4 +28,4 @@ window.schemaParts = {
 
 window.uiPackage = ['sharedFunction1','sharedFunction2']; // Shared UI elements
 
-window.appviewPackage = ['appviewfunction','sharedFunction2']; // Shared UI elements
+window.appviewPackage = ['appviewfunction','appviewfunction']; // Shared UI elements
