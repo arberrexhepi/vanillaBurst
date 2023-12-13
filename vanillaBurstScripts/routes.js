@@ -162,7 +162,7 @@ window.runClose = function runClose() {
       // Check if vanillaGoRoute is not equal to stateKey before calling window.routeCall
       if (vanillaGoRoute !== stateKey) {
         setTimeout(function () {
-          window.routeCall(vanillaGoRoute);
+         // window.routeCall(vanillaGoRoute);
         }, 20); // Then run a route to call
       }
     } else {

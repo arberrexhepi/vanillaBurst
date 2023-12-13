@@ -79,6 +79,13 @@ async function miniDOM(domConfig, domFunction, initView) {
     
 }
 
+window.componentDOM = function componentDOM(htmlPath, cssPath, targetDOM){
+    window.vanillaDOM({ htmlPath, cssPath },async (htmlContent) => {
+         document.getElementById(targetDOM).innerHTML = htmlContent;
+    })
+
+}
+
 
 ///a dom shortcut 
 window.checkDOM = function checkDOM(targetDOM){
