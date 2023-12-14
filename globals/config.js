@@ -18,14 +18,16 @@ window.schemaParts = {
   'appviewfunction': false,
   'sharedFunction1': false,
   'sharedFunction2': false,
-  'app':'appviewfunction', //['uiPackage', 'scorePackage'], // Main app view with UI and score functionality
-  'level1':['uiPackage'], //['level1SpecificPackage'], // Level 1 specific functionality
-  'level2': null, // ['level2SpecificPackage'], // Level 2 specific functionality
+  //'app':'appviewfunction', //['uiPackage', 'scorePackage'], // Main app view with UI and score functionality
+  'app': null,
+  //'level1':['uiPackage'], //['level1SpecificPackage'], // Level 1 specific functionality
+  'documentation':null,
+  'gen': null, // ['level2SpecificPackage'], // Level 2 specific functionality
   // Add additional levels as needed
 
 };
 
 
-window.uiPackage = ['sharedFunction1','sharedFunction2']; // Shared UI elements
+//window.uiPackage = ['sharedFunction1','sharedFunction2']; // Shared UI elements
 
-window.appviewPackage = ['appviewfunction','appviewfunction']; // Shared UI elements
+//window.appviewPackage = ['appviewfunction','appviewfunction']; // Shared UI elements

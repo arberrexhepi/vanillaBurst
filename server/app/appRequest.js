@@ -8,7 +8,7 @@ window.appRequest = async function appRequest(renderSchema, runFunction) {
     
     rollCall = [
       'app',
-      ...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
+      //...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
     ];
 
     await window.buildRollCall(renderSchema, rollCall, runFunction)

@@ -4,21 +4,14 @@ window.app = async function app() {
 
         window.domFunction='app'
 
-        window.miniDOM(window.appConfig(), 'app', initView);
+        window.miniDOM(window.appConfig(), 'app', appView);
 
         window.componentDOM('client/components/nav/nav.html', 'client/components/nav/nav.css', 'navbar', 'nav')
+        window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'footer')
+        window.componentDOM('client/components/footer/footer.html', 'client/components/footer/footer.css', 'footer', 'footer')
 
-        window.componentDOM('client/components/footer/footer.html', 'client/components/nav/footer.css', 'footer', 'footer')
-
-        function initView() {
-            const startButton = document.getElementById('startGameButton');
-            startButton.addEventListener('click', startLevel1Game);
-
-            async function startLevel1Game() {
-
-                await window.routeCall('level1');
-
-            }
+        function appView() {
+         
 
         }
 

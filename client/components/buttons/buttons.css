@@ -1,0 +1,19 @@
+#generateConfigButton {
+    padding: 10px 20px;
+    background-color: #01b247;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#docbutton {
+    padding: 10px 20px;
+    background-color: #4800fe;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}

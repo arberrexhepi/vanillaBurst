@@ -1,12 +1,12 @@
-window.level1Request = async function level1Request(renderSchema, runFunction) {
+window.documentationRequest = async function documentationRequest(renderSchema, runFunction) {
    runFunction = window.runFunction;
   await runFunction;
 
   if (runFunction) {
     
     rollCall = [
-       'level1',
-       ...window.uiPackage
+       'documentation',
+       //...window.uiPackage
        ];
 
      
