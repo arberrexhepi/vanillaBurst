@@ -1,24 +1,48 @@
 window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
-    try {  
-        
-        await cssPath
-        if (cssPath) {
-        const cssResponse = await fetch(cssPath);
-        const css = await cssResponse.text();
-        const style = document.createElement('style');
-        style.textContent = css;
-        document.head.appendChild(style);
-        
-    }
-        const htmlResponse = await fetch(htmlPath);
-        const htmlContent = await htmlResponse.text();
+    try {
+        // Function to load and apply CSS
+        const loadCSS = async (path) => {
+            let cssCacheKey = 'cachedCSS_' + path;
+            let css = localStorage.getItem(cssCacheKey);
 
-        // Call the callback function with the HTML content
+            if (!css) {
+                const cssResponse = await fetch(path);
+                css = await cssResponse.text();
+                localStorage.setItem(cssCacheKey, css);
+            }
+
+            if (!document.head.querySelector(`style[data-css-path="${path}"]`)) {
+                const style = document.createElement('style');
+                style.setAttribute('data-css-path', path);
+                style.textContent = css;
+                document.head.appendChild(style);
+            }
+        };
+
+        // Function to load HTML
+        const loadHTML = async (path) => {
+            let htmlCacheKey = 'cachedHTML_' + path;
+            let htmlContent = localStorage.getItem(htmlCacheKey);
+
+            if (!htmlContent) {
+                const htmlResponse = await fetch(path);
+                htmlContent = await htmlResponse.text();
+                localStorage.setItem(htmlCacheKey, htmlContent);
+            }
+
+            return htmlContent;
+        };
+
+        // Load and apply CSS if provided
+        if (cssPath) {
+            await loadCSS(cssPath);
+        }
+
+        // Load HTML and call callback
+        const htmlContent = await loadHTML(htmlPath);
         if (typeof vanillaDOMcallback === 'function') {
             vanillaDOMcallback(htmlContent);
         }
-      
-
     } catch (error) {
         console.error('Error:', error);
     }
@@ -26,60 +50,47 @@ window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
 
 
 async function miniDOM(domConfig, domFunction, initView) {
-    let htmlPath;
-    let cssPath;
-    let targetDOM;
-    let passedFunction
-    console.log(window.domFunction)
-    if(domConfig.customFunctions?.[domFunction] && domConfig.customFunctions?.[domFunction] !== undefined){
-        passedFunction = domConfig.customFunctions[domFunction]
+    let functionFile, htmlPath, cssPath, targetDOM, passedFunction;
+    
+    console.log(window.domFunction);
 
-    }else{
-        passedFunction = domConfig[domFunction]
+    // Determine the function to use
+    passedFunction = domConfig.customFunctions?.[domFunction] ?? domConfig[domFunction];
 
-    }
-    console.log("the passed" +JSON.stringify(passedFunction))
+    console.log("the passed" + JSON.stringify(passedFunction));
   
     if (passedFunction.functionFile) {
-        htmlPath = passedFunction.htmlPath;
-    }else{
-        console.error(error)
-    }
-
-    if (passedFunction.functionFile) {
         functionFile = passedFunction.functionFile;
-    }
-    if (passedFunction.cssPath) {
+        htmlPath = passedFunction.htmlPath;
         cssPath = passedFunction.cssPath;
-    }
-    if (passedFunction.targetDOM) {
         targetDOM = passedFunction.targetDOM;
+    } else {
+        console.error("Function file not found");
+        return;
     }
- 
-    if(window.originBurst?.[functionFile]?.[functionFile]?.htmlResult !==undefined){
-        //alert('hey')
 
+    // Check for cached content
+    if (window.originBurst?.[functionFile]?.[functionFile]?.htmlResult !== undefined) {
         document.getElementById(targetDOM).innerHTML = window.originBurst[functionFile][functionFile].htmlResult;
         initView();
-    }else{
+    } else {
         continueDOM(htmlPath, cssPath);
     }
 
-     function continueDOM(htmlPath, cssPath){
-        window.vanillaDOM({ htmlPath, cssPath },async (htmlContent) => {
-
+    // Function to continue DOM processing
+    async function continueDOM(htmlPath, cssPath) {
+        window.vanillaDOM({ htmlPath, cssPath }, async (htmlContent) => {
             document.getElementById(targetDOM).innerHTML = htmlContent;
-            if(window.originBurst?.[functionFile]?.[functionFile] !== undefined){
-                window.originBurst[functionFile][functionFile].htmlResult = htmlContent
-                await window.originBurst[functionFile][functionFile].htmlResult
-            }else{
+            
+            // Cache the result if not already cached
+            window.originBurst = window.originBurst || {};
+            window.originBurst[functionFile] = window.originBurst[functionFile] || {};
+            window.originBurst[functionFile][functionFile] = window.originBurst[functionFile][functionFile] || {};
+            window.originBurst[functionFile][functionFile].htmlResult = htmlContent;
 
-            }
             initView();
-
-        })
+        });
     }
-    
 }
 
 window.componentDOM = function componentDOM(htmlPath, cssPath, targetDOM){
