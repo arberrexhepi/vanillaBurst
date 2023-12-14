@@ -126,24 +126,6 @@ window.runClose = function runClose() {
   }
 
 
-  window.navigateToStateByProperty = function navigateToStateByProperty(propertyName, propertyValue) {
-    const historyStack = window.originBurst;
-    
-    for (let i = 0; i < historyStack.length; i++) {
-      const state = historyStack[i].app;
-      alert(state)
-    //   if (state.hasOwnProperty(propertyName) && state[propertyName] === propertyValue) {
-    //     // Found the desired state, navigate to it
-    //     window.history.go(i - historyStack.length + 1);
-    //     return;
-    //   }
-     }
-    
-    // State with the specified property value not found
-    //console.error("State not found");
-  }
-
-
   //stateKey sends to history, vanillaGoRoute calls an option route, no route is called if no vanillaGoRoute, preventing from forward overwrites creating mismath between history and originburst index
   window.vanillaGo = async function vanillaGo(stateKey, vanillaGoRoute) {
     if (vanillaGoRoute === undefined) {

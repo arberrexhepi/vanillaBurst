@@ -15,19 +15,12 @@ window.baseUrlStyles = "/css/styles/";
 
 // Define the routeParts based on the views
 window.schemaParts = {
-  'appviewfunction': false,
-  'sharedFunction1': false,
-  'sharedFunction2': false,
-  //'app':'appviewfunction', //['uiPackage', 'scorePackage'], // Main app view with UI and score functionality
   'app': null,
-  //'level1':['uiPackage'], //['level1SpecificPackage'], // Level 1 specific functionality
   'documentation':null,
-  'gen': null, // ['level2SpecificPackage'], // Level 2 specific functionality
+  'gen': null, //
+  //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage 
   // Add additional levels as needed
-
 };
 
 
 //window.uiPackage = ['sharedFunction1','sharedFunction2']; // Shared UI elements
-
-//window.appviewPackage = ['appviewfunction','appviewfunction']; // Shared UI elements

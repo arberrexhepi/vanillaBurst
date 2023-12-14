@@ -1,5 +1,15 @@
 window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
-    try {
+    try {  
+        
+        await cssPath
+        if (cssPath) {
+        const cssResponse = await fetch(cssPath);
+        const css = await cssResponse.text();
+        const style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
+        
+    }
         const htmlResponse = await fetch(htmlPath);
         const htmlContent = await htmlResponse.text();
 
@@ -7,14 +17,7 @@ window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
         if (typeof vanillaDOMcallback === 'function') {
             vanillaDOMcallback(htmlContent);
         }
-        if (cssPath) {
-            const cssResponse = await fetch(cssPath);
-            const css = await cssResponse.text();
-            const style = document.createElement('style');
-            style.textContent = css;
-            document.head.appendChild(style);
-            
-        }
+      
 
     } catch (error) {
         console.error('Error:', error);

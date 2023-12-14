@@ -8,9 +8,7 @@ window.gen = async function gen(renderSchema, originBurst, runFunction) {
 
         //should introduce a domChain ..?
          window.miniDOM(window.genConfig(), 'gen', genView);
-         window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
-
-         window.componentDOM(htmlPath+'parent-node.html', cssPath+'', 'parent-node', 'parent-node');
+        
         
          // the component below is not ready
          //window.componentDOM(htmlPath+'function-node.html', cssPath+'', 'function-node', 'function-node');
@@ -20,7 +18,9 @@ window.gen = async function gen(renderSchema, originBurst, runFunction) {
         async function genView(){
             
            
-       
+            window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
+
+            window.componentDOM(htmlPath+'parent-node.html', cssPath+'', 'parent-node', 'parent-node');
             
         }
 
