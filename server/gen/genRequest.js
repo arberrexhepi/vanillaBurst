@@ -7,11 +7,17 @@ window.genRequest = async function genRequest(renderSchema, runFunction, levelsP
     rollCall = [
       
        'gen',
+       'appShell',
       // ...levelsPackage
        ];
- 
+
+       //await window.appShellReady
+
+
        window.buildRollCall(rollCall, renderSchema, runFunction)
-    }
+       }else{
+        console.log("genRequest didn't run")
+       }
  
    
    };

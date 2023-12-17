@@ -1,7 +1,7 @@
-window.genConfig = function genConfig() {
+window.genConfig = function genConfig(sharedParts) {
   
   let genConfig = {};
-
+  
    passedConfig = {
       'gen': {
         'role':'parent',
@@ -11,8 +11,9 @@ window.genConfig = function genConfig() {
         'originBurst': 'gen',
         'htmlPath':'client/views/gen/gen.html',
         'cssPath':'client/views/gen/gen.css',
-        'targetDOM':'levelbox'
+        'targetDOM':'viewbox'
       },
+      ...sharedParts
     }
 
     genConfig = {...vanillaConfig('gen', passedConfig)}

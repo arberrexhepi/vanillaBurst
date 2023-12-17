@@ -1,6 +1,5 @@
 // User defined
 window.baseUrl = "/";
- fetch(baseUrl+'index.html');
 
 // vanillaBurst App
 window.renderComplete = "false";

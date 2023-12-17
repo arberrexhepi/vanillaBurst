@@ -2,7 +2,7 @@
 window.baseUrl = "/";
 
 // Initial route of the application
-window.appRoute = 'app';
+window.appRoute = 'home';
 
 // Base URLs for custom assets
 window.baseUrlIcons = "/assets/icons/";
@@ -15,12 +15,13 @@ window.baseUrlStyles = "/css/styles/";
 
 // Define the routeParts based on the views
 window.schemaParts = {
-  'app': null,
-  'documentation':null,
-  'gen': null, //
+  'appShell': false,
+  'home': 'appShell',
+  'documentation':'appShell',
+  'gen': 'appShell', //
   //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage 
   // Add additional levels as needed
 };
 
 
-//window.uiPackage = ['sharedFunction1','sharedFunction2']; // Shared UI elements
+//window.appShell = ['appShell']

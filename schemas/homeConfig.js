@@ -1,7 +1,7 @@
-// appConfig.js
-window.appConfig = function appConfig(sharedParts) {
+// homeConfig.js
+window.homeConfig = function homeConfig(sharedParts) {
 
-    let appConfig = {};
+    let homeConfig = {};
 
 
     //TODO, see bottom of document for thoughts on this
@@ -16,7 +16,7 @@ window.appConfig = function appConfig(sharedParts) {
     
         }
     
-        //including these in the main app Config could prove ideal because the app is always called.
+        //including these in the main home Config could prove ideal because the home is always called.
         plugins = {
             'gtag':{
                 'pluginPath':'url', 
@@ -33,14 +33,14 @@ window.appConfig = function appConfig(sharedParts) {
 
     passedConfig = {
    
-        'app': {
+        'home': {
             'role': 'parent',
-            'dir': 'client/views/app/',
-            'functionFile': 'app',
+            'dir': 'client/views/home/',
+            'functionFile': 'home',
             'render': 'pause',
-            'originBurst': 'app',
-            'htmlPath': 'client/views/app/app.html',
-            'cssPath': 'client/views/app/app.css',
+            'originBurst': 'home',
+            'htmlPath': 'client/views/home/home.html',
+            'cssPath': 'client/views/home/home.css',
             'targetDOM':'vanillaBurst',
             'seo': seo,
         },
@@ -51,17 +51,17 @@ window.appConfig = function appConfig(sharedParts) {
 
 
 
-    appConfig = { ...vanillaConfig('app', passedConfig) }
+    homeConfig = { ...vanillaConfig('home', passedConfig) }
 
-    return appConfig;
+    return homeConfig;
 };
 
 
 ///
-//including these in the main app Config could prove ideal because the app is always called.
+//including these in the main home Config could prove ideal because the home is always called.
 // plugins = {
 //     'gtag':{
-//         //'customFunctions': null] //unsetting or setting it to null means full app scope
+//         //'customFunctions': null] //unsetting or setting it to null means full home scope
 //         'pluginPath':'url', //could be selfhosted in a vendor directory, see next example for self hosting (pluginPaths, would run a slightly off branch logic during childFunction, TODO)
 //         'executables':[], //an array of functions you could run when this plugin runs, great for sending conversion signals for example, how awesome would that be?
 //     },

@@ -1,4 +1,4 @@
-window.appRequest = async function appRequest(renderSchema, runFunction) {
+window.homeRequest = async function homeRequest(renderSchema, runFunction) {
 
 
   runFunction = window.runFunction;
@@ -7,7 +7,8 @@ window.appRequest = async function appRequest(renderSchema, runFunction) {
   if (runFunction) {
     
     rollCall = [
-      'app',
+      'home',
+      'appShell'
       //...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
     ];
 

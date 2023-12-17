@@ -1,36 +1,27 @@
-// final.js
+window.gen = async function gen(renderSchema, originBurst, runFunction, appShellReady) {
 
-window.gen = async function gen(renderSchema, originBurst, runFunction) {
- 
- if (window.runFunction === "functionBurst") {
+    if (window.runFunction === "functionBurst") {
         let htmlPath = 'client/views/gen/components/';
         let cssPath = 'client/views/gen/components/';
 
-        //should introduce a domChain ..?
-         window.miniDOM(window.genConfig(), 'gen', genView);
-        
-        
-         // the component below is not ready
-         //window.componentDOM(htmlPath+'function-node.html', cssPath+'', 'function-node', 'function-node');
-       
+ 
 
+            window.miniDOM(window.genConfig(), 'gen', 'gen', genView);
 
-        async function genView(){
-            
-           
-            window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
+            async function genView() {
 
-            window.componentDOM(htmlPath+'parent-node.html', cssPath+'', 'parent-node', 'parent-node');
-            
-        }
+                window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
 
-       
-    
-    
+                window.componentDOM(htmlPath + 'parent-node.html', cssPath + '', 'parent-node', 'parent-node');
+
+            }
+
     } else {
         console.warn("gen view: runFunction not set, halting execution.");
     }
-};
+
+}
+
 
 //move this to its own functionFile, this gen view might get more complex
 window.nodeConfigBuild = function nodeConfigBuild(event) {
@@ -48,8 +39,8 @@ window.nodeConfigBuild = function nodeConfigBuild(event) {
         const dir = node.querySelector('[name="dir"]').value;
         const functionFile = nodeName;
         const originBurst = node.querySelector('[name="originburst"]').value;
-        const htmlPath = dir+node.querySelector('[name="htmlPath"]').value;
-        const cssPath = dir+node.querySelector('[name="cssPath"]').value;
+        const htmlPath = dir + node.querySelector('[name="htmlPath"]').value;
+        const cssPath = dir + node.querySelector('[name="cssPath"]').value;
         const targetDOM = node.querySelector('[name="targetDOM"]').value;
 
         // Construct the function string for each node
@@ -88,5 +79,3 @@ window.${functionFile}Config = function ${functionFile}Config(sharedParts) {
 
     alert("Config copied to clipboard!");
 }
-
-//define functions here

@@ -11,7 +11,7 @@ window.documentationConfig = function documentationConfig() {
         'originBurst': 'documentation',
         'htmlPath': 'client/views/documentation/documentation.html',
         'cssPath': 'client/views/documentation/documentation.css',
-        'targetDOM':'levelbox',
+        'targetDOM':'viewbox',
    
       },
     }

@@ -6,6 +6,7 @@ window.documentationRequest = async function documentationRequest(renderSchema, 
     
     rollCall = [
        'documentation',
+       'appShell'
        //...window.uiPackage
        ];
 

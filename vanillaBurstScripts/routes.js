@@ -2,22 +2,20 @@
 document.addEventListener('load', function(){
     //alert('hi')
 })
+//only sets 1 route (the one on initial path), and is never called again until a full page reload
 function getRoute() {
     const path = window.location.pathname;
+    const searchParams = new URLSearchParams(window.location.search);
+    const burstRoute = searchParams.get('burst');
 
-    if (path === "/"+appRoute) {
+    if (path === "/" + appRoute && !burstRoute) {
         return appRoute;
-    } else {
-        if(path !== undefined){
-            const routeFilter = path.split('/');
-            return routeFilter[1]; // Assuming the route is the second part of the URL
-        }else{
-            return appRoute; //fallback to default
-        }
-   
-    
+    } else if (burstRoute) {
+        return burstRoute;
     }
+    return null; // or some default route
 }
+
 window.route = getRoute();
 window.routeCycles = 0;
 
@@ -25,31 +23,31 @@ window.routeCycles = 0;
 //Because this function is called via window.renderView() everytime a view is rendered (1 view being app shell appRoute and the other 'initial path route'), 
 //so i've set a counter to keep track of how many renders have occured. and since we only ever need 1 cycle it doesn't run the function after
 
-window.vanillaBurst = async function vanillaBurst(renderComplete, route, routeCycles){
+window.vanillaBurst = async function vanillaBurst(renderComplete, route, routeCycles) {
+    // Initialize or update the route and routeCycles
     routeCycles = window.routeCycles || routeCycles;
-     route = window.route || route;
-     if(route === undefined){
+    route = window.route || route;
+
+    // If route is undefined, set it to appRoute
+    if (route === undefined) {
         route = window.appRoute;
-     }
-
-if(window.renderComplete === "false" && window.route !== appRoute){
-    if(routeCycles > 1){
-        return
-    }else{
-        handleRoute( route );
-    
-    
-    if(!window.appReady){
-        routeCall(appRoute);
-    }
-};
-}else{
-    if(route === appRoute){
-        routeCall(appRoute);
-
     }
 
-}
+    if (route === '/' && window.location.search.includes('burst')) {
+        // Extract burst value from URL
+        const searchParams = new URLSearchParams(window.location.search);
+        const burstRoute = searchParams.get('burst');
+        // Call routeCall with burstRoute if it exists
+        if (burstRoute) {
+            routeCall(burstRoute);
+        } else {
+            // If burst value is not present, call appRoute
+            routeCall(window.appRoute);
+        }
+    } else {
+        // Call routeCall for the current route
+        routeCall(route);
+    }
 
 //main app shell appRoute
 function routeCall(route) {
