@@ -1,10 +1,10 @@
 
 window.childFunction = async function childFunction(renderSchema, rollCall, runRoll, originBurst) {
     runRoll = window.runRoll;
-    // alert("ran");
+    // ("ran");
 
     if (runRoll == "rollBurst" && window.ranScripts === true) {
-        // alert("ran again");
+        // ("ran again");
 
         renderSchema = window.renderSchema;
         rollCall = window.rollCall;
@@ -17,7 +17,6 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
 
                 if (passedFunction.dataSchema && passedFunction.role == "parent" || passedFunction.role !=="rollCall") {
-                    runFunction = "functionBurst";
                     data = passedFunction.dataSchema;
                     let runData = "serverBurst";
                     await buildview(renderSchema, functionName, passedFunction, runFunction, data, runData);
@@ -69,7 +68,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
             let passedFunction = renderSchema.customFunctions[rollCall];
             let functionName = passedFunction.functionFile;
-            // alert(JSON.stringify(passedFunction));
+            // (JSON.stringify(passedFunction));
             if (passedFunction) {
                 //passedFunction.render = "burst";
 
@@ -101,8 +100,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
         async function renderFunction(renderSchema, functionName, passedFunction, runFunction, serverResult) {
 
-            if (runFunction == "functionBurst") {
-
+            if (runFunction === "functionBurst") {
                 window.renderSchema = renderSchema;
                 // console.log("at renderfunction");
                 let burst;
@@ -110,9 +108,9 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                 let originBurst = window.originBurst || {};
                 let functionResult = functionName + 'Result';
 
-                if (originBurst) {
+                if (originBurst && Object.keys(originBurst).length > 0) {
 
-
+//reached here for forward and back
 
                     async function updateOriginBurst(renderSchema, functionName, passedFunction, serverResult) {
                         // Make sure we have a valid renderSchema with a landing property
@@ -174,7 +172,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
 
                         } else {
-
+//reached else
                             console.warn('Consider Intent (no new data = no originBurst serverResult changes)', landingKey + ' > ' + functionName)
                             
 
@@ -184,7 +182,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                         const isSameOrigin = originBurst?.[landingKey]?.[functionName] === passedFunction.originBurst || '';
                         originBurst[landingKey][functionName].burst = !isSameOrigin;
                         await originBurst[landingKey][functionName].burst
-                        //console.table(isSameOrigin ? {"Merging origin to scope for":functionName}: {"Separating origin for functionName: ": functionName});
+                        console.table(isSameOrigin ? {"Merging origin to scope for":functionName}: {"Separating origin for functionName: ": functionName});
 
 
                     }
@@ -196,37 +194,18 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
              
 
 
-                    // alert("new global origin");
+                    // ("new global origin");
                     //console.log("set if burst origin not set but function has a burtOrigin instruction");
                 }
 
 
                 // Update originBurst based on passedFunction if not already set
 
+                window.serverResult = serverResult;
+                window.passedFunction = passedFunction;
+                window.originBurst = originBurst; // Set the global originBurst
 
-
-                if (typeof window[functionName] === 'function') {
-                    window.serverResult = serverResult;
-                    window.passedFunction = passedFunction;
-
-                    window.originBurst = originBurst; // Set the global originBurst
-
-                    if (passedFunction.role == 'parent') {
-                        //  console.log("this is an already loaded parent function" + JSON.stringify(passedFunction));
-                        window[functionName](renderSchema, serverResult, passedFunction, runFunction, originBurst);
-
-
-                    } else {
-                        // console.log("this is an already loaded nonparent function" + JSON.stringify(passedFunction));
-                        window[functionName](renderSchema, passedFunction, serverResult, runFunction, originBurst);
-                        //console.log("functionName:", functionName);
-
-
-                    }
-
-                    // passedFunction.render = "pause"; //THIS pauses rendering, it was causing issues with originBurst functions so I turned it off
-                    // console.log("going to function");
-                } else {
+               
 
                     window.serverResult = serverResult;
                     window.passedFunction = passedFunction;
@@ -245,7 +224,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
                     }
 
-                }
+                
             }
         }
 
@@ -266,26 +245,29 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
 
             if (data && runData == "serverBurst") {
+                ("data && runData")
                 if (window.originBurst?.[renderSchema.landing]?.[functionName]?.serverResult === undefined) {
 
                     let serverResult = serverCall(data, runData);
                     await serverResult;
-                    // alert("new data for" + functionName +JSON.stringify(window.serverResult));
+                    // ("new data for" + functionName +JSON.stringify(window.serverResult));
 
                     serverResult = window.serverResult;
                     runServerResult(serverResult)
 
                 } else {
 
+                    ("data && runData else")
 
 
                     serverResult = window.originBurst[renderSchema.landing][functionName].serverResult;
                     await serverResult;
-                    //alert("originburst data for" + functionName)
+                    //("originburst data for" + functionName)
                     runServerResult(serverResult)
 
                 }
                 async function runServerResult(serverResult) {
+                    ("runServerResult")
 
 
                     console.log("after serverCall for" + functionName);
@@ -298,8 +280,8 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
 
             }
             else {
-                //alert("no data")
-                //  console.log("at buildView for" + functionName);
+                //("no data")
+                  console.log("no data, at buildView for" + functionName);
                 await renderFunction(renderSchema, functionName, passedFunction, runFunction);
 
             }
@@ -336,7 +318,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                     window.originBurst[viewName] = { serverResult: resultData };
 
                 }
-                //     alert('ran server data from getData');
+                //     ('ran server data from getData');
                 await buildViewCallback(resultData);
 
 
@@ -349,7 +331,7 @@ window.childFunction = async function childFunction(renderSchema, rollCall, runR
                 // Use cached data
                 let resultData = window.originBurst[landingKey][viewName].serverResult;
 
-                // alert('ran originburst data from getData');
+                // ('ran originburst data from getData');
                 buildViewCallback(resultData);
             }
 

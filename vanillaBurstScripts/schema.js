@@ -80,7 +80,7 @@ window.vanillaConfig = function vanillaConfig(landing, passedConfig) {
           ...passedConfig
       }
   };
-  //alert(JSON.stringify(buildConfig[landing]));
+  //(JSON.stringify(buildConfig[landing]));
   return buildConfig[landing];
 };
 

@@ -1,19 +1,20 @@
 window.homeRequest = async function homeRequest(renderSchema, runFunction) {
 
-
+  
   runFunction = window.runFunction;
   await runFunction;
-
   if (runFunction) {
     
     rollCall = [
+      ...window.appShells,
+
       'home',
-      'appShell'
+
       //...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
     ];
 
-    await window.buildRollCall(renderSchema, rollCall, runFunction)
+    await window.buildRollCall(rollCall, renderSchema, runFunction)
+    window.freezeSchema();
 
-  }
-
+          }
 };

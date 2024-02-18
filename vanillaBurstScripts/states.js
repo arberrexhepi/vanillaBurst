@@ -14,7 +14,7 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
   stateTag = window.stateTag;
   stateTagPath = window.stateTagPath;
   loadParams = window.loadParams;
-  schema = window.schema;
+  //schema = window.schema;
 
 
 
@@ -29,14 +29,15 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
     console.log(`Preloading state: ${stateTag}`);
 
-    const scriptUrls = schema[stateTag].scripts;
+    const scriptUrls =  window.schema[stateTag].scripts;
     // TODO const externalScriptUrls = schema[stateTag].externalScriptUrls;
-    const preloaderUrl = schema[stateTag].preloader;
+    const preloaderUrl = window.schema[stateTag].preloader;
 
 
 
     //MAIN PROMISE
     function loadScriptAndRunFunction(scriptUrls, preloaderUrl) {
+      
       // Function to add script to the document's head
       function addScriptToHead(url) {
         // Check if the script tag with the given URL already exists
@@ -65,48 +66,44 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
 
         } else {
 
-          $.getScript(preloaderUrl, function (data, textStatus, jqxhr) {
-            if (textStatus === "success") {
-              addScriptToHead(preloaderUrl); // Add preloader script to head
-
-              window.preloaderAnimation();
-
-              // Then, load the other scripts
-              Promise.all(scriptUrls.map(url => {
-                return new Promise((resolve, reject) => {
-                  //const cacheBuster = Date.now(); in other wors cache can go here
-                  //url = url + '?v=' + cacheBuster;
-                  $.getScript(url, function (data, textStatus, jqxhr) {
-                    if (textStatus === "success") {
-
-
-                      addScriptToHead(url); // Add the successfully loaded script to head
-
-
-                      resolve(); // Resolve the promise for this URL
-                    } else {
-                      reject(new Error(`Failed to load script at ${url}`));
-                    }
-                  });
-                });
-              }))
-                .then(() => {
-                  // Check if window.render is a function
-                  if (typeof window.render === 'function') {
+          function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = () => resolve(script);
+                script.onerror = () => reject(new Error(`Failed to load script at ${url}`));
+                document.head.appendChild(script);
+            });
+        }
+        
+        function addScriptToHead(url) {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            document.head.appendChild(script);
+        }
+        
+        loadScript(preloaderUrl)
+            .then(() => {
+                addScriptToHead(preloaderUrl);
+                window.preloaderAnimation();
+        
+                // Then, load the other scripts
+                return Promise.all(scriptUrls.map(url => loadScript(url).then(() => addScriptToHead(url))));
+            })
+            .then(() => {
+                if (typeof window.render === 'function') {
                     window.ranScripts = true;
-
                     runState(); // Call runState() explicitly
                     handlePop();
-                    resolve(); // Resolve the outer promise
-                  } else {
-                    reject(new Error('window.render is not a function'));
-                  }
-                })
-                .catch(reject); // Reject the outer promise if any script fails to load
-            } else {
-              reject(new Error(`Failed to load preloader script at ${preloaderUrl}`));
-            }
-          });
+                } else {
+                    throw new Error('window.render is not a function');
+                }
+            })
+            .catch(error => {
+                console.error(error.message);
+            });
+        
         }
       });
     }
@@ -138,8 +135,8 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
     function stateParams(loadParams, tagParam) {
 
       //this resource is where the new schema from viewSchemas folder should come in
-      const resource = schema[tagParam].customFunctions[tagParam].dataSchema;
-      const resourceParent = schema[tagParam];
+      const resource =  window.schema[tagParam].customFunctions[tagParam].dataSchema;
+      const resourceParent =  window.schema[tagParam];
 
       if (resource && typeof resource === 'object' && Object.keys(resource).length > 0) {
 
@@ -187,7 +184,7 @@ async function stateDefine(stateTag, stateTagPath, loadParams, historyCount, sch
       return {
         stateTagName: stateTag,
         stateTagPath: stateTagPath,
-        stateTagScripts: schema[stateTag].scripts,
+        stateTagScripts:  window.schema[stateTag].scripts,
         stateTagLoadParams: loadParams,
         stateTagParams: renderSchema,
         stateCount: historyCount
@@ -258,8 +255,30 @@ window.renderView = async function renderView(renderSchema) {
     window.originBurst['signalBurst'] = { [history.state.stateTagName]: { 'origin': history.state.stateTagName, 'signal': 'load', 'signalResult': undefined } }
     // history.state['signalBurst'] = {[history.state.stateTagName]:{'origin': history.state.stateTagName, 'signal': 'load', 'signalResult':undefined}}
   }
-}
+ 
 
+}  
+
+window.freezeSchema = async function freezeSchema(){
+
+
+await window.appShellReady
+
+if(window.appShellReady === undefined){
+
+}
+else{
+  Object.keys(renderSchema).forEach(key => {
+           Object.defineProperty(window, key, {
+               value: renderSchema[key],
+               writable: false,
+               configurable: false
+           });
+       });
+       window.deepFreeze(renderSchema)
+
+}
+}
 
 
 //end test here

@@ -5,7 +5,6 @@ window.baseUrl = "/";
 window.renderComplete = "false";
 
 window.vanillaApp = function vanillaApp(baseUrl) {
-  window.$ = jQuery;
 
   window.onload = function() {    // Load script helper function
     console.log('.');
@@ -17,25 +16,28 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     console.log('.');
 
     window.loadScript = function loadScript(url) {
-      return fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then(scriptContent => {
-          eval(scriptContent);
-        })
-        .catch(error => {
-          console.error('Failed to load script:', url, error);
-        });
-    };
-
+      return new Promise((resolve, reject) => {
+          // Create a new script element
+          const script = document.createElement('script');
+  
+          // Set the script source (URL)
+          script.src = url;
+  
+          // Define what happens when the script loads
+          script.onload = () => resolve(script);
+  
+          // Define what happens in case of an error
+          script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+  
+          // Add the script to the document (this starts the loading process)
+          document.head.appendChild(script);
+      });
+  };
+  
     // Function to load initial scripts and then run promise1
     function loadInitialScripts() {
       return Promise.all([
-        window.loadScript(`${window.baseUrl}globals/config.js`)
+        window.loadScript(`${window.baseUrl}globals/config.js`),
       ]).then(() => {
         return window.schemaParts; // Assuming schemaParts is defined and returned here
       }).catch(error => {
@@ -74,6 +76,7 @@ window.vanillaApp = function vanillaApp(baseUrl) {
         if (typeof window.config === 'function') {
           const schema = window.config();
           window.schema = schema;
+         
           promise2(schema); // Call promise2 with the schema
         } else {
           console.error("window.config is not a function.");
@@ -107,6 +110,8 @@ window.vanillaApp = function vanillaApp(baseUrl) {
     // Array of scripts to be used in the application
     window.vanillaBurstScripts = [
       //window.baseUrl + 'globals/loader.js',
+     // window.baseUrl + 'jquery-3.7.1.min.js',
+      window.baseUrl + 'vendors/purify.min.js',
       window.baseUrl + 'globals/config.js',
       window.baseUrl + 'vanillaBurstScripts/serverRender.js',
       window.baseUrl + 'vanillaBurstScripts/singlePromise.js',
@@ -134,3 +139,12 @@ window.vanillaApp = function vanillaApp(baseUrl) {
 };
 
 window.vanillaApp(window.baseUrl);
+
+window.deepFreeze = function deepFreeze(object) {
+  Object.getOwnPropertyNames(object).forEach(prop => {
+    if (object[prop] !== undefined && typeof object[prop] === 'object') {
+      deepFreeze(object[prop]);
+    }
+  });
+  return Object.freeze(object);
+}

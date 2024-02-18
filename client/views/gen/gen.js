@@ -1,32 +1,26 @@
-window.gen = async function gen(renderSchema, originBurst, runFunction, appShellReady) {
+function gen() {
 
-    if (window.runFunction === "functionBurst") {
-        let htmlPath = 'client/views/gen/components/';
-        let cssPath = 'client/views/gen/components/';
 
- 
+          
 
-            window.miniDOM(window.genConfig(), 'gen', 'gen', genView);
+             window.genView = function genView() {
+                let button = document.getElementById('create-config');
 
-            async function genView() {
-
-                window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
-
-                window.componentDOM(htmlPath + 'parent-node.html', cssPath + '', 'parent-node', 'parent-node');
+                button.addEventListener('click', function () {
+                    window.nodeConfigBuild();                
+                });
+            
+                
 
             }
 
-    } else {
-        console.warn("gen view: runFunction not set, halting execution.");
-    }
+  
 
 }
 
 
 //move this to its own functionFile, this gen view might get more complex
-window.nodeConfigBuild = function nodeConfigBuild(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
+window.nodeConfigBuild = function nodeConfigBuild() {
 
     // Find the container for the draggable nodes
     const canvas = document.querySelector('#vanillaFlowCanvas');

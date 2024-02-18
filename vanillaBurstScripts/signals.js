@@ -53,3 +53,7 @@ window.getSignal = function getSignal(signalSend){
   return signalSend;
 }
 
+window.onpopstate = function(event) {
+  window.signalBurst('load', ['getSignal']);
+  window.runBurst = 'functionBurst';
+};

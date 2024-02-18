@@ -1,21 +1,13 @@
-window.home = async function home() {
+function home() {
 
-    if (window.runFunction === 'functionBurst') {
-        window.domFunction='home'
+   
+           window.homeView = async function homeView(){
 
-
-            window.miniDOM(window.homeConfig(), 'home', 'home', homeView);
-
-
-        function homeView() {
-            window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
-
-
+            
+            let button = document.getElementById('docbutton');
+            button.addEventListener('click', function () {
+                window.routeCall('documentation');
+            });
         }
 
-
-
-    } else {
-        console.warn("home view: runFunction not set, halting execution.");
-    }
 }

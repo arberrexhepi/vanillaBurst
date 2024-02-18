@@ -1,24 +1,18 @@
 window.genRequest = async function genRequest(renderSchema, runFunction, levelsPackage) {
-    runFunction = window.runFunction;
+  runFunction = window.runFunction;
   await runFunction;
-
   if (runFunction) {
-
+    
     rollCall = [
-      
-       'gen',
-       'appShell',
-      // ...levelsPackage
-       ];
+      ...window.appShells,
 
-       //await window.appShellReady
+      'gen',
 
+      //...window.appviewPackage //use ... array spread for if there are actual multiple functions in the package
+    ];
 
-       window.buildRollCall(rollCall, renderSchema, runFunction)
-       }else{
-        console.log("genRequest didn't run")
-       }
- 
-   
-   };
-   
+    await window.buildRollCall(rollCall, renderSchema, runFunction)
+    window.freezeSchema();
+
+          }
+};

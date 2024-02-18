@@ -1,148 +1,227 @@
-// window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
-//     try {
-//         // Function to load and apply CSS
-//         const loadCSS = async (path) => {
-//             let cssCacheKey = 'cachedCSS_' + path;
-//             let css = localStorage.getItem(cssCacheKey);
-
-//             if (!css) {
-//                 const cssResponse = await fetch(path);
-//                 css = await cssResponse.text();
-//                 localStorage.setItem(cssCacheKey, css);
-//             }
-
-//             if (!document.head.querySelector(`style[data-css-path="${path}"]`)) {
-//                 const style = document.createElement('style');
-//                 style.setAttribute('data-css-path', path);
-//                 style.textContent = css;
-//                 document.head.appendChild(style);
-//             }
-//         };
-
-//         // Function to load HTML
-//         const loadHTML = async (path) => {
-//             let htmlCacheKey = 'cachedHTML_' + path;
-//             let htmlContent = localStorage.getItem(htmlCacheKey);
-
-//             if (!htmlContent) {
-//                 const htmlResponse = await fetch(path);
-//                 htmlContent = await htmlResponse.text();
-//                 localStorage.setItem(htmlCacheKey, htmlContent);
-//             }
-
-//             return htmlContent;
-//         };
-
-//         // Load and apply CSS if provided
-//         if (cssPath) {
-//             await loadCSS(cssPath);
-//         }
-
-//         // Load HTML and call callback
-//         const htmlContent = await loadHTML(htmlPath);
-//         if (typeof vanillaDOMcallback === 'function') {
-//             vanillaDOMcallback(htmlContent);
-//         }
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
-// };
-
-window.vanillaDOM = async function ({ htmlPath, cssPath }, vanillaDOMcallback) {
+async function vanillaDOM({ htmlPath, cssPath }, vanillaDOMcallback) {
     try {
-        const htmlResponse = await fetch(htmlPath);
-        const htmlText = await htmlResponse.text();
+        const getContent = async (path) => {
+            const response = await fetch(path);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const content = await response.text();
+            return content;
+        };
 
-        // Use DOMParser to parse the HTML text
+        // Get HTML content
+        const htmlText = await getContent(htmlPath);
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
-        const bodyContent = doc.body.innerHTML;
+        const contentToUse = doc.body.innerHTML;
 
-        // Call the callback function with the body's HTML content
         if (typeof vanillaDOMcallback === 'function') {
-            vanillaDOMcallback(bodyContent);
+            vanillaDOMcallback(contentToUse);
         }
 
+        // Apply CSS content using <link> tag
         if (cssPath) {
-            const cssResponse = await fetch(cssPath);
-            const css = await cssResponse.text();
-            const style = document.createElement('style');
-            style.textContent = css;
-            document.head.appendChild(style);
+            let linkTag = document.head.querySelector(`link[data-css-path="${cssPath}"]`);
+            if (!linkTag) {
+                linkTag = document.createElement('link');
+                linkTag.setAttribute('rel', 'stylesheet');
+                linkTag.setAttribute('href', cssPath);
+                linkTag.setAttribute('data-css-path', cssPath);
+                document.head.appendChild(linkTag);
+            }
         }
     } catch (error) {
         console.error('Error:', error);
     }
-};
+}
+
+
 
 
 async function miniDOM(domConfig, domFunction, originFunction, initView) {
+    let thisConfig = domConfig;
+
+    function checkAndSanitizeHTML(htmlString) {
+        const cleanHTML = DOMPurify.sanitize(htmlString);
+
+        if (cleanHTML !== htmlString) {
+            // DOMPurify has stripped some content
+            console.log(cleanHTML);
+            // Redirect to a warning page or handle the threat accordingly
+           // window.routeCall('warning')
+        }
+
+        return cleanHTML;
+    }
+
     let functionFile, htmlPath, cssPath, targetDOM, passedFunction;
-    
-    console.log(window.domFunction);
 
     // Determine the function to use
-    passedFunction = domConfig.customFunctions?.[domFunction] ?? domConfig[domFunction];
+    passedFunction = renderSchema.customFunctions?.[domFunction] ?? domConfig[domFunction];
 
-    console.log("the passed" + JSON.stringify(passedFunction));
-  
     if (passedFunction.functionFile) {
         functionFile = passedFunction.functionFile;
         htmlPath = passedFunction.htmlPath;
         cssPath = passedFunction.cssPath;
         targetDOM = passedFunction.targetDOM;
+        
     } else {
         console.error("Function file not found");
         return;
     }
 
     // Check for cached content
-    if (window.originBurst?.[originFunction]?.[functionFile]?.htmlResult !== undefined) {
-        document.getElementById(targetDOM).innerHTML = window.originBurst[originFunction][functionFile].htmlResult;
-        initView();
-    } else {
-        continueDOM(htmlPath, cssPath);
-    }
+    return new Promise((resolve, reject) => {
+        // Check for cached content
+            // Sanitize the HTML content
+            ('has burst')
+            let safeHTML = checkAndSanitizeHTML(window.originBurst[originFunction][functionFile].htmlResult);
+
+            // Get the target element or create it if it doesn't exist
+            let targetElement = document.getElementById(targetDOM);
+            if (!targetElement) {
+                targetElement = document.createElement('div');
+                targetElement.id = targetDOM;
+                document.body.appendChild(targetElement);
+            }
+
+            // Assign sanitized HTML to innerHTML
+            targetElement.innerHTML = safeHTML;
+       
+            continueDOM(htmlPath, cssPath, targetDOM).then(() => {
+                resolve('domReady'); // Resolve the Promise with 'domReady'
+            }).catch(error => {
+                reject(error); // Reject the Promise with an error
+            });
+     
+    });
 
     // Function to continue DOM processing
-    async function continueDOM(htmlPath, cssPath) {
-        window.vanillaDOM({ htmlPath, cssPath }, async (htmlContent) => {
+    async function continueDOM(htmlPath, cssPath, targetDOM) {
+        ('defined')
 
-            document.getElementById(targetDOM).innerHTML = htmlContent;
-            
-            // Cache the result if not already cached
-            window.originBurst = window.originBurst || {};
-            window.originBurst[originFunction] = window.originBurst[originFunction] || {};
-            window.originBurst[originFunction][functionFile] = window.originBurst[originFunction][functionFile] || {};
-            window.originBurst[originFunction][functionFile].htmlResult = htmlContent;
-            
-            initView();
+        return new Promise((resolve, reject) => {
+            vanillaDOM({ htmlPath, cssPath }, async (htmlContent) => {
+                // Sanitize the HTML content
+                let safeHTML = checkAndSanitizeHTML(htmlContent);
+
+                // Get the target element or create it if it doesn't exist
+                let targetElement = document.getElementById(targetDOM);
+                if (!targetElement) {
+                    targetElement = document.createElement('div');
+                    targetElement.id = targetDOM;
+                    document.body.appendChild(targetElement);
+                }
+
+                // Assign sanitized HTML to innerHTML
+                targetElement.innerHTML = safeHTML;
+
+                // Cache the result if not already cached
+                if (window.originBurst?.[originFunction]?.[functionFile]?.htmlResult === undefined) {
+
+                window.originBurst = window.originBurst || {};
+                window.originBurst[originFunction] = window.originBurst[originFunction] || {};
+                window.originBurst[originFunction][functionFile] = window.originBurst[originFunction][functionFile] || {};
+                window.originBurst[originFunction][functionFile].htmlResult = safeHTML;
+                //window.serverResult[targetDOM+'Result'] = window.originBurst[originFunction][functionFile].htmlResult;
+                }
+                if(renderSchema.customFunctions[originFunction]?.subDOM){
+                    subDOM(functionFile);
+                    window[functionFile+'View']();
+
+                    }
+                resolve(); // Resolve the Promise
+            });
         });
+    }
+
+    function runInitView() {
+        if (document.readyState !== 'loading') {
+            initView();
+        } else {
+            document.addEventListener('DOMContentLoaded', initView);
+        }
     }
 }
 
-window.componentDOM = function componentDOM(htmlPath, cssPath, targetDOM){
-    window.vanillaDOM({ htmlPath, cssPath },async (htmlContent) => {
-        if(targetDOM){
-            document.getElementById(targetDOM).innerHTML = htmlContent;
 
-        }
+// async function componentDOM(htmlPath, cssPath, targetDOM) {
+//     await window.vanillaDOM({ htmlPath, cssPath }, async (htmlContent) => {
+//         let targetElement = document.getElementById(targetDOM);
+        
+//         // If the targetDOM doesn't exist, create it
+//         if (!targetElement) {
+//             targetElement = document.createElement('div');
+//             targetElement.id = targetDOM;
+//             document.body.appendChild(targetElement);
+//         }
 
-    })
+//         // Sanitize the htmlContent before setting it
+//         const cleanHTML = DOMPurify.sanitize(htmlContent);
+//         targetElement.innerHTML = cleanHTML;
+//     })
+// }
 
+
+
+//testing a new version of componentDOM
+
+
+
+
+//promises the dom when building it in the functionFile
+// ie loadDOM(window.navConfig(), 'nav', 'nav', functionView);
+async function loadDOM(config, domFunction, originFunction, initView) {
+    console.log(domFunction)
+    try {
+        const domReady = await window.miniDOM(config, domFunction, originFunction, initView);
+        console.log(domReady); // Logs 'domReady'
+    } catch (error) {
+        console.error(error);
+    }
 }
 
+async function subDOM(functionFile) {
+    let subDOM = window.renderSchema?.customFunctions[functionFile]?.subDOM;
 
-///a dom shortcut 
-window.checkDOM = function checkDOM(targetDOM){
+    for (let component in subDOM) {
+        let { htmlDir: htmlPath, cssDir: cssPath, htmlTarget: targetDOM } = subDOM[component];
+
+        try {
+            await window.vanillaDOM({ htmlPath, cssPath }, async (htmlContent) => {
+                if (targetDOM) {
+                    let targetElement = document.getElementById(targetDOM);
+                    
+                    // If the targetDOM doesn't exist, create it
+                    if (!targetElement) {
+                        targetElement = document.createElement('div');
+                        targetElement.id = targetDOM;
+                        document.body.appendChild(targetElement);
+                    }
+
+                    // Clear the targetElement's content before setting its innerHTML
+                    targetElement.innerHTML = '';
+                    targetElement.innerHTML = htmlContent;
+                    window[functionFile+'View']();
+                }
+            });
+            console.log('domReady'); // Logs 'domReady'
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+///a dom shortcut returns TRUE OR FALSE
+async function checkDOM(targetDOM) {
     let appShell = document.getElementById(targetDOM);
-    if(appShell.length !==undefined){
+    if (appShell.length !== undefined) {
         checkDOM = window.originBurst[thestate][thestate].serverResult;
-        if (checkDOM){
+        if (checkDOM) {
             hasDOM = true;
             return hasDOM
         }
-    }else{
+    } else {
         hasDOM = false;
         return hasDOM
     }

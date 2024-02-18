@@ -37,12 +37,24 @@ window.homeConfig = function homeConfig(sharedParts) {
             'role': 'parent',
             'dir': 'client/views/home/',
             'functionFile': 'home',
-            'render': 'pause',
+            'render': 'render',
             'originBurst': 'home',
             'htmlPath': 'client/views/home/home.html',
             'cssPath': 'client/views/home/home.css',
-            'targetDOM':'vanillaBurst',
+            'targetDOM':'viewbox',
             'seo': seo,
+            'subDOM':{
+                'button':{
+                'htmlDir':'client/components/buttons/docbutton.html',
+                'cssDir':'client/components/buttons/buttons.css',
+                'htmlTarget':'button-wrapper',
+                'id':'docbutton',
+                'class':'button round'
+              },
+
+              }
+            //            //window.componentDOM('client/components/buttons/docbutton.html', 'client/components/buttons/buttons.css', 'button-wrapper', 'docbutton')
+
         },
         ...sharedParts,
         ...plugins

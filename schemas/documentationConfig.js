@@ -1,4 +1,4 @@
-window.documentationConfig = function documentationConfig() {
+window.documentationConfig = function documentationConfig(sharedParts) {
   
   let documentationConfig = {};
 
@@ -14,6 +14,8 @@ window.documentationConfig = function documentationConfig() {
         'targetDOM':'viewbox',
    
       },
+      ...sharedParts
+
     }
 
     documentationConfig = {...vanillaConfig('documentation', passedConfig)}

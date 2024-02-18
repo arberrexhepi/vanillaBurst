@@ -2,6 +2,9 @@
 RewriteEngine On
 
 # Ensure mod_rewrite is available
+<IfModule mod_headers.c>
+    # Header set Content-Security-Policy "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
+</IfModule>
 <IfModule mod_rewrite.c>
 
     RewriteCond %{REQUEST_URI} ^/$

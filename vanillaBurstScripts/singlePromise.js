@@ -17,6 +17,7 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
         if (customFunctionName && customFunction.render === "burst") {
             const existingScript = document.querySelector(`head script[src="${customFunctionUrl}"]`);
             if (!existingScript) {
+
                 // Script not found, create and append the script tag to the head
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
@@ -42,17 +43,48 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
     }
 
     async function executeFunction(customFunctionName) {
-       // alert(customFunctionName)
-//alert('executing function customFunctionName')
+//('executing function customFunctionName')
         if (typeof window[customFunctionName] === 'function') {
             vanillaShortcuts(customFunctionName, passedFunction);
+            initView = window[customFunctionName](renderSchema, passedFunction, serverResult, originBurst);
 
+             // window[customFunctionName](renderSchema, passedFunction, serverResult, originBurst);
             if (serverResult) {
                // console.log(JSON.stringify(serverResult));
                 window.serverResult = serverResult;
-                await window[customFunctionName](renderSchema, passedFunction, serverResult, originBurst);
+                new Promise((resolve, reject) => {
+                    resolve(window[customFunctionName](renderSchema, passedFunction, originBurst));
+                }).then(() => {
+                    if(renderSchema.customFunctions[customFunctionName] && renderSchema.customFunctions[customFunctionName].role !== 'rollCall' && renderSchema.customFunctions[customFunctionName].targetDOM){
+                        loadDOM( window[customFunctionName+'Config'](), customFunctionName, renderSchema.landing, window[customFunctionName]);
+                    };
+                    if(renderSchema.customFunctions[customFunctionName]?.subDOM){
+                    subDOM(customFunctionName);
+
+                    }
+                  //  window[customFunctionName+'View'];
+
+                }).catch(error => {
+                    console.error(error);
+                });
             } else {
-                await window[customFunctionName](renderSchema, passedFunction, originBurst);
+
+                new Promise((resolve, reject) => {
+                    resolve(window[customFunctionName](renderSchema, passedFunction, originBurst));
+                     
+                }).then(() => {
+                    if(renderSchema.customFunctions[customFunctionName] && renderSchema.customFunctions[customFunctionName].role !== 'rollCall' && renderSchema.customFunctions[customFunctionName].targetDOM){
+                        loadDOM( window[customFunctionName+'Config'](),customFunctionName, renderSchema.landing, window[customFunctionName]);
+                    };
+                    if(renderSchema.customFunctions[customFunctionName]?.subDOM){
+                    subDOM(customFunctionName);
+                    
+                    }
+                  //  window[customFunctionName+'View']();
+
+                }).catch(error => {
+                    console.error(error);
+                });
                 
             }
               
@@ -61,7 +93,7 @@ window.singlePromise = async function singlePromise(renderSchema, passedFunction
             
         } else {
        
-            console.warn(`Function ${customFunctionName} is not defined on the window object`);
+            console.warn(`Function ${customFunctionName} is not defined on the window object, Expected if first load`);
         }
       
     }

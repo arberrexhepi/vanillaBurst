@@ -16,12 +16,15 @@ window.baseUrlStyles = "/css/styles/";
 // Define the routeParts based on the views
 window.schemaParts = {
   'appShell': false,
-  'home': 'appShell',
-  'documentation':'appShell',
-  'gen': 'appShell', //
+  'nav':false,
+  'home': ['appShells'],
+  'documentation':['appShells'],
+  'warning':['appShells'],
+  'gen': ['appShells'], //
   //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage 
   // Add additional levels as needed
 };
 
 
-//window.appShell = ['appShell']
+
+window.appShells = ['appShell', 'nav'];

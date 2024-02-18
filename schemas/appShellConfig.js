@@ -9,12 +9,18 @@ window.appShellConfig = function appShellConfig(burstTo) {
             'dir': 'client/views/appShell/',
             'functionFile': 'appShell',
             'render': 'pause',
-            'htmlPath': 'client/views/app/appShell.html',
-            'cssPath': 'client/views/app/appShell.css',
-            'targetDOM':'appContainer',
             'originBurst': {
                 'namespace':burstTo
             },
+            'footer':{
+                'button':{
+                'htmlDir':'client/components/footer/footer.html',
+                'cssDir':'client/components/footer/footer.css',
+                'htmlTarget':'footer',
+                'id':'footer',
+                'class':'footer'
+              },
+            }
         }
    
         }

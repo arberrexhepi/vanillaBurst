@@ -1,6 +1,6 @@
 //only sets 1 route (the one on initial path), and is never called again until a full page reload
 document.addEventListener('load', function(){
-    //alert('hi')
+    //('hi')
 })
 //only sets 1 route (the one on initial path), and is never called again until a full page reload
 function getRoute() {
@@ -8,7 +8,7 @@ function getRoute() {
     const searchParams = new URLSearchParams(window.location.search);
     const burstRoute = searchParams.get('burst');
 
-    if (path === "/" + appRoute && !burstRoute) {
+    if (path === "/" && !burstRoute) {
         return appRoute;
     } else if (burstRoute) {
         return burstRoute;
@@ -64,6 +64,7 @@ function routeCall(route) {
         stateStatus = "done";
         loadParams = {};
         window.stateDefine(stateTag, stateTagPath, loadParams);
+      
       
     
 }
