@@ -1,18 +1,7 @@
-const mode = "dev"; //or "live"
+const mode = "live"; //or "live"
 
 const devBaseUrl = "/";
 const liveBaseUrl = "/";
-
-switch (mode) {
-  case "dev": {
-    baseUrl = devBaseUrl;
-    break;
-  }
-  case "live": {
-    baseUrl = liveBaseUrl;
-    break;
-  }
-}
 
 try {
   if (window.frozenVanilla === undefined) {
@@ -88,6 +77,19 @@ const domainUrl = window.location.origin + "/";
 window.frozenVanilla("isFrozen", isFrozen);
 
 ///////
+
+switch (mode) {
+  case "dev": {
+    baseUrl = devBaseUrl;
+    break;
+  }
+  case "live": {
+    baseUrl = liveBaseUrl;
+    break;
+  }
+}
+
+window.frozenVanilla("mode", mode);
 
 window.frozenVanilla("baseUrl", baseUrl);
 

@@ -4,7 +4,19 @@ window.frozenVanilla("defaultAppRoute", "homeview");
 
 window.appRoute = window.defaultAppRoute;
 
-window.frozenVanilla("domainUrl", "http://vanillaburstgame");
+switch (window.mode) {
+  case "dev": {
+    window.frozenVanilla("domainUrl", "http://vanillaburstgame");
+    break;
+  }
+  case "live": {
+    window.frozenVanilla(
+      "domainUrl",
+      "http://https://vanillaburstgame.onrender.com"
+    );
+    break;
+  }
+}
 
 window.frozenVanilla("fetchDomainUrl", "");
 
