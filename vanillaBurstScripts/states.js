@@ -48,7 +48,6 @@ window.frozenVanilla(
       const scriptUrls = window.schema[stateTag].scripts;
       const preloaderUrl = window.schema[stateTag].preloader;
       const nonceString2 = window.nonceBack(); // Fetch nonceString2 once
-      alert(nonceString2);
       function loadScript(url, nonceString2) {
         return new Promise((resolve, reject) => {
           let script = document.querySelector(`script[src="${url}"]`);
