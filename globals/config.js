@@ -10,10 +10,7 @@ switch (window.mode) {
     break;
   }
   case "live": {
-    window.frozenVanilla(
-      "domainUrl",
-      "http://https://vanillaburstgame.onrender.com"
-    );
+    window.frozenVanilla("domainUrl", "https://vanillaburstgame.onrender.com");
     break;
   }
 }
