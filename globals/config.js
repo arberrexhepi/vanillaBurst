@@ -32,13 +32,62 @@ window.frozenVanilla("baseUrlStyles", "/css/styles/");
 window.frozenVanilla(
   "schemaParts",
   Object.freeze({
-    homeview: ["appShells"],
+    homeview: ["homeViewPack"],
     nav: false,
+    heroHeader: false,
     documentation: ["appShells"],
     gen: ["appShells"], //
   })
 );
 window.frozenVanilla("appShells", ["nav"]);
+window.frozenVanilla("homeViewPack", ["nav", "heroHeader"]);
 
 //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
 // Add additional levels as needed
+
+window.frozenVanilla("trustedSources", {
+  //"default-src": ["'self'"],
+  "img-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  "media-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  "style-src": [window.domainUrl],
+  "object-src": ["'none'"],
+  "font-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  "connect-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+    window.domainUrl, // Add window.domainUrl here
+  ],
+  "manifest-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  "worker-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  "child-src": [
+    window.domainUrl,
+    "https://arber.inc",
+    "https://storage.googleapis.com",
+  ],
+  // "frame-ancestors": ["'none'"], // Not supported in <meta> tag
+  // "form-action": ["'none'"],
+  // "base-uri": ["'self'"],
+});
+
+window.setTrustedSources(window.trustedSources);

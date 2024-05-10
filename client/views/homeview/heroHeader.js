@@ -1,4 +1,4 @@
-window.frozenVanilla("homeview", function (vanillaPromise) {
+window.frozenVanilla("heroHeader", function (vanillaPromise) {
   console.log(vanillaPromise.this + " ran");
   // let route = "documentation";
   // let button = document.getElementById("mydocbutton2");
