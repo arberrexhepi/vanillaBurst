@@ -105,7 +105,25 @@ window.frozenVanilla(
           }
 
           console.log("htmlResult:", htmlResult); // Check htmlResult
-          targetElement.innerHTML = htmlResult;
+
+          // Parse the HTML string into a DOM structure
+          let parser = new DOMParser();
+          let doc = parser.parseFromString(htmlResult, "text/html");
+
+          // Add a nonce to img tags
+          let imgTags = doc.getElementsByTagName("img");
+          for (let img of imgTags) {
+            let nonceString = window.nonce();
+            window.nonceBack(nonceString);
+            img.setAttribute("nonce", nonceString);
+          }
+
+          // Serialize the DOM structure back into a string
+          let serializer = new XMLSerializer();
+          let serializedHTML = serializer.serializeToString(doc);
+
+          // Set the innerHTML of the target element
+          targetElement.innerHTML = serializedHTML;
 
           let signalDOMUpdate = signalBurstDOM(originFunction, functionFile);
           // Cache the result

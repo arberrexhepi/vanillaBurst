@@ -14,6 +14,18 @@ window.frozenVanilla(
 
         return result;
       }
+
+      function waitForElement(id, callback) {
+        const interval = setInterval(() => {
+          const element = document.getElementById(id);
+          console.log("checking");
+          if (element) {
+            clearInterval(interval);
+            callback(element);
+          }
+        }, 1);
+      }
+
       new Promise((resolve, reject) => {
         let flattenedvanillaElement = flattenvanillaElement(components);
 
@@ -102,6 +114,7 @@ window.frozenVanilla(
           if (viewContainer.contains(targetContainer)) {
             // If the targetElement doesn't exist, create it
             let targetElement = document.getElementById(id);
+
             if (!targetElement) {
               let sanitizedChildren = window.sanitizeVanillaDOM(children);
 
@@ -111,7 +124,7 @@ window.frozenVanilla(
                   sanitizedChildren,
                   "text/html"
                 );
-                const nonceString2 = getNonce();
+                const nonceString2 = window.nonceBack();
                 let elementBuild = document.createElement("div");
                 elementBuild.id = id;
                 elementBuild.class = className;
@@ -128,18 +141,33 @@ window.frozenVanilla(
               // Get a reference to the container
               let containerElement = document.getElementById(container);
 
-              // Append the new element to the container
-              containerElement.appendChild(elementBuild);
-              window.cssFileLoader(cssPath);
+              waitForElement(container, (containerElement) => {
+                // If the containerElement has no child nodes, or if it doesn't contain a child with the same id as elementBuild, append elementBuild
+                if (
+                  !containerElement.hasChildNodes() ||
+                  !containerElement.querySelector(`#${elementBuild.id}`)
+                ) {
+                  containerElement.append(elementBuild);
+                }
+
+                window.cssFileLoader(cssPath);
+              });
             } else {
               // If the targetElement does exist, append the children to it
               let sanitizedChildren = window.sanitizeVanillaDOM(children);
               let parser = new DOMParser();
               let doc = parser.parseFromString(sanitizedChildren, "text/html");
 
+              // Create a document fragment
+              let fragment = document.createDocumentFragment();
+
+              // Append the children to the fragment
               while (doc.body.firstChild) {
-                targetElement.appendChild(doc.body.firstChild);
+                fragment.appendChild(doc.body.firstChild);
               }
+
+              // Replace the innerHTML of the targetElement with the innerHTML of the fragment
+              targetElement.innerHTML = fragment.innerHTML;
 
               //CACHE IT
 

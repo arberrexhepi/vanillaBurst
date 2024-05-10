@@ -27,32 +27,40 @@ window.frozenVanilla(
           return response.text();
         })
         .then((scriptContent) => {
+          const scriptId = customFunctionName + "_vanilla";
+
+          // Remove existing script tag if it exists
+          const existingScript = document.getElementById(scriptId);
+          if (existingScript) {
+            existingScript.remove();
+          }
+
           const script = document.createElement("script");
           script.type = "text/javascript";
           let nonceString = window.nonceBack();
 
-          console.log("nonceString:", nonceString); // Log the nonce
-          // Get the CSP from the meta tag
-          const csp = document.querySelector(
-            'meta[http-equiv="Content-Security-Policy"]'
-          ).content;
+          // console.log("nonceString:", nonceString); // Log the nonce
+          // // Get the CSP from the meta tag
+          // const csp = document.querySelector(
+          //   'meta[http-equiv="Content-Security-Policy"]'
+          // ).content;
           // Extract the nonce from the CSP
-          const metaNonce = csp.match(/'nonce-(.*?)'/)[1];
-          console.log("meta nonce:", metaNonce); // Log the meta nonce
+          //const metaNonce = csp.match(/'nonce-(.*?)'/)[1];
+          // console.log("meta nonce:", metaNonce); // Log the meta nonce
           script.setAttribute("nonce", nonceString);
           script.text = scriptContent;
-          script.id = customFunctionName + "_vanilla";
+          script.id = scriptId;
           document.head.appendChild(script);
 
           console.log("script nonce:", script.getAttribute("nonce")); // Log the script's nonce
 
           // Get the CSP from the meta tag
-          const cspAfter = document.querySelector(
-            'meta[http-equiv="Content-Security-Policy"]'
-          ).content;
-          // Extract the nonce from the CSP
-          const metaNonceAfter = cspAfter.match(/'nonce-(.*?)'/)[1];
-          console.log("meta nonce:", metaNonceAfter); // Log the meta nonce
+          // const cspAfter = document.querySelector(
+          //   'meta[http-equiv="Content-Security-Policy"]'
+          // ).content;
+          // // Extract the nonce from the CSP
+          // const metaNonceAfter = cspAfter.match(/'nonce-(.*?)'/)[1];
+          // console.log("meta nonce:", metaNonceAfter); // Log the meta nonce
 
           if (
             passedFunction.dataSchema &&
@@ -84,7 +92,7 @@ window.frozenVanilla(
               customFunctionName
             ].htmlResult = domHtmlResult;
           }
-          console.log(JSON.stringify(vanillaPromise));
+          // console.log(JSON.stringify(vanillaPromise));
           resolve(vanillaPromise);
         })
         .catch((error) => {

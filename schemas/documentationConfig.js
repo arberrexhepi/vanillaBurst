@@ -14,11 +14,11 @@ window.frozenVanilla("documentationConfig", function (sharedParts) {
       components: {
         myButtonName: {
           dir: "buttons/",
-          id: "docbutton",
+          id: "genbutton",
           container: "gen-button_wrapper",
           className: "button round",
           children: `
-          <button class="mygenbutton" data-route="gen">View Documentation</button>
+          <button class="mygenbutton" data-route="gen">Go to the Config Builder</button>
             `,
           eventHandlers: "submit:preventDefault",
         },

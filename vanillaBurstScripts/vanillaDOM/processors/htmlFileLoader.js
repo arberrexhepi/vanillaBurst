@@ -2,13 +2,28 @@ window.frozenVanilla(
   "htmlFileLoader",
   async function ({ htmlPath, cssPath }, DOMFileLOADcallback) {
     // Centralized nonce management
-    function getNonce() {
-      let nonceString = window.nonce();
-      window.nonceBack(nonceString);
-      return nonceString;
-    }
 
     try {
+      // Modify the connect-src directive in CSP to include htmlPath
+      // const docPath = window.domainUrl + baseUrl + htmlPath;
+      // if (
+      //   window.CSP &&
+      //   window.CSP["connect-src"] &&
+      //   !window.CSP["connect-src"].includes(docPath)
+      // ) {
+      //   window.CSP["connect-src"].push(docPath);
+      //   let metaTag = document.querySelector(
+      //     'meta[http-equiv="Content-Security-Policy"]'
+      //   );
+      //   if (metaTag) {
+      //     let cspString = "";
+      //     for (let directive in window.CSP) {
+      //       cspString += `${directive} ${window.CSP[directive].join(" ")}; `;
+      //     }
+      //     metaTag.setAttribute("content", cspString.trim());
+      //   }
+      // }
+
       const getContent = async (path) => {
         const response = await fetch(path);
         if (!response.ok) {
@@ -19,7 +34,7 @@ window.frozenVanilla(
       };
 
       // Get HTML content
-      const nonceString = getNonce();
+      const nonceString = window.nonceBack();
 
       const htmlText = await getContent(htmlPath);
       const parser = new DOMParser();
@@ -44,7 +59,6 @@ window.frozenVanilla(
       }
 
       // Apply nonce to meta and script tags in the main document
-      window.nonceBack(nonceString);
 
       // Apply CSS content using <link> tag
       window.cssFileLoader(cssPath);
