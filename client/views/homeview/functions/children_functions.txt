@@ -1,0 +1,2 @@
+this is where you create js files that attach to the parent config, they are not nested,
+so long as they don'thave role:parent they will behave as children of the view

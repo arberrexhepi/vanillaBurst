@@ -1,75 +1,95 @@
-function gen() {
+window.frozenVanilla("gen", function (vanillaPromise) {
+  console.log(vanillaPromise.this + " ran");
 
+  //let button = document.getElementById("create-config");
 
-          
+  let subDomClicks = 0;
+  $(".addSubDOM").on("click", function (e) {
+    subDomClicks++;
+    e.preventDefault();
 
-             window.genView = function genView() {
-                let button = document.getElementById('create-config');
+    let newSubDom = $(this).siblings(".subDOMTemplate").first().clone();
+    if (subDomClicks === 1) {
+      $(this).siblings(".subDOMTemplate").first().css("display", "flex");
+    } else {
+      newSubDom.insertBefore($(this).siblings(".subDOMTemplate").first());
+      newSubDom.css("display", "flex");
+    }
+  });
 
-                button.addEventListener('click', function () {
-                    window.nodeConfigBuild();                
-                });
-            
-                
+  $("#create-config").on("click", function (e) {
+    e.preventDefault();
+    nodeConfigBuild();
+  });
 
-            }
-
-  
-
-}
-
-
-//move this to its own functionFile, this gen view might get more complex
-window.nodeConfigBuild = function nodeConfigBuild() {
-
+  //move this to its own functionFile, this gen view might get more complex
+  function nodeConfigBuild() {
     // Find the container for the draggable nodes
-    const canvas = document.querySelector('#vanillaFlowCanvas');
-    const nodes = canvas.querySelectorAll('.parent-node');
+    const configCanvas = document.querySelector("#viewbox");
+    const nodes = configCanvas.querySelectorAll(".parentnode");
 
     let configString = "";
 
-    nodes.forEach(node => {
-        const nodeName = node.querySelector('[name="functionName"]').value;
-        const dir = node.querySelector('[name="dir"]').value;
-        const functionFile = nodeName;
-        const originBurst = node.querySelector('[name="originburst"]').value;
-        const htmlPath = dir + node.querySelector('[name="htmlPath"]').value;
-        const cssPath = dir + node.querySelector('[name="cssPath"]').value;
-        const targetDOM = node.querySelector('[name="targetDOM"]').value;
+    // Define a function that generates a configuration object
+    function generateConfig(
+      functionFile,
+      dir,
+      originBurst,
+      htmlPath,
+      cssPath,
+      targetDOM,
+      subDOMObject
+    ) {
+      let config = {};
+      config[functionFile] = {
+        role: "parent",
+        dir: dir,
+        functionFile: functionFile,
+        render: "pause",
+        originBurst: originBurst,
+        htmlPath: htmlPath,
+        cssPath: cssPath,
+        targetDOM: targetDOM,
+        subDOM: subDOMObject,
+      };
+      return config;
+    }
 
-        // Construct the function string for each node
-        configString += `
-window.${functionFile}Config = function ${functionFile}Config(sharedParts) {
-    let ${functionFile}Config = {};
-    passedConfig = {
-        '${functionFile}': {
-            'role': 'parent',
-            'dir': '${dir}',
-            'functionFile': '${functionFile}',
-            'render': 'pause',
-            'originBurst': ${originBurst},
-            'htmlPath': '${htmlPath}',
-            'cssPath': '${cssPath}',
-            'targetDOM': '${targetDOM}'
-        }
-        ...sharedParts
+    // Use the function in your loop
+    nodes.forEach((node) => {
+      // ... (same as before)
 
-    };
-    ${functionFile}Config = {...vanillaConfig('${functionFile}', passedConfig)};
-    return ${functionFile}Config;
-};
-        `;
+      // Construct the configuration object for each node
+      let nodeConfig = generateConfig(
+        functionFile,
+        dir,
+        originBurst,
+        htmlPath,
+        cssPath,
+        targetDOM,
+        subDOMObject
+      );
+
+      // Merge nodeConfig with sharedParts and vanillaConfig
+      let mergedConfig = { ...nodeConfig, ...sharedParts };
+      let finalConfig = { ...vanillaConfig(functionFile, mergedConfig) };
+
+      // Add the final configuration to the window object
+      window[`${functionFile}Config`] = finalConfig;
     });
 
     console.log("Generated vanillaBurst Config:", configString);
 
     // Optional: Copy the config to clipboard
-    const textArea = document.createElement("textarea");
-    textArea.value = configString;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    textArea.remove();
+    navigator.clipboard.writeText(configString).then(
+      function () {
+        alert("Config copied to clipboard!");
 
-    alert("Config copied to clipboard!");
-}
+        console.log("Copying to clipboard was successful!");
+      },
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
+  }
+});

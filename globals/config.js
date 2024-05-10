@@ -1,30 +1,35 @@
-// Base URL for the application
-window.baseUrl = "/";
+//
 
-// Initial route of the application
-window.appRoute = 'home';
+window.frozenVanilla("defaultAppRoute", "homeview");
 
-// Base URLs for custom assets
-window.baseUrlIcons = "/assets/icons/";
-window.baseUrlStyles = "/css/styles/";
+window.appRoute = window.defaultAppRoute;
 
-// Define the homeHtmlConfig
+window.frozenVanilla("domainUrl", "http://vanillaburstgame");
 
+window.frozenVanilla("fetchDomainUrl", "");
 
+window.frozenVanilla("registeredRoutes", ["homeview", "documentation", "gen"]);
 
+window.frozenVanilla("baseUrlIcons", "/assets/icons/");
+
+window.frozenVanilla("baseUrlStyles", "/css/styles/");
+
+///////////////////////////////////////////////////////////////
+//Define the routeParts based on the views
+//string with comma dilimited array for array of multiple packages
+//false for shared packages
 
 // Define the routeParts based on the views
-window.schemaParts = {
-  'appShell': false,
-  'nav':false,
-  'home': ['appShells'],
-  'documentation':['appShells'],
-  'warning':['appShells'],
-  'gen': ['appShells'], //
-  //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage 
-  // Add additional levels as needed
-};
+window.frozenVanilla(
+  "schemaParts",
+  Object.freeze({
+    homeview: ["appShells"],
+    nav: false,
+    documentation: ["appShells"],
+    gen: ["appShells"], //
+  })
+);
+window.frozenVanilla("appShells", ["nav"]);
 
-
-
-window.appShells = ['appShell', 'nav'];
+//'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
+// Add additional levels as needed

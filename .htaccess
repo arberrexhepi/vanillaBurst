@@ -9,9 +9,14 @@ RewriteEngine On
 
     RewriteCond %{REQUEST_URI} ^/$
     RewriteCond %{QUERY_STRING} ^$
-    RewriteRule ^ /?burst=home [L,R=302] 
+    RewriteCond %{QUERY_STRING} !^/env/vanilla\.txt$
+    RewriteCond %{QUERY_STRING} !^vanilla\.txt$
+    RewriteCond %{QUERY_STRING} !^vanilla\.txt$
+    RewriteRule ^ /?burst=homeview [L,R=302] 
 
     # Dynamically rewrite any path to /?burst=path
+    RewriteCond %{REQUEST_URI} !^/env/vanilla\.txt$
+    RewriteCond %{REQUEST_URI} !^vanilla\.txt$
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)$ /?burst=$1 [L,QSA,R=301]
@@ -22,7 +27,7 @@ RewriteEngine On
     RewriteRule ^ - [L]
 
     # Serve "index.html" for all other requests not accessing a physical file
-    RewriteCond %{REQUEST_URI} !\.(js|css|jpg|jpeg|png|gif|svg|ico)$ [NC]
+    RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|svg|ico)$ [NC]
     RewriteRule ^ index.html [L]
 
 </IfModule>

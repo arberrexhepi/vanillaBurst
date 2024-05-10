@@ -1,0 +1,67 @@
+<h3>Parent Node Configuration</h3>
+<small>Name Convention: viewnameConfig.js</small>
+<br /><br />
+<form id="parentConfigForm">
+    <div class="fields">
+
+        <input type="hidden" id="role" name="role" value="parent"><br />
+
+        <label for="functionName">View Name:</label><br />
+        <input type="text" id="functionName" name="functionName" placeholder="e.g., myFunction"><br />
+
+        <label for="directory">Directory:</label><br />
+        <input type="text" id="directory" name="dir" placeholder="e.g., client/views/myFunction/"><br />
+
+        <label for="renderMode">Render Mode: 'pause' </label><br />
+        <small>Change manually to 'burst' if needed</small>
+        <br /> <br />
+
+        <label for="originburst">Origin Burst:</label><br />
+        <input type="text" id="originburst" name="originburst" placeholder="e.g., a custom object"><br />
+
+        <label for="htmlPath">HTML Path:</label><br />
+        <input type="text" id="htmlPath" name="htmlPath"
+            placeholder="e.g., myFunction.html (relative to Directory above)"><br />
+
+        <label for="cssPath">CSS Path:</label><br />
+        <input type="text" id="cssPath" name="cssPath"
+            placeholder="e.g., myFunction.css (relative to Directory above)"><br />
+
+        <label for="targetDOM">Target DOM:</label><br />
+        <input type="text" id="targetDOM" name="targetDOM" placeholder="e.g., someDOMId"><br /><br />
+
+
+        <fieldset class="subDOMTemplate" style="display: none">
+            <legend>Sub DOM Configuration</legend>
+            <div class=" subDOMFieldsContainer" ">
+                    <label for=" htmlPath">HTML Path:</label><br />
+                <input type="text" name="subDOMHtmlPath" placeholder="e.g., path"><br />
+
+                <label for="cssPath">CSS Path:</label><br />
+                <input type="text" name="subDOMCssPath" placeholder="e.g., path"><br />
+
+                <label for="targetDOM">Target DOM:</label><br />
+                <input type="text" name="subDOMTargetDOM" placeholder="e.g., id"><br />
+
+                <label for="htmlAttrs">HTML Attributes:</label><br />
+                <fieldset id="subDOMTemplate">
+                    <!-- existing fields... -->
+
+                    <h3>HTML Attributes:</h3>
+
+                    <label for="id">ID:</label><br />
+                    <input type="text" name="subDOMHtmlAttrId"><br />
+
+                    <label for="cssclass">CSS Class:</label><br />
+                    <input type="text" name="subDOMHtmlAttrCssClass"><br />
+                </fieldset>
+            </div>
+        </fieldset>
+        <label for="subDOM">Sub DOM:</label><br />
+        <button id="subDOM" class="addSubDOM" name="subDOM">Add Sub DOM</button><br /><br />
+
+
+    </div>
+    <button id="create-config">Create Config</button>
+
+</form>

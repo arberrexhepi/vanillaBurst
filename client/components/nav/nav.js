@@ -1,15 +1,15 @@
- function nav() {
+window.frozenVanilla(
+  "nav",
+  function (vanillaPromise) {
+    console.log(vanillaPromise.this + " ran");
 
-        window.navView = function navView(){
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function () {
-                    const route = this.getAttribute('data-route');
-                    window.routeCall(route);
-                    
-                    
-                });
-            });
-        }
-    
-};
+    const navLinks = document.querySelectorAll(".nav-link");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", function () {
+        let route = this.getAttribute("data-route");
+        window.myState([route, `../?burst=${route}`]);
+      });
+    });
+  },
+  true
+);

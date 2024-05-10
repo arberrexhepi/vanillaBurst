@@ -1,150 +1,184 @@
-// User defined
-window.baseUrl = "/";
+const mode = "dev"; //or "live"
 
-// vanillaBurst App
+const devBaseUrl = "/";
+const liveBaseUrl = "/";
+
+switch (mode) {
+  case "dev": {
+    baseUrl = devBaseUrl;
+    break;
+  }
+  case "live": {
+    baseUrl = liveBaseUrl;
+    break;
+  }
+}
+
+try {
+  if (window.frozenVanilla === undefined) {
+    Object.defineProperty(window, "frozenVanilla", {
+      value: function frozenVanilla(prop, value, setAsWindowProp = true) {
+        let frozenValue;
+        if (typeof value === "function") {
+          // Handle functions
+          frozenValue = function (...args) {
+            return value.apply(this, args);
+          };
+          frozenValue = Object.freeze(value);
+        } else {
+          // Handle simple values
+          frozenValue = Object.freeze(value);
+        }
+
+        if (setAsWindowProp) {
+          if (
+            window[prop] === undefined ||
+            window[prop] === null ||
+            (window[prop] &&
+              Object.getOwnPropertyDescriptor(window, prop).writable)
+          ) {
+            Object.defineProperty(window, prop, {
+              value: frozenValue,
+              writable: false,
+              configurable: false,
+            });
+          }
+        }
+        return frozenValue;
+      },
+      writable: false,
+      configurable: false,
+    });
+  }
+} catch (error) {
+  console.error(
+    "Oops, looks like we dropped your vanilla, we'll try preparing it again!",
+    error
+  );
+  window.location.reload(); // Reload the current page
+}
+
+///You should try frozenVanilla! it's awesome
+
+const isFrozen = function isFrozen(prop, type) {
+  // Check if the property exists
+  if (window[prop] === undefined) {
+    return false;
+  }
+
+  // Check if the property is frozen
+  if (!Object.isFrozen(window[prop])) {
+    return false;
+  }
+
+  // Check if the property is of the correct type
+  if (typeof window[prop] !== type) {
+    return false;
+  }
+
+  // If all checks pass, return true
+
+  return true;
+};
+
+const domainUrl = window.location.origin + "/";
+
+///let's freeze the gauge!
+
+window.frozenVanilla("isFrozen", isFrozen);
+
+///////
+
+window.frozenVanilla("baseUrl", baseUrl);
+
+///// vanillaBurst App
 window.renderComplete = "false";
 
-window.vanillaApp = function vanillaApp(baseUrl) {
+////
 
-  window.onload = function() {    // Load script helper function
-    console.log('.');
-    console.log('.');
-    console.log('.');
-    console.info({Status: "build renderSchema"});
-    console.log('.');
-    console.log('.');
-    console.log('.');
+window.frozenVanilla("nonce", function () {
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let length = 16; // Set this to the desired length of your nonce string
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+});
 
-    window.loadScript = function loadScript(url) {
-      return new Promise((resolve, reject) => {
-          // Create a new script element
-          const script = document.createElement('script');
-  
-          // Set the script source (URL)
-          script.src = url;
-  
-          // Define what happens when the script loads
-          script.onload = () => resolve(script);
-  
-          // Define what happens in case of an error
-          script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-  
-          // Add the script to the document (this starts the loading process)
-          document.head.appendChild(script);
-      });
-  };
-  
-    // Function to load initial scripts and then run promise1
-    function loadInitialScripts() {
-      return Promise.all([
-        window.loadScript(`${window.baseUrl}globals/config.js`),
-      ]).then(() => {
-        return window.schemaParts; // Assuming schemaParts is defined and returned here
-      }).catch(error => {
-        console.error("Script loading error: ", error);
-      });
-    }
+window.frozenVanilla("nonceBack", function () {
+  let metaTag = document.querySelector(
+    'meta[http-equiv="Content-Security-Policy"]'
+  );
+  if (metaTag) {
+    const csp = metaTag.content;
+    const existingNonce = csp.match(/'nonce-(.*?)'/)[1];
+    return existingNonce;
+  }
 
-    // Function to handle first batch of promises
-    function promise1() {
-      // Extract just the keys from window.schemaParts
-      const parts = Object.keys(window.schemaParts);
-    
-      // Log the extracted parts
-      console.log("Extracted parts (keys):", parts);
-    
-      // Map over parts to load scripts
-      const scriptPromises = parts.map(part => {
-        const scriptUrl = `${window.baseUrl}schemas/${part}Config.js`;    
-        // Use window.loadScript to load the script
-        return window.loadScript(scriptUrl).catch(error => {
-          console.error(`Error loading [view]Config for part: ${part}`, error);
+  let nonceString = window.nonce();
+  let csp = document.createElement("meta");
+  csp.httpEquiv = "Content-Security-Policy";
+  csp.content = `default-src 'self'; style-src 'self' 'nonce-${nonceString}'; script-src 'self' 'nonce-${nonceString}';`;
+  document.head.appendChild(csp);
+
+  // Set the nonce on the script and link tags
+  let scriptTag = document.querySelector("script#vanillaBurstTag");
+  if (scriptTag) {
+    scriptTag.nonce = nonceString;
+  }
+  let linkTag = document.querySelector('link[name="appShellCSS"]');
+  if (linkTag) {
+    linkTag.nonce = nonceString;
+  }
+});
+
+window.nonceBack();
+
+const start = async function (baseUrl) {
+  let nonceString = window.nonceBack();
+  if (typeof baseUrl !== "string") {
+    throw new Error("Invalid baseUrl");
+  }
+  try {
+    // Create a new script element
+
+    const script = document.createElement("script");
+    const scriptPath = baseUrl + "vanillaBurstScripts/vanillaApp.js";
+    script.src = scriptPath;
+    script.setAttribute("name", "init");
+    script.setAttribute("nonce", nonceString);
+
+    // Add the script to the document (this starts the loading process)
+    document.head.appendChild(script);
+
+    // Wait for the script to load
+    await new Promise((resolve, reject) => {
+      script.onload = (nonceString) => {
+        resolve(script);
+      };
+      script.onerror = () => {
+        const error = new Error(`Failed to load script: ${scriptPath}`);
+        console.table({
+          "Error Name": error.name,
+          "Error Message": error.message,
+          "Script Path": scriptPath,
         });
-      });
-    
-      // Also load the schema.js script
-      scriptPromises.push(
-        window.loadScript(`${window.baseUrl}vanillaBurstScripts/schema.js`).catch(error => {
-          console.error("Error loading schema.js script", error);
-        })
-      );
-    
-      // Load all scripts and then build the schema
-      return Promise.all(scriptPromises, parts).then(() => {
-        console.info("CONFIG PARTS PROMISED:", parts);
-
-        if (typeof window.config === 'function') {
-          const schema = window.config();
-          window.schema = schema;
-         
-          promise2(schema); // Call promise2 with the schema
-        } else {
-          console.error("window.config is not a function.");
-        }
-      }).catch(error => {
-        console.error("An error occurred during script loading or execution: ", error);
-      });
-    }
-    
-    
-    
-    
-
-    // Function to handle second batch of promises
-    async function promise2(schema) {
-      // Load states.js script
-      window.loadScript(`${window.baseUrl}vanillaBurstScripts/states.js`).then(() => {
-        // After states.js is loaded, load routes.js script
-        return window.loadScript(`${window.baseUrl}vanillaBurstScripts/routes.js`);
-      }).then(() => {
-        // After routes.js is loaded, perform any additional actions if needed
-        window.vanillaBurst(window.renderComplete, window.route, window.routeCycles);
-        
-        console.log("Scripts states.js and routes.js loaded successfully.");
-      }).catch(error => {
-        console.error("Scripts states.js and routes.js could not be loaded successfully: ", error);
-      });
-    }
-    
-
-    // Array of scripts to be used in the application
-    window.vanillaBurstScripts = [
-      //window.baseUrl + 'globals/loader.js',
-     // window.baseUrl + 'jquery-3.7.1.min.js',
-      window.baseUrl + 'vendors/purify.min.js',
-      window.baseUrl + 'globals/config.js',
-      window.baseUrl + 'vanillaBurstScripts/serverRender.js',
-      window.baseUrl + 'vanillaBurstScripts/singlePromise.js',
-      window.baseUrl + 'vanillaBurstScripts/signals.js',
-      window.baseUrl + 'vanillaBurstScripts/dom.js',
-      window.baseUrl + 'vanillaBurstScripts/childFunction.js',
-      window.baseUrl + 'vanillaBurstScripts/render.js',
-    ];
-
-    // Start the script loading process
-    loadInitialScripts().then(schemaParts => {
-      promise1(schemaParts).then((runFunction)=>{
-        if(window.runFunction===true && typeof window[renderSchema.landing] === 'function')
-        console.log('.');
-        console.log('.');
-        console.log('.');
-        console.log('.');
-        console.info({Status: "...loading vanillaBurst scripts..."});
-        console.log('.');
-        console.log('.');
-        console.log('.');
-      });
+        reject(error);
+      };
     });
+
+    if (!window.frozenVanilla || typeof window.frozenVanilla !== "function") {
+      throw new Error("window.frozenVanilla is not a function");
+    }
+    //window.vanillaApp(domainUrl, baseUrl);
+  } catch (error) {
+    throw error;
   }
 };
 
-window.vanillaApp(window.baseUrl);
-
-window.deepFreeze = function deepFreeze(object) {
-  Object.getOwnPropertyNames(object).forEach(prop => {
-    if (object[prop] !== undefined && typeof object[prop] === 'object') {
-      deepFreeze(object[prop]);
-    }
-  });
-  return Object.freeze(object);
+try {
+  start(baseUrl);
+} catch (error) {
+  console.error(error);
 }
