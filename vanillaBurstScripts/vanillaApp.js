@@ -166,7 +166,7 @@ const vanillaApp = window.frozenVanilla(
             //DOM processors
 
             baseUrl +
-              "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDom.js",
+              "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDOM.js",
             baseUrl +
               "vanillaBurstScripts/vanillaDOM/processors/signalBurstDOM.js",
             baseUrl +
