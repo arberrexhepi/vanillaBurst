@@ -1,4 +1,4 @@
-const mode = "dev"; // "dev" or "live"
+const mode = "live"; // "dev" or "live"
 
 const devBaseUrl = "/";
 const liveBaseUrl = "/";
