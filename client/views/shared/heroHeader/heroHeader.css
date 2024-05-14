@@ -1,0 +1,75 @@
+
+#myHeroHeader {
+    text-align: center;
+    padding: 20px;
+    background-color: #032f3f;
+    color: #fdfdf1;
+}
+
+#myHeroHeader img {
+    width: 100px;
+    height: auto;
+}
+
+#myHeroHeader h1 {
+    color: #fdfdf1;
+}
+
+#myHeroHeader blockquote {
+    color: #f75f88;
+}
+
+#myHeroHeader hr {#myHeroHeader {
+    text-align: center;
+    padding: 20px;
+    background-color: #032f3f;
+    color: #fdfdf1; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader img {
+    width: 100px;
+    height: auto;
+}
+
+#myHeroHeader h1 {
+    color: #fdfdf1; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader blockquote {
+    color: #f75f88; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader hr {
+    border-color: #f75f88; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader .action-container h1 {
+    color: #fdfdf1; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader .action-container h1 em {
+    color: #f75f88; /* Light color for contrast against dark background */
+}
+
+#myHeroHeader .action-container p {
+    color: #fdfdf1; /* Light color for contrast against dark background */
+}
+    border-color: #f75f88;
+}
+
+#myHeroHeader .action-container h1 {
+    color: #ff6347;
+}
+
+#myHeroHeader .action-container h1 em {
+    color: #f75f88;
+}
+
+#myHeroHeader .action-container p {
+    color: #ffffff;
+}
+
+#header-wordmark{
+    min-width:300px;
+    max-width:40vh;
+}

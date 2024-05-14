@@ -32,15 +32,14 @@ window.frozenVanilla("baseUrlStyles", "/css/styles/");
 window.frozenVanilla(
   "schemaParts",
   Object.freeze({
-    homeview: ["homeViewPack"],
+    homeview: ["appShells"],
     nav: false,
     heroHeader: false,
     documentation: ["appShells"],
     gen: ["appShells"], //
   })
 );
-window.frozenVanilla("appShells", ["nav"]);
-window.frozenVanilla("homeViewPack", ["nav", "heroHeader"]);
+window.frozenVanilla("appShells", ["nav", "heroHeader"]);
 
 //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
 // Add additional levels as needed

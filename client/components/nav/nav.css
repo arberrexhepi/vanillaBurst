@@ -26,6 +26,13 @@
 #mainNav ul li {
     display: inline;
     margin: 0 3vh; /* More space between elements */
+    cursor: pointer;
+
+}
+
+
+#logo-nav{
+    height:5vh;
 }
 
 #mainNav ul li span {

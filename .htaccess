@@ -12,12 +12,7 @@ RewriteEngine On
 
 <IfModule mod_rewrite.c>
 
-    RewriteCond %{REQUEST_URI} ^/$
-    RewriteCond %{QUERY_STRING} ^$
-    RewriteCond %{QUERY_STRING} !^/env/vanilla\.txt$
-    RewriteCond %{QUERY_STRING} !^vanilla\.txt$
-    RewriteCond %{QUERY_STRING} !^vanilla\.txt$
-    RewriteRule ^ /?burst=homeview [L,R=302] 
+
 
     # Dynamically rewrite any path to /?burst=path
     RewriteCond %{REQUEST_URI} !^/env/vanilla\.txt$

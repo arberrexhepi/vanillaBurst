@@ -19,7 +19,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           container: "doc-button_wrapper",
           className: "button round",
           children: `
-          <button class="mydocbutton" data-route="gen">View Documentation</button>
+          <button class="mydocbutton" data-route="documentation">View Documentation</button>
             `,
           eventHandlers: "submit:preventDefault",
         },

@@ -7,7 +7,7 @@ window.frozenVanilla(
         let runFunction;
         rollCall;
         let serverResult;
-
+        let vanillaPromises;
         // for (const element of rollCall) {
         //   if (window[element] && typeof window[element] === "function") {
         //     delete window[element];
@@ -42,6 +42,10 @@ window.frozenVanilla(
                 passedFunction,
                 originBurst
               );
+              vanillaPromises = {
+                ...vanillaPromises,
+                [customFunctionName]: vanillaPromise,
+              };
 
               let id = passedFunction.container;
 
@@ -51,25 +55,9 @@ window.frozenVanilla(
                 window[customFunctionName]
               );
 
-              let observer = new MutationObserver((mutationsList, observer) => {
-                let componentElement = document.getElementById(id);
-
-                if (componentElement && customFunctionName === render) {
-                  window[customFunctionName](vanillaPromise);
-                  window.storeBurst(vanillaPromise);
-                  observer.disconnect();
-                }
-              });
-              window[customFunctionName](vanillaPromise);
-
-              observer.observe(document.body, {
-                attributes: true,
-                childList: true,
-                subtree: true,
-              });
-
+              window.storeBurst(vanillaPromise);
               if (count >= maxCount) {
-                return vanillaPromise;
+                resolve(vanillaPromises);
               }
             } catch (error) {
               console.error(error);
@@ -126,8 +114,6 @@ window.frozenVanilla(
             });
         }
       }
-
-      return true;
     });
   }
 );
