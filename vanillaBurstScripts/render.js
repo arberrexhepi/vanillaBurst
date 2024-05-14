@@ -63,7 +63,6 @@ window.frozenVanilla(
       childFunction(renderSchema, rollCall, runRoll, originBurst)
         .then((vanillaPromises) => {
           for (let customFunctionName of rollCall) {
-            alert(customFunctionName);
             window[customFunctionName](vanillaPromises[customFunctionName]);
             window.storeBurst(vanillaPromises[customFunctionName]);
           }
