@@ -199,7 +199,7 @@ window.frozenVanilla(
           "/" + buildState.stateTagPath
         );
 
-        renderView(buildState.stateTagParams);
+        window.render(buildState.stateTagParams);
       }
       changeState(
         stateTag,
@@ -212,7 +212,8 @@ window.frozenVanilla(
     function handlePop() {
       window.addEventListener("popstate", (event) => {
         //console.log('popstate detected');
-        if (event.state && renderComplete == "true") {
+        renderComplete = window.renderComplete;
+        if (event.state && renderComplete === true) {
           renderComplete = "false";
           let popState = event.state;
           popState;
@@ -232,17 +233,9 @@ window.frozenVanilla(
           renderSchema = popState.stateTagParams;
           console.log(renderSchema);
 
-          renderView(renderSchema);
+          window.render(renderSchema);
         }
       });
-    }
-
-    async function renderView(renderSchema) {
-      console.log(renderSchema);
-
-      await window.render(renderSchema);
-      renderComplete = "true";
-      window.renderComplete = renderComplete;
     }
   }
 );

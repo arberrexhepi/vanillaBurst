@@ -61,8 +61,15 @@ window.frozenVanilla(
       //////
 
       childFunction(renderSchema, rollCall, runRoll, originBurst)
-        .then(() => {
-          console.log("Done");
+        .then((vanillaPromises) => {
+          for (let customFunctionName of rollCall) {
+            alert(customFunctionName);
+            window[customFunctionName](vanillaPromises[customFunctionName]);
+            window.storeBurst(vanillaPromises[customFunctionName]);
+          }
+
+          console.log(vanillaPromises);
+          window.renderComplete = true;
           localStorage.removeItem("stateBurst");
         })
         .catch((error) => {

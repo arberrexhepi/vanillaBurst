@@ -1,6 +1,6 @@
 // User defined
 
-const mode = "dev"; //or "live"
+const mode = "live"; //or "live"
 
 const devBaseUrl = "/";
 const liveBaseUrl = "/";

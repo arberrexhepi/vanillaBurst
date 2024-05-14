@@ -19,7 +19,7 @@ window.frozenVanilla(
     initView
   ) {
     return new Promise(async (resolve, reject) => {
-      const safeHTML = await window.loadParts(
+      const functionHTML = await window.loadParts(
         config,
         domFunction,
         originFunction,
@@ -28,10 +28,10 @@ window.frozenVanilla(
         originBurst
       );
 
-      if (safeHTML !== null) {
-        resolve(safeHTML);
+      if (functionHTML !== null) {
+        resolve(functionHTML);
       } else {
-        reject(new Error("safeHTML is falsy"));
+        reject(new Error("functionHTML is falsy"));
       }
     })
       .then()
@@ -125,11 +125,14 @@ window.frozenVanilla(
           // Set the innerHTML of the target element
           targetElement.innerHTML = serializedHTML;
 
-          let signalDOMUpdate = signalBurstDOM(originFunction, functionFile);
+          let signalDOMUpdate = window.signalBurstDOM(
+            originFunction,
+            functionFile
+          );
           // Cache the result
           if (signalDOMUpdate === true) {
             if (functionFile && functionFile !== undefined) {
-              safeHTML = window.sanitizeVanillaDOM(
+              functionHTML = window.sanitizeVanillaDOM(
                 targetElement.innerHTML,
                 functionFile
               );
@@ -137,7 +140,7 @@ window.frozenVanilla(
                 originBurst,
                 originFunction,
                 functionFile,
-                safeHTML
+                functionHTML
               );
             }
           }
@@ -149,7 +152,7 @@ window.frozenVanilla(
             let targetElement =
               document.getElementById(container) ||
               document.querySelector(`div#${container}`);
-            let safeHTML;
+            let functionHTML;
 
             if (!targetElement) {
               targetElement = document.createElement("div");
@@ -161,25 +164,31 @@ window.frozenVanilla(
             }
 
             if (functionFile) {
-              safeHTML = window.sanitizeVanillaDOM(htmlContent, functionFile);
+              functionHTML = window.sanitizeVanillaDOM(
+                htmlContent,
+                functionFile
+              );
             }
 
-            if (safeHTML) {
-              targetElement.innerHTML = safeHTML;
+            if (functionHTML) {
+              targetElement.innerHTML = functionHTML;
             }
 
             window.cssFileLoader(cssPath);
-            let signalDOMUpdate = signalBurstDOM(originFunction, functionFile);
+            let signalDOMUpdate = window.signalBurstDOM(
+              originFunction,
+              functionFile
+            );
             // Cache the result
             window.storeBurstOrigin(
               originBurst,
               originFunction,
               functionFile,
-              safeHTML
+              functionHTML
             );
             if (functionFile && functionFile !== undefined) {
               if (signalDOMUpdate === true) {
-                safeHTML = window.sanitizeVanillaDOM(
+                functionHTML = window.sanitizeVanillaDOM(
                   targetElement.innerHTML,
                   functionFile
                 );
@@ -187,12 +196,12 @@ window.frozenVanilla(
                   originBurst,
                   originFunction,
                   functionFile,
-                  safeHTML
+                  functionHTML
                 );
 
-                resolve(safeHTML);
+                resolve(functionHTML);
               } else {
-                resolve(safeHTML);
+                resolve(functionHTML);
               }
             }
             // Resolve the Promise
