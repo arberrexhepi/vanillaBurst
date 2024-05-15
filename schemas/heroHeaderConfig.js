@@ -18,7 +18,6 @@ window.frozenVanilla("heroHeaderConfig", function () {
           container: "action-container",
           className: "button round",
           children: `
-            <h1>Let's <em>vanillaBurst</em> to the Docs!</h1>
             <div class="button_wrapper">
             <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button></div>
             <br />
@@ -34,8 +33,7 @@ window.frozenVanilla("heroHeaderConfig", function () {
           container: "action-container",
           className: "button round",
           children: `
-              <h1>Let's <em>vanillaBurst</em> your configs!</h1>
-              <div class="button_wrapper">
+          <div class="button_wrapper">
               <button class="headerbutton mygenbutton" data-route="gen">Go to Config Builder</button></div>
               <br />
               <p>Explore the power and flexibility of vanillaBurst. Get started quickly by generating configs with the config builder!</p>

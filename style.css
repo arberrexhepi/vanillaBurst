@@ -2,6 +2,7 @@
     display: flex;
     max-width: 100%; /* Use 100% for mobile and small screens */
     margin: auto;
+    padding:5%;
     margin-top: 5vh;
     margin-bottom: 5vh;
 }
