@@ -171,6 +171,23 @@ window.frozenVanilla(
                 }
 
                 window.cssFileLoader(cssPath);
+                let componentHTML = sanitizeVanillaDOM(
+                  targetContainer.outerHTML
+                );
+                //CACHE IT
+                let DOMtype = {
+                  type: {
+                    component: [id, componentHTML],
+                  },
+                };
+                let originFunction = functionFile;
+                window.storeBurstOrigin(
+                  originBurst,
+                  originFunction,
+                  functionFile,
+                  componentHTML,
+                  DOMtype
+                );
               } else {
                 // If the targetElement does exist, append the children to it
                 let sanitizedChildren = window.sanitizeVanillaDOM(children);
@@ -193,6 +210,8 @@ window.frozenVanilla(
 
                 targetElement.setAttribute("nonce", window.nonceBack());
                 targetElement.append(fragment.innerHTML);
+
+                console.log("vanilla-element found");
                 let componentHTML = sanitizeVanillaDOM(targetElement.outerHTML);
                 //CACHE IT
                 let DOMtype = {
@@ -208,7 +227,6 @@ window.frozenVanilla(
                   componentHTML,
                   DOMtype
                 );
-                console.log("vanilla-element found");
               }
             }
           }
