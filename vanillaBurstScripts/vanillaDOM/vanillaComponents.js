@@ -137,97 +137,54 @@ window.frozenVanilla(
               let targetElement = document.getElementById(id);
               let sanitizedChildren = window.sanitizeVanillaDOM(children);
 
-              if (!targetElement) {
-                function createElementBuild(id, sanitizedChildren) {
-                  let parser = new DOMParser();
-                  let doc = parser.parseFromString(
-                    sanitizedChildren,
-                    "text/html"
-                  );
-                  const nonceString2 = window.nonceBack();
-                  let elementBuild = document.createElement("div");
-                  elementBuild.id = id;
-                  elementBuild.class = className;
-                  elementBuild.setAttribute("nonce", nonceString2);
-
-                  while (doc.body.firstChild) {
-                    elementBuild.appendChild(doc.body.firstChild);
-                  }
-                  return elementBuild;
-                }
-                console.log("here a");
-
-                const elementBuild = createElementBuild(id, sanitizedChildren);
-                // Get a reference to the container
-                // let targetContainer = document.getElementById(container);
-
-                if (
-                  !targetContainer.hasChildNodes() ||
-                  !targetContainer.querySelector(`#${elementBuild.id}`)
-                ) {
-                  targetContainer.setAttribute("nonce", window.nonceBack());
-
-                  targetContainer.append(elementBuild);
-                }
-
-                window.cssFileLoader(cssPath);
-                let componentHTML = sanitizeVanillaDOM(
-                  targetContainer.outerHTML
-                );
-                //CACHE IT
-                let DOMtype = {
-                  type: {
-                    component: [id, componentHTML],
-                  },
-                };
-                let originFunction = functionFile;
-                window.storeBurstOrigin(
-                  originBurst,
-                  originFunction,
-                  functionFile,
-                  componentHTML,
-                  DOMtype
-                );
-              } else {
-                // If the targetElement does exist, append the children to it
-                let sanitizedChildren = window.sanitizeVanillaDOM(children);
+              function createElementBuild(id, sanitizedChildren) {
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(
                   sanitizedChildren,
                   "text/html"
                 );
+                const nonceString2 = window.nonceBack();
+                let elementBuild = document.createElement("div");
+                elementBuild.id = id;
+                elementBuild.class = className;
+                elementBuild.setAttribute("nonce", nonceString2);
 
-                // Create a document fragment
-                let fragment = document.createDocumentFragment();
-
-                // Append the children to the fragment
                 while (doc.body.firstChild) {
-                  fragment.appendChild(doc.body.firstChild);
+                  elementBuild.appendChild(doc.body.firstChild);
                 }
-
-                // Replace the innerHTML of the targetElement with the innerHTML of the fragment
-                targetElement.innerHTML = fragment.innerHTML;
-
-                targetElement.setAttribute("nonce", window.nonceBack());
-                targetElement.append(fragment.innerHTML);
-
-                console.log("vanilla-element found");
-                let componentHTML = sanitizeVanillaDOM(targetElement.outerHTML);
-                //CACHE IT
-                let DOMtype = {
-                  type: {
-                    component: [id, componentHTML],
-                  },
-                };
-                let originFunction = functionFile;
-                window.storeBurstOrigin(
-                  originBurst,
-                  originFunction,
-                  functionFile,
-                  componentHTML,
-                  DOMtype
-                );
+                return elementBuild;
               }
+              console.log("here a");
+
+              const elementBuild = createElementBuild(id, sanitizedChildren);
+              // Get a reference to the container
+              // let targetContainer = document.getElementById(container);
+
+              if (
+                !targetContainer.hasChildNodes() ||
+                !targetContainer.querySelector(`#${elementBuild.id}`)
+              ) {
+                targetContainer.setAttribute("nonce", window.nonceBack());
+
+                targetContainer.append(elementBuild);
+              }
+              let componentHTML = sanitizeVanillaDOM(targetContainer.outerHTML);
+              //CACHE IT
+              let DOMtype = {
+                type: {
+                  component: [id, componentHTML],
+                },
+              };
+              let originFunction = functionFile;
+              window.storeBurstOrigin(
+                originBurst,
+                originFunction,
+                functionFile,
+                componentHTML,
+                DOMtype
+              );
+
+              window.cssFileLoader(cssPath);
             }
           }
           return componentHTML;
