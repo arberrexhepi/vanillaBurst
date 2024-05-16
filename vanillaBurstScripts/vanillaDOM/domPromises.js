@@ -1,6 +1,6 @@
 window.frozenVanilla(
   "domPromises",
-  function (renderSchema, customFunctionName, originBurst) {
+  function (renderSchema, customFunctionName, vanillaPromise) {
     return new Promise((resolve, reject) => {
       let config = renderSchema.customFunctions[customFunctionName];
       let safeHTML;
@@ -11,22 +11,21 @@ window.frozenVanilla(
           customFunctionName,
           renderSchema.landing,
           renderSchema,
-          originBurst
+          vanillaPromise
         )
-          .then((loadedHTML) => {
-            if (loadedHTML === null) {
-              return Promise.reject(new Error("safeHTML is falsy"));
-            }
-            safeHTML = loadedHTML;
+          .then((vanillaPromise) => {
+            console.log(
+              "here at the end of loadDOM at the then " +
+                JSON.stringify(vanillaPromise)
+            );
+            let observeDOM = (id, vanillaPromise) => {
+              let observerOptions = {
+                childList: true,
+                attributes: true,
+                subtree: true,
+              };
 
-            let observeDOM = (id) => {
               return new Promise((resolve, reject) => {
-                let observerOptions = {
-                  childList: true,
-                  attributes: true,
-                  subtree: true,
-                };
-
                 let observerCallback = function (mutationsList, observer) {
                   for (let mutation of mutationsList) {
                     if (
@@ -36,7 +35,7 @@ window.frozenVanilla(
                       let domCheck = document.getElementById(id);
                       if (domCheck) {
                         observer.disconnect();
-                        resolve();
+                        resolve(vanillaPromise);
                       }
                     }
                   }
@@ -52,30 +51,27 @@ window.frozenVanilla(
               renderSchema?.customFunctions?.[customFunctionName]?.container;
 
             if (id) {
-              observeDOM(id).then(() => {
+              observeDOM(id, vanillaPromise).then((vanillaPromise) => {
                 if (config?.components) {
                   vanillaComponents(
                     customFunctionName,
                     renderSchema,
-                    originBurst
+                    vanillaPromise
                   );
                 }
               });
             }
           })
-          .then((componentHTML) => {
-            if (componentHTML === null) {
-              return Promise.reject(new Error("safeHTML is falsy"));
-            }
-            safeHTML = componentHTML;
-            resolve(safeHTML);
+          .then((vanillaPromise) => {
+            resolve(vanillaPromise);
+            console.log("here at the end of it " + vanillaPromise);
           })
           .catch((error) => {
             console.error(error);
             reject(error);
           });
       } else {
-        resolve(safeHTML);
+        resolve(true);
       }
     });
   }

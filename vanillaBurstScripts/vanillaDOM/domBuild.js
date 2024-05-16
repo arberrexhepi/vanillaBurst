@@ -15,21 +15,21 @@ window.frozenVanilla(
     domFunction,
     originFunction,
     renderSchema,
-    originBurst,
+    vanillaPromise,
     initView
   ) {
     return new Promise(async (resolve, reject) => {
-      const functionHTML = await window.loadParts(
+      const updateVanillaPromise = await window.loadParts(
         config,
         domFunction,
         originFunction,
         initView,
         renderSchema,
-        originBurst
+        vanillaPromise
       );
 
-      if (functionHTML !== null) {
-        resolve(functionHTML);
+      if (updateVanillaPromise !== null) {
+        resolve(vanillaPromise);
       } else {
         reject(new Error("functionHTML is falsy"));
       }
@@ -49,7 +49,7 @@ window.frozenVanilla(
     originFunction,
     initView,
     renderSchema,
-    originBurst
+    vanillaPromise
   ) {
     let functionFile, htmlPath, cssPath, container, passedFunction;
 
@@ -73,18 +73,21 @@ window.frozenVanilla(
     }
 
     let targetElement = document.getElementById(container);
-    continueDOM(htmlPath, cssPath, container);
+    continueDOM(htmlPath, cssPath, container, vanillaPromise);
 
     // Function to continue DOM processing
-    function continueDOM(htmlPath, cssPath, container, originBurst) {
+    function continueDOM(htmlPath, cssPath, container, vanillaPromise) {
       return new Promise((resolve, reject) => {
         let originBurst;
-
+        console.log(vanillaPromise);
         try {
           originBurst = JSON.parse(localStorage.getItem("originBurst"));
         } catch (error) {
           console.error("Error parsing originBurst from localStorage:", error);
           originBurst = {};
+        }
+        if (!originBurst) {
+          originBurst = vanillaPromise.originBurst;
         }
         let htmlResult =
           originBurst?.[originFunction]?.[functionFile]?.htmlResult;
@@ -136,12 +139,14 @@ window.frozenVanilla(
                 targetElement.innerHTML,
                 functionFile
               );
-              window.storeBurstOrigin(
+              let updatedOriginBurst = window.storeBurstOrigin(
                 originBurst,
                 originFunction,
                 functionFile,
                 functionHTML
               );
+              originBurst = updatedOriginBurst;
+              vanillaPromise.originBurst = originBurst;
             }
           }
 
@@ -180,28 +185,33 @@ window.frozenVanilla(
               functionFile
             );
             // Cache the result
-            window.storeBurstOrigin(
+            let updatedOriginBurst = window.storeBurstOrigin(
               originBurst,
               originFunction,
               functionFile,
               functionHTML
             );
+            originBurst = updatedOriginBurst;
+            vanillaPromise.originBurst = originBurst;
+
             if (functionFile && functionFile !== undefined) {
               if (signalDOMUpdate === true) {
                 functionHTML = window.sanitizeVanillaDOM(
                   targetElement.innerHTML,
                   functionFile
                 );
-                window.storeBurstOrigin(
+                let updatedOriginBurst = window.storeBurstOrigin(
                   originBurst,
                   originFunction,
                   functionFile,
                   functionHTML
                 );
+                originBurst = updatedOriginBurst;
+                vanillaPromise.originBurst = originBurst;
 
-                resolve(functionHTML);
+                resolve(vanillaPromise);
               } else {
-                resolve(functionHTML);
+                resolve(vanillaPromise);
               }
             }
             // Resolve the Promise

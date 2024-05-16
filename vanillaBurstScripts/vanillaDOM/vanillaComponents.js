@@ -1,33 +1,23 @@
 window.frozenVanilla(
   "vanillaComponents",
-  function (functionFile, renderSchema, originBurst) {
-    let componentHTML;
+  function (functionFile, renderSchema, vanillaPromise) {
     try {
-      let components = renderSchema?.customFunctions[functionFile]?.components;
-      function flattenvanillaElement(components, result = []) {
-        for (let component in components) {
-          result.push(components[component]);
-
-          if (components[component].components) {
-            flattenvanillaElement(components[component].components, result);
-          }
-        }
-
-        return result;
-      }
-
-      function waitForElement(id, callback) {
-        const interval = setInterval(() => {
-          const element = document.getElementById(id);
-          console.log("checking");
-          if (element) {
-            clearInterval(interval);
-            callback(element);
-          }
-        }, 1);
-      }
-
       new Promise((resolve, reject) => {
+        let componentHTML;
+
+        let components =
+          renderSchema?.customFunctions[functionFile]?.components;
+        function flattenvanillaElement(components, result = []) {
+          for (let component in components) {
+            result.push(components[component]);
+
+            if (components[component].components) {
+              flattenvanillaElement(components[component].components, result);
+            }
+          }
+
+          return result;
+        }
         let flattenedvanillaElement = flattenvanillaElement(components);
 
         if (flattenedvanillaElement) {
@@ -110,7 +100,7 @@ window.frozenVanilla(
             // console.log(htmlPath + " html path for " + id);
 
             /////////
-
+            baseId = id;
             // Append the HTML content to the container
             id = id + "-" + renderSchema.landing + "_" + functionFile;
             //let viewContainer = document.getElementById("viewbox");
@@ -118,9 +108,14 @@ window.frozenVanilla(
               renderSchema.customFunctions[functionFile].container
             );
             let targetContainer = viewContainer.querySelector("." + container);
+            let originFunction = renderSchema.landing;
 
             let renderComponent;
-
+            let originBurst =
+              JSON.parse(localStorage.getItem("originBurst")) ||
+              vanillaPromise.originBurst;
+            console.log("this is origin burst" + originBurst);
+            let cachedComponent;
             if (!namespace) {
               renderComponent = true;
             } else {
@@ -134,7 +129,26 @@ window.frozenVanilla(
               renderComponent === true
             ) {
               // If the targetElement doesn't exist, create it
-              let targetElement = document.getElementById(id);
+
+              //let children;
+
+              if (
+                originBurst?.[originFunction]?.[functionFile]?.componentBurst?.[
+                  baseId
+                ]
+              ) {
+                let component =
+                  originBurst[originFunction][functionFile].componentBurst[
+                    baseId
+                  ];
+                if (component && component.htmlResult) {
+                  children = component.htmlResult;
+                  cachedComponent = true;
+                }
+              } else {
+                cachedComponent = false;
+              }
+
               let sanitizedChildren = window.sanitizeVanillaDOM(children);
 
               function createElementBuild(id, sanitizedChildren) {
@@ -155,10 +169,8 @@ window.frozenVanilla(
                 return elementBuild;
               }
               console.log("here a");
-
-              const elementBuild = createElementBuild(id, sanitizedChildren);
-              // Get a reference to the container
-              // let targetContainer = document.getElementById(container);
+              let elementBuild;
+              elementBuild = createElementBuild(id, sanitizedChildren);
 
               if (
                 !targetContainer.hasChildNodes() ||
@@ -168,26 +180,32 @@ window.frozenVanilla(
 
                 targetContainer.append(elementBuild);
               }
-              let componentHTML = sanitizeVanillaDOM(targetContainer.outerHTML);
+              componentHTML = sanitizeVanillaDOM(elementBuild.innerHTML);
               //CACHE IT
+
               let DOMtype = {
                 type: {
-                  component: [id, componentHTML],
+                  component: [baseId, componentHTML],
                 },
               };
-              let originFunction = functionFile;
-              window.storeBurstOrigin(
+              let updatedOriginBurst = window.storeComponentBurst(
                 originBurst,
                 originFunction,
                 functionFile,
-                componentHTML,
                 DOMtype
               );
+              console.log(JSON.stringify(updatedOriginBurst));
+              originBurst = updatedOriginBurst;
+              vanillaPromise.originBurst = originBurst;
 
               window.cssFileLoader(cssPath);
             }
           }
-          return componentHTML;
+          if (componentHTML !== null) {
+            resolve(vanillaPromise);
+          } else {
+            reject(new Error("functionHTML is falsy"));
+          }
         }
       })
         .then()
