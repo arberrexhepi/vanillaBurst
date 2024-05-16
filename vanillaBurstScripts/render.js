@@ -62,14 +62,35 @@ window.frozenVanilla(
 
       childFunction(renderSchema, rollCall, runRoll, originBurst)
         .then((vanillaPromises) => {
-          for (let customFunctionName of rollCall) {
-            window[customFunctionName](vanillaPromises[customFunctionName]);
-            window.storeBurst(vanillaPromises[customFunctionName]);
-          }
+          let containers = JSON.parse(localStorage.getItem("containers"));
 
-          console.log(vanillaPromises);
-          window.renderComplete = true;
-          localStorage.removeItem("stateBurst");
+          if (containers) {
+            let promises = containers.map(
+              (container) =>
+                new Promise((resolve, reject) => {
+                  let checkExist = setInterval(function () {
+                    if (
+                      document.getElementById(container) ||
+                      document.querySelector(`.${container}`)
+                    ) {
+                      clearInterval(checkExist);
+                      resolve();
+                    }
+                  }, 10);
+                })
+            );
+
+            Promise.all(promises).then(() => {
+              for (let customFunctionName of rollCall) {
+                window[customFunctionName](vanillaPromises[customFunctionName]);
+                window.storeBurst(vanillaPromises[customFunctionName]);
+              }
+
+              console.log(vanillaPromises);
+              window.renderComplete = true;
+              localStorage.removeItem("stateBurst");
+            });
+          }
         })
         .catch((error) => {
           console.error("An error occurred:", error);

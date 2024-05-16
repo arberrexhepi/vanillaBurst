@@ -14,7 +14,6 @@ window.frozenVanilla(
     }
     let functionResult = functionName + "Result";
 
-    console.log("here");
     // Make sure we have a valid renderSchema with a landing property
     if (!renderSchema || !renderSchema.landing) {
       console.error("Invalid renderSchema or missing landing key.");
@@ -105,7 +104,7 @@ window.frozenVanilla(
     originBurst,
     serverResult
   ) {
-    console.log("here");
+    console.log("setting originBurst, serverresult");
     // Make sure we have a valid renderSchema with a landing property
     if (!renderSchema || !renderSchema.landing) {
       console.error("Invalid renderSchema or missing landing key.");
@@ -143,46 +142,43 @@ window.frozenVanilla(
   "storeComponentBurst",
   function (originBurst, originFunction, functionFile, DOMtype) {
     // Check localStorage first
-    originBurst = originBurst || {};
-    console.log(
-      "this is the originburst at componentburst" + JSON.stringify(originBurst)
-    );
-    if (!originBurst[originFunction]) {
-      originBurst[originFunction] = {};
-    }
+    // originBurst = originBurst || {};
+    // // console.log(
+    // //   "this is the originburst at componentburst" + JSON.stringify(originBurst)
+    // // );
+    // if (!originBurst[originFunction]) {
+    //   originBurst[originFunction] = {};
+    // }
 
-    if (!originBurst[originFunction][functionFile]) {
-      originBurst[originFunction][functionFile] = {};
-    }
+    // if (!originBurst[originFunction][functionFile]) {
+    //   originBurst[originFunction][functionFile] = {};
+    // }
 
-    if (!originBurst[originFunction][functionFile].componentBurst) {
-      originBurst[originFunction][functionFile].componentBurst = {};
-    }
+    // if (!originBurst[originFunction][functionFile].componentBurst) {
+    //   originBurst[originFunction][functionFile].componentBurst = {};
+    // }
     if (
       DOMtype &&
       DOMtype.type?.component &&
       DOMtype.type.component.length >= 2
     ) {
-      if (originBurst?.[originFunction]?.[functionFile]?.componentBurst) {
-        originBurst[originFunction][functionFile].componentBurst = {
-          ...originBurst[originFunction][functionFile].componentBurst,
-          [DOMtype.type.component[0]]: {
-            id: DOMtype.type.component[0],
-            htmlResult: DOMtype.type.component[1],
-          },
-        };
-      } else {
-        originBurst[originFunction][functionFile].componentBurst = {
-          [DOMtype.type.component[0]]: {
-            id: DOMtype.type.component[0],
-            htmlResult: DOMtype.type.component[1],
-          },
-        };
+      // Initialize originBurst.componentBurst if it doesn't exist
+      if (!originBurst.componentBurst) {
+        originBurst.componentBurst = {};
       }
-      console.log(
-        "this is the originburst at AFTER componentburst" +
-          JSON.stringify(originBurst)
-      );
+
+      // Initialize originBurst.componentBurst[functionFile] if it doesn't exist
+
+      // Add or update the component
+      originBurst.componentBurst[DOMtype.type.component[0]] = {
+        id: DOMtype.type.component[0],
+        htmlResult: DOMtype.type.component[1],
+      };
+
+      // console.log(
+      //   "this is the originburst at AFTER componentburst" +
+      //     JSON.stringify(originBurst)
+      // );
     }
     return originBurst;
   }
