@@ -3,12 +3,6 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
   //let button = document.getElementById("create-config");
 
-  let route = "documentation";
-  let button = document.getElementById("docbutton-gen_gen");
-  button.addEventListener("click", function (event) {
-    window.myState([route, `../?burst=${route}`]);
-  });
-
   let subDomClicks = 0;
   $(".addSubDOM").on("click", function (e) {
     subDomClicks++;

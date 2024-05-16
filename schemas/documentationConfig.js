@@ -18,7 +18,7 @@ window.frozenVanilla("documentationConfig", function (sharedParts) {
           container: "gen-button_wrapper",
           className: "button round",
           children: `
-          <button class="mygenbutton" data-route="gen">Go to the Config Builder</button>
+          <button class="headerbutton mygenbutton" data-route="gen">Go to the Config Builder</button>
             `,
           eventHandlers: "submit:preventDefault",
         },
