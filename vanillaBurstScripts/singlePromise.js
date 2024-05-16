@@ -30,7 +30,7 @@ window.frozenVanilla(
             let prepDOM = await window.domPromises(
               renderSchema,
               customFunctionName,
-              originBurst
+              vanillaPromise
             );
             let scriptPromises = await window.appendScript(
               renderSchema,

@@ -119,7 +119,7 @@ window.frozenVanilla(
     originBurst[landingKey][functionName].serverResult || null;
     console.info({
       Update: "New serverResult:",
-      customFunciton: functionName,
+      customFunction: functionName,
     });
 
     console.table({ Result: originBurst[landingKey][functionName] });
@@ -128,15 +128,42 @@ window.frozenVanilla(
 );
 window.frozenVanilla(
   "storeBurstOrigin",
-  function (originBurst, originFunction, functionFile, safeHTML, DOMtype) {
+  function (originBurst, originFunction, functionFile, safeHTML) {
+    // Check localStorage first
     originBurst = originBurst || {};
     originBurst[originFunction] = originBurst[originFunction] || {};
     originBurst[originFunction][functionFile] =
       originBurst[originFunction][functionFile] || {};
     originBurst[originFunction][functionFile].htmlResult = safeHTML;
+    return originBurst;
+  }
+);
 
-    if (DOMtype && DOMtype.type?.component) {
-      if (originBurst[originFunction][functionFile].componentBurst) {
+window.frozenVanilla(
+  "storeComponentBurst",
+  function (originBurst, originFunction, functionFile, DOMtype) {
+    // Check localStorage first
+    originBurst = originBurst || {};
+    console.log(
+      "this is the originburst at componentburst" + JSON.stringify(originBurst)
+    );
+    if (!originBurst[originFunction]) {
+      originBurst[originFunction] = {};
+    }
+
+    if (!originBurst[originFunction][functionFile]) {
+      originBurst[originFunction][functionFile] = {};
+    }
+
+    if (!originBurst[originFunction][functionFile].componentBurst) {
+      originBurst[originFunction][functionFile].componentBurst = {};
+    }
+    if (
+      DOMtype &&
+      DOMtype.type?.component &&
+      DOMtype.type.component.length >= 2
+    ) {
+      if (originBurst?.[originFunction]?.[functionFile]?.componentBurst) {
         originBurst[originFunction][functionFile].componentBurst = {
           ...originBurst[originFunction][functionFile].componentBurst,
           [DOMtype.type.component[0]]: {
@@ -152,8 +179,11 @@ window.frozenVanilla(
           },
         };
       }
+      console.log(
+        "this is the originburst at AFTER componentburst" +
+          JSON.stringify(originBurst)
+      );
     }
-
-    localStorage.setItem("originBurst", JSON.stringify(originBurst));
+    return originBurst;
   }
 );

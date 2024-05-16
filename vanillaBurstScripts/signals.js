@@ -11,7 +11,9 @@ window.frozenVanilla("storeBurst", function (vanillaPromise) {
   }
 
   try {
-    originBurst = JSON.parse(localStorage.getItem("originBurst"));
+    originBurst =
+      JSON.parse(localStorage.getItem("originBurst")) ||
+      vanillaPromise.originBurst;
   } catch (e) {
     console.error("Failed to parse originBurst from localStorage:", e);
     originBurst = {};
@@ -50,11 +52,10 @@ window.frozenVanilla("storeBurst", function (vanillaPromise) {
     // Merge the new data with the existing data
     for (let [key, value] of Object.entries(vanillaPromise.originBurst)) {
       // Check if originBurst[key] exists, if not initialize it to an empty object
-      if (!originBurst[key]) {
+      if (!originBurst.hasOwnProperty(key)) {
         originBurst[key] = {};
       }
-
-      // Merge the new data with the existing data
+      //Merge the new data with the existing data
       originBurst[key] = {
         ...originBurst[key],
         ...value,
