@@ -18,7 +18,7 @@ window.frozenVanilla("homeviewConfig", function (sharedParts) {
           id: "docbutton",
           container: "doc-button_wrapper",
           children: `
-          <button class="headerbutton mydocbutton button round" data-route="gen">View Documentation</button>
+          <button class="headerbutton mydocbutton button round" data-route="documentation">View Documentation</button>
             `,
           eventHandlers: "submit:preventDefault",
         },
