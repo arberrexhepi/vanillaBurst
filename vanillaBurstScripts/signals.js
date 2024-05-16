@@ -44,8 +44,8 @@ window.frozenVanilla("storeBurst", function (vanillaPromise) {
         namespace:
           [vanillaPromise.renderSchema.landing, vanillaPromise.this] || null,
         signalResult:
-          vanillaPromise.originBurst[burstSchema][vanillaPromise.this]
-            .serverResult || null,
+          vanillaPromise?.originBurst?.[burstSchema]?.[vanillaPromise.this]
+            ?.serverResult || null,
       },
     };
 

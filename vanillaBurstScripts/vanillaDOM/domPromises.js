@@ -14,10 +14,10 @@ window.frozenVanilla(
           vanillaPromise
         )
           .then((vanillaPromise) => {
-            console.log(
-              "here at the end of loadDOM at the then " +
-                JSON.stringify(vanillaPromise)
-            );
+            // console.log(
+            //   "here at the end of loadDOM at the then " +
+            //     JSON.stringify(vanillaPromise)
+            // );
             let observeDOM = (id, vanillaPromise) => {
               let observerOptions = {
                 childList: true,
@@ -64,14 +64,14 @@ window.frozenVanilla(
           })
           .then((vanillaPromise) => {
             resolve(vanillaPromise);
-            console.log("here at the end of it " + vanillaPromise);
+            //console.log("here at the end of it " + vanillaPromise);
           })
           .catch((error) => {
             console.error(error);
             reject(error);
           });
       } else {
-        resolve(true);
+        resolve(vanillaPromise);
       }
     });
   }
