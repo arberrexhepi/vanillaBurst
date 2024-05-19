@@ -1,6 +1,26 @@
 window.frozenVanilla("genConfig", function (sharedParts) {
   let genConfig = {};
 
+  let seo = {
+    title: "Generate vanillaBurst App Views",
+    description:
+      "vanillaBurst assists with planning and creation of your app's views. Streamline your JS projects with ease and efficiency.",
+    keywords: [
+      "vanillaBurst",
+      "JavaScript",
+      "Plugin",
+      "Standalone",
+      "Project Builder",
+      "Server Interaction",
+      "State Caching",
+      "Load Balancing",
+    ],
+    author: "vanillaBurst Team",
+    image: "URL to the image for social sharing", // Replace with the actual URL of the image
+    url: "URL of the page", // Replace with the actual URL of the page
+    siteName: "vanillaBurst",
+  };
+
   let passedConfig = {
     gen: {
       role: "parent",
@@ -11,7 +31,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
       htmlPath: "client/views/gen/gen.html",
       cssPath: "client/views/gen/gen.css",
       container: "viewbox",
-
+      ...{ seo: seo },
       components: {
         myButtonName: {
           dir: "buttons/",
@@ -128,6 +148,8 @@ window.frozenVanilla("genConfig", function (sharedParts) {
   };
 
   genConfig = { ...vanillaConfig("gen", passedConfig) };
+
+  window.seo = seo;
 
   return genConfig;
 });

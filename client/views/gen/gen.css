@@ -8,9 +8,19 @@
     justify-content: center;
     grid-gap: 5vh;
 }
+.config-canvas{
+    justify-content: center;
+    margin-top:5vh;
+    display: flex;
+    flex-wrap:wrap;
+    grid-gap: 5vh;
+    width: 100%;
+}
 .genform{
-    width:40vh;
-    max-width:80vw;
+
+    min-width: 300px;
+    width: 30vw;
+    max-width: 400px;
     background-color: white;
     box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.05);
     padding:2vh;
@@ -19,15 +29,20 @@
 .genform > form#parentConfigForm input{
     width:90%;
 }
-.config-canvas{
-    justify-content: center;
-    margin-top:5vh;
-    display: flex;
-    grid-column-gap: 5vh;
-    width: 100%;
-}
+
 
 .config-title{
     width: 100%;
     text-align: center;
+}
+
+.config-canvas pre{
+
+    min-width: 300px;
+    width: 30vw;
+    max-width: 400px;
+    background-color: #d9dfe1;
+    box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.05);
+    padding:2vh;
+    border-radius:3vh;
 }

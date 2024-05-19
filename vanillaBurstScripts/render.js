@@ -80,9 +80,16 @@ window.frozenVanilla("render", async function render(renderSchema) {
         window[customFunctionName](vanillaPromises[customFunctionName]);
         window.storeBurst(vanillaPromises[customFunctionName]);
       }
+      let seo =
+        vanillaPromises[renderSchema.landing].renderSchema.customFunctions[
+          renderSchema.landing
+        ].seo;
 
-      window.renderComplete = true;
+      window.setSeo(seo);
+
       window.logSpacer();
+      window.renderComplete = true;
+
       console.log(
         "%c🍦🎉 vanillaBurst COMPLETE 🎉🍦",
         "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"

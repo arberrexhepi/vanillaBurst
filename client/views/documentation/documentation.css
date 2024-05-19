@@ -1,0 +1,9 @@
+.documentation-sections section{
+
+        padding-top: 40px;
+        padding-bottom: 40px;
+        border-top: dotted 2.5px;
+}
+.documentation-sections section h2{
+margin-bottom: 2vh;
+}
