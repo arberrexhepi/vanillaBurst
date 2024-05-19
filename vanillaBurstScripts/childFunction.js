@@ -1,133 +1,175 @@
+/**
+ * Processes and runs the functions defined in the renderSchema based on the provided rollCall.
+ *
+ * @param {Object} renderSchema - The schema defining the views and functions to render.
+ * @param {Array} rollCall - The list of functions to run for the view.
+ * @param {Boolean} runRoll - Flag indicating whether to run the roll call.
+ * @param {Object} originBurst - The initial state to be passed to the functions.
+ * @returns {Promise<Object>} A promise that resolves with the processed function promises.
+ * @global
+ *
+ * @description
+ * The childFunction loads and executes custom functions defined in the renderSchema.
+ * It manages asynchronous operations, processes function data, and updates the originBurst state.
+ */
 window.frozenVanilla(
   "childFunction",
   async function (renderSchema, rollCall, runRoll, originBurst) {
     return new Promise((resolve, reject) => {
-      let vanillaPromise;
-      if (runRoll === true) {
-        let runFunction;
-        rollCall;
-        let serverResult;
-        let vanillaPromises;
-        // for (const element of rollCall) {
-        //   if (window[element] && typeof window[element] === "function") {
-        //     delete window[element];
-        //   }
-        // }
+      window.logSpacer();
+      console.log(
+        "%c[Starting Promising renderSchema landing customFunctions]",
+        "color: white; font-weight: bold; font-size:24px;"
+      );
+      if (!runRoll || !Array.isArray(rollCall) || rollCall.length === 0) {
+        resolve({});
+        return;
+      }
 
-        if (Array.isArray(rollCall) && rollCall.length >= 0) {
-          arrayRoll(rollCall);
-        }
+      arrayRoll(rollCall)
+        .then((vanillaPromises) => resolve(vanillaPromises))
+        .catch((error) => reject(error));
+    });
 
-        async function arrayRoll(rollCall) {
-          let maxCount = rollCall.length;
-          let count = 0;
+    /**
+     * Processes an array of function names, executing and resolving each.
+     *
+     * @param {Array} rollCall - The list of functions to run for the view.
+     * @returns {Promise<Object>} A promise that resolves with the processed function promises.
+     */
+    async function arrayRoll(rollCall) {
+      const maxCount = rollCall.length;
+      let count = 0;
+      let vanillaPromises = {};
 
-          for (const element of rollCall) {
-            count++;
-            let passedFunction = renderSchema.customFunctions[element];
-            let customFunctionName = passedFunction.functionFile;
+      for (const element of rollCall) {
+        //window.logSpacer();
+        console.log(
+          "%cPromising " + element,
+          "color: white; font-weight: bold; font-size:18px;"
+        );
+        count++;
+        const passedFunction = renderSchema.customFunctions[element];
+        const customFunctionName = passedFunction.functionFile;
 
-            try {
-              let originBurst = await processFunction(
-                passedFunction,
-                customFunctionName
-              );
-              let serverResult =
-                originBurst?.[renderSchema.landing]?.[customFunctionName] ||
-                null;
+        try {
+          const updatedOriginBurst = await processFunction(
+            passedFunction,
+            customFunctionName
+          );
+          const serverResult =
+            updatedOriginBurst?.[renderSchema.landing]?.[customFunctionName] ||
+            null;
 
-              let vanillaPromise = await window.singlePromise(
-                renderSchema,
-                serverResult,
-                passedFunction,
-                originBurst
-              );
-              vanillaPromises = {
-                ...vanillaPromises,
-                [customFunctionName]: vanillaPromise,
-              };
+          const vanillaPromise = await window.singlePromise(
+            renderSchema,
+            serverResult,
+            passedFunction,
+            updatedOriginBurst
+          );
+          vanillaPromises[customFunctionName] = vanillaPromise;
 
-              let id = passedFunction.container;
-
-              console.log("customFunctionName:", customFunctionName);
-              console.log(
-                "window[customFunctionName]:",
-                window[customFunctionName]
-              );
-
-              window.storeBurst(vanillaPromise);
-              if (count >= maxCount) {
-                resolve(vanillaPromises);
-              }
-            } catch (error) {
-              console.error(error);
-            }
+          if (typeof window[customFunctionName] === "function") {
+            console.log(
+              "%c" + customFunctionName + " has been successfully rendered.",
+              "color: white; font-weight: bold; font-size:18px;"
+            );
+            window.logSpacer();
+          } else {
+            console.warn(
+              "window." +
+                customFunctionName +
+                " is not a function. HINT: Naming conflicts in files, or reference name exists as some other Global name such as a DIV element ID."
+            );
           }
-        }
-        async function processFunction(
-          passedFunction,
-          customFunctionName,
-          data,
-          runData
-        ) {
-          return new Promise((resolve, reject) => {
-            console.info({
-              Status: "STARTING rollCall for customFunction ",
-              customFunctionName,
-              passedFunction,
-            });
-            console.table(passedFunction);
-            if (passedFunction) {
-              //passedFunction.render = "burst";
 
-              originBurst = window.updateOriginBurst(
-                renderSchema,
-                customFunctionName,
-                passedFunction,
-                originBurst
-              );
+          window.storeBurst(vanillaPromise);
 
-              let serverResult;
-              if (
-                passedFunction.dataSchema &&
-                passedFunction.dataSchema.data.auto &&
-                passedFunction.dataSchema.data.auto === true
-              ) {
-                serverResult = window.serverRender(
-                  passedFunction.dataSchema,
-                  "serverBurst"
-                );
-              }
-              originBurst = window.setOriginBurst(
-                renderSchema,
-                customFunctionName,
-                passedFunction,
-                originBurst,
-                serverResult
-              );
-              resolve(originBurst);
-            }
-          })
-            .then()
-            .catch((error) => {
-              throw new Error("something went wrong" + error);
-            });
+          if (count >= maxCount) {
+            console.log(
+              "%c[Completed Promising renderSchema landing customFunctions]",
+              "color: white; font-weight: bold; font-size:24px;"
+            );
+            window.logSpacer();
+            return vanillaPromises;
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
-    });
+    }
+
+    /**
+     * Processes a single function and updates the originBurst state.
+     *
+     * @param {Object} passedFunction - The function definition from the renderSchema.
+     * @param {String} customFunctionName - The name of the custom function to process.
+     * @returns {Promise<Object>} A promise that resolves with the updated originBurst state.
+     */
+    function processFunction(passedFunction, customFunctionName) {
+      return new Promise((resolve) => {
+        console.info({
+          Status: "STARTING rollCall for customFunction",
+          customFunctionName,
+          passedFunction,
+        });
+
+        if (passedFunction) {
+          originBurst =
+            JSON.parse(localStorage.getItem("originBurst")) ||
+            window.updateOriginBurst(
+              renderSchema,
+              customFunctionName,
+              passedFunction,
+              originBurst
+            );
+
+          let serverResult;
+          if (passedFunction.dataSchema?.data?.auto === true) {
+            serverResult = window.serverRender(
+              passedFunction.dataSchema,
+              "serverBurst"
+            );
+          }
+
+          originBurst = window.setOriginBurst(
+            renderSchema,
+            customFunctionName,
+            passedFunction,
+            originBurst,
+            serverResult
+          );
+          resolve(originBurst);
+        }
+      }).catch((error) => {
+        throw new Error("something went wrong: " + error);
+      });
+    }
   }
 );
+
+/**
+ * Re-runs the specified custom functions.
+ *
+ * @param {Array} rollCall - An array of custom function names to re-run.
+ * @global
+ *
+ * @description
+ * The reRollFunctions function iterates over the provided rollCall and re-runs
+ * each specified custom function if it exists on the window object.
+ */
 window.frozenVanilla("reRollFunctions", function (rollCall) {
   function runReRoll(customFunctionName) {
     if (typeof window[customFunctionName] === "function") {
       window[customFunctionName]();
     }
   }
+
   if (Array.isArray(rollCall) && rollCall.length > 1) {
     for (const customFunctionName of rollCall) {
       runReRoll(customFunctionName);
     }
-  } else {
-    runReRoll(customFunctionName);
+  } else if (rollCall.length === 1) {
+    runReRoll(rollCall[0]);
   }
 });

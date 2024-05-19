@@ -14,10 +14,6 @@ window.frozenVanilla(
           vanillaPromise
         )
           .then((vanillaPromise) => {
-            // console.log(
-            //   "here at the end of loadDOM at the then " +
-            //     JSON.stringify(vanillaPromise)
-            // );
             let observeDOM = (id, vanillaPromise) => {
               let observerOptions = {
                 childList: true,
@@ -36,6 +32,7 @@ window.frozenVanilla(
                       if (domCheck) {
                         observer.disconnect();
                         resolve(vanillaPromise);
+                        return;
                       }
                     }
                   }
@@ -51,7 +48,7 @@ window.frozenVanilla(
               renderSchema?.customFunctions?.[customFunctionName]?.container;
 
             if (id) {
-              observeDOM(id, vanillaPromise).then((vanillaPromise) => {
+              return observeDOM(id, vanillaPromise).then((vanillaPromise) => {
                 if (config?.components) {
                   vanillaComponents(
                     customFunctionName,
@@ -59,12 +56,29 @@ window.frozenVanilla(
                     vanillaPromise
                   );
                 }
+                // console.log(
+                //   "first vanillaPromise log for " +
+                //     customFunctionName +
+                //     JSON.stringify(vanillaPromise)
+                // );
+                return vanillaPromise; // Ensure this promise is returned to the next then
               });
+            } else {
+              // console.log(
+              //   "else first vanillaPromise log for " +
+              //     customFunctionName +
+              //     JSON.stringify(vanillaPromise)
+              // );
+              return vanillaPromise; // Ensure this promise is returned to the next then
             }
           })
           .then((vanillaPromise) => {
+            // console.log(
+            //   "second vanillaPromise log for " +
+            //     customFunctionName +
+            //     JSON.stringify(vanillaPromise)
+            // );
             resolve(vanillaPromise);
-            //console.log("here at the end of it " + vanillaPromise);
           })
           .catch((error) => {
             console.error(error);
