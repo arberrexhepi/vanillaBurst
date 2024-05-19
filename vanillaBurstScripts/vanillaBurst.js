@@ -167,6 +167,12 @@ window.frozenVanilla(
           buildState.stateTagName,
           `/${buildState.stateTagPath}`
         );
+        let seo = window.seo;
+
+        window.setSeo(seo);
+        console.log("Setting SEO:", seo);
+        console.log("Document title set to:", seo.title);
+
         window.render(buildState.stateTagParams);
       }
 
@@ -188,6 +194,9 @@ window.frozenVanilla(
             popState.stateTagName,
             `/${popState.stateTagPath}`
           );
+          let seo = window.seo;
+
+          window.setSeo(seo);
           window.render(popState.stateTagParams);
         }
       });

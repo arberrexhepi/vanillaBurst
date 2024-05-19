@@ -1,6 +1,6 @@
 .mygenbutton {
     padding: 10px 20px;
-    background-color: #01b247;
+    background-color: #fdb635;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -10,7 +10,7 @@
 
 .mydocbutton {
     padding: 10px 20px;
-    background-color: #4800fe;
+    background-color: #16b2e4;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -18,6 +18,8 @@
     font-size: 1em;
 }
 
-/* .headerbutton{
-    
-} */
+.headerbutton{
+    min-height: 5sh;
+    height:5sh;
+}
+

@@ -11,18 +11,34 @@ window.frozenVanilla("heroHeaderConfig", function () {
         namespace: null,
       },
       components: {
-        docButtonHeader: {
+        documentationHeaderBlockquote: {
           namespace: ["homeview", "gen"],
-          dir: "buttons/",
-          id: "docbutton",
-          container: "action-container",
-          className: "button round",
+          //parent: true,
+          id: "blockquote-container",
+          container: "blockquote-wrapper",
+          className: "blockquote",
           children: `
-            <div class="button_wrapper">
-            <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button></div>
-            <br />
-            <p>Explore the power and flexibility of vanillaBurst. Dive into our comprehensive documentation to learn how to
-              use vanillaBurst, understand its core concepts, and much more.</p>
+          
+          <blockquote>
+          <small title="${window.seo.title}">${window.seo.title}</small>
+          <h2 class="myHeroHeaderh2">Just Getting Started?</h2>
+          <div class="action-container">
+          </blockquote>
+            `,
+          eventHandlers: "submit:preventDefault",
+        },
+        generateHeaderBlockquote: {
+          namespace: ["documentation"],
+          //parent: true,
+          id: "blockquote-container",
+          container: "blockquote-wrapper",
+          className: "blockquote",
+          children: `
+          <blockquote>
+          <small title="${window.seo.title}">${window.seo.title}</small>
+          <h2 class="myHeroHeaderh2">Hey TLDRs...Build Quickly!</h2>
+          <div class="action-container">
+          </blockquote>
             `,
           eventHandlers: "submit:preventDefault",
         },
@@ -36,7 +52,21 @@ window.frozenVanilla("heroHeaderConfig", function () {
           <div class="button_wrapper">
               <button class="headerbutton mygenbutton" data-route="gen">Go to Config Builder</button></div>
               <br />
-              <p>Explore the power and flexibility of vanillaBurst. Get started quickly by generating configs with the config builder!</p>
+              <p>${window.seo.description}</p>
+            `,
+          eventHandlers: "submit:preventDefault",
+        },
+        docButtonHeader: {
+          namespace: ["homeview", "gen"],
+          dir: "buttons/",
+          id: "docbutton",
+          container: "action-container",
+          className: "button round",
+          children: `
+            <div class="button_wrapper">
+            <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button></div>
+            <br />
+            <p>${window.seo.description}</p>
             `,
           eventHandlers: "submit:preventDefault",
         },

@@ -1,11 +1,25 @@
 
 #myHeroHeader {
     text-align: center;
-    padding: 20px;
-    background-color: #032f3f;
+    background-color: #ff8a65;
     color: #fdfdf1;
+    min-height: 70sh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
+#myHeroHeaderContainer{
+
+    margin:auto;
+}
+#myHeroHeader #hero-logo{
+    display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    min-height:20vh;
+    align-items: center;
+}
 #myHeroHeader img {
     width: 100px;
     height: auto;
@@ -17,9 +31,15 @@
 
 #myHeroHeader blockquote {
     color: #f75f88;
+    min-height: 30vh;
 }
 
-#myHeroHeader hr {#myHeroHeader {
+#myHeroHeader blockquote-wrapper{
+    display: flex;
+    min-height:70%;
+}
+
+#myHeroHeader hr{
     text-align: center;
     padding: 20px;
     background-color: #032f3f;
@@ -51,11 +71,8 @@
     color: #f75f88; /* Light color for contrast against dark background */
 }
 
-#myHeroHeader .action-container p {
-    color: #fdfdf1; /* Light color for contrast against dark background */
-}
-    border-color: #f75f88;
-}
+
+
 
 #myHeroHeader .action-container h1 {
     color: #ff6347;
@@ -66,10 +83,58 @@
 }
 
 #myHeroHeader .action-container p {
-    color: #ffffff;
+    color: #edf8b0;
 }
 
 #header-wordmark{
     min-width:300px;
     max-width:40vh;
+}
+
+.myHeroHeaderh2{
+    color:white;
+    margin-bottom:0;
+}
+
+
+
+.action-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.action-container h1 {
+    color: #ff6347;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+}
+
+.action-container p {
+    line-height: 1.6;
+    color: #333;
+    font-size: calc(var(--base-font-size) * var(--p-large-scale)); 
+
+}
+
+#myHeroHeader blockquote{
+
+        color: #666;
+        max-width: 600px;
+        width:60vw;
+        min-width:300px;
+        margin: auto;
+        width: 80%;
+        padding-left: 4vw;
+        padding-right:4vw;
+        padding-top:0;
+        padding-bottom:0;
+        align-items: center;
+        height:auto;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+
+    
 }

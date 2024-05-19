@@ -1,6 +1,26 @@
 window.frozenVanilla("homeviewConfig", function (sharedParts) {
   let homeviewConfig = {};
 
+  let seo = {
+    title: "vanilla JS Framework",
+    description:
+      "Meet vanillaBurst! Simplify your JS webApp projects, manage functions, DOM, and server interactions with ease.",
+    keywords: [
+      "vanillaBurst",
+      "JavaScript",
+      "Plugin",
+      "Standalone",
+      "Project Builder",
+      "Server Interaction",
+      "State Caching",
+      "Load Balancing",
+    ],
+    author: "vanillaBurst Team",
+    image: "URL to the image for social sharing", // Replace with the actual URL of the image
+    url: "URL of the page", // Replace with the actual URL of the page
+    siteName: "vanillaBurst",
+  };
+
   let passedConfig = {
     homeview: {
       role: "parent",
@@ -12,22 +32,16 @@ window.frozenVanilla("homeviewConfig", function (sharedParts) {
       cssPath: "client/views/homeview/homeview.css",
       cssPack: [""],
       container: "viewbox",
-      components: {
-        myButtonName: {
-          dir: "buttons/",
-          id: "docbutton",
-          container: "doc-button_wrapper",
-          children: `
-          <button class="headerbutton mydocbutton button round" data-route="documentation">View Documentation</button>
-            `,
-          eventHandlers: "submit:preventDefault",
-        },
-      },
+      components: {},
+      ...{ seo: seo },
     },
+
     ...sharedParts,
   };
 
   homeviewConfig = { ...vanillaConfig("homeview", passedConfig) };
+
+  window.seo = seo;
 
   return homeviewConfig;
 });

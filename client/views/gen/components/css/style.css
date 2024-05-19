@@ -57,12 +57,12 @@ input[type="text"], select {
 }
 
 input[type="text"]:focus, select:focus {
-    border-color: #4CAF50;
+    border-color: #fdb635;
     box-shadow: 0 0 8px 0 rgba(76, 175, 80, 0.2);
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #fdb635;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -73,9 +73,18 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #f75f88;
 }
+
 
 .selected {
     border: 2px solid red; /* Example style to indicate selection */
+}
+
+
+form .fields{
+    height: 40vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
 }

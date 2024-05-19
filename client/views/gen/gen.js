@@ -110,14 +110,28 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       finalConfigs.push(mergedConfig);
     });
 
-    const configResultDiv = document.getElementById("config-result");
-    if (configResultDiv) {
+    let configResultDiv = document.getElementById("config-result");
+    let clonedDiv;
+    // Check if configResultDiv is not a descendant of configCanvas
+    if (!configCanvas.contains(configResultDiv)) {
+      // Clone the configResultDiv
+      clonedDiv = configResultDiv.cloneNode(true);
+
+      // Append the cloned div to configCanvas
+      configCanvas.append(clonedDiv);
+
+      // Remove the original div
+      configResultDiv.remove();
+    }
+
+    let readyResultDiv = clonedDiv || configResultDiv;
+    if (readyResultDiv) {
       // Convert the finalConfigs array to a string
       const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-      if (configResultDiv) {
+      if (readyResultDiv) {
         // Convert the finalConfigs array to a string
         const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-        configResultDiv.innerHTML = `<pre>${configString}</pre>`;
+        readyResultDiv.innerHTML = `<pre>${configString}</pre>`;
       }
     }
     if (navigator.clipboard) {
