@@ -22,29 +22,58 @@ window.frozenVanilla("gen", function (vanillaPromise) {
     nodeConfigBuild();
   });
 
-  //move this to its own functionFile, this gen view might get more complex
+  //move this to its own functionName, this gen view might get more complex
   function nodeConfigBuild() {
+    alert("Config Generated. Check the bottom of this page for the code!");
     // Find the container for the draggable nodes
-    const configCanvas = document.querySelector("#viewbox");
+    const configCanvas = document.querySelector(".config-canvas");
     const nodes = configCanvas.querySelectorAll(".parentnode");
 
-    let configString = "";
-
     // Define a function that generates a configuration object
-    function generateConfig(
-      functionFile,
-      dir,
-      originBurst,
-      htmlPath,
-      cssPath,
-      targetDOM,
-      subDOMObject
-    ) {
+    function generateConfig() {
+      // Get the form values
+      const form = document.querySelector("#parentConfigForm");
+      const functionName = form.querySelector("#functionName").value;
+      const dir = form.querySelector("#directory").value;
+      const originBurst = form.querySelector("#originburst").value;
+      const htmlPath = form.querySelector("#htmlPath").value;
+      const cssPath = form.querySelector("#cssPath").value;
+      const targetDOM = form.querySelector("#targetDOM").value;
+
+      // Get the subDOM values
+      const subDOMTemplate = form.querySelector(".subDOMTemplate");
+      const subDOMHtmlPath = subDOMTemplate.querySelector(
+        "[name='subDOMHtmlPath']"
+      ).value;
+      const subDOMCssPath = subDOMTemplate.querySelector(
+        "[name='subDOMCssPath']"
+      ).value;
+      const subDOMTargetDOM = subDOMTemplate.querySelector(
+        "[name='subDOMTargetDOM']"
+      ).value;
+      const subDOMHtmlAttrId = subDOMTemplate.querySelector(
+        "[name='subDOMHtmlAttrId']"
+      ).value;
+      const subDOMHtmlAttrCssClass = subDOMTemplate.querySelector(
+        "[name='subDOMHtmlAttrCssClass']"
+      ).value;
+
+      // Create the subDOMObject
+      const subDOMObject = {
+        htmlPath: subDOMHtmlPath,
+        cssPath: subDOMCssPath,
+        targetDOM: subDOMTargetDOM,
+        htmlAttrs: {
+          id: subDOMHtmlAttrId,
+          cssClass: subDOMHtmlAttrCssClass,
+        },
+      };
+
       let config = {};
-      config[functionFile] = {
+      config[functionName] = {
         role: "parent",
         dir: dir,
-        functionFile: functionFile,
+        functionName: functionName,
         render: "pause",
         originBurst: originBurst,
         htmlPath: htmlPath,
@@ -55,41 +84,53 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       return config;
     }
 
-    // Use the function in your loop
-    nodes.forEach((node) => {
-      // ... (same as before)
+    let finalConfigs = [];
 
+    nodes.forEach((node) => {
       // Construct the configuration object for each node
-      let nodeConfig = generateConfig(
-        functionFile,
-        dir,
-        originBurst,
-        htmlPath,
-        cssPath,
-        targetDOM,
-        subDOMObject
-      );
+      let nodeConfig = generateConfig();
+      let sharedParts = {};
 
       // Merge nodeConfig with sharedParts and vanillaConfig
       let mergedConfig = { ...nodeConfig, ...sharedParts };
-      let finalConfig = { ...vanillaConfig(functionFile, mergedConfig) };
+      // let finalConfig = { ...vanillaConfig(functionName, mergedConfig) };
 
       // Add the final configuration to the window object
-      window[`${functionFile}Config`] = finalConfig;
+      console.log("functionName:", functionName.value);
+      console.log("mergedConfig:", mergedConfig);
+
+      if (typeof functionName.value === "string" && mergedConfig) {
+        window[`${functionName.value}Config`] = mergedConfig;
+      } else {
+        console.error("Cannot set property on window object");
+      }
+      //window.frozenVanilla(functionName, mergedConfig);
+
+      // Add the final configuration to the finalConfigs array
+      finalConfigs.push(mergedConfig);
     });
 
-    console.log("Generated vanillaBurst Config:", configString);
-
-    // Optional: Copy the config to clipboard
-    navigator.clipboard.writeText(configString).then(
-      function () {
-        alert("Config copied to clipboard!");
-
-        console.log("Copying to clipboard was successful!");
-      },
-      function (err) {
-        console.error("Could not copy text: ", err);
+    const configResultDiv = document.getElementById("config-result");
+    if (configResultDiv) {
+      // Convert the finalConfigs array to a string
+      const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
+      if (configResultDiv) {
+        // Convert the finalConfigs array to a string
+        const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
+        configResultDiv.innerHTML = `<pre>${configString}</pre>`;
       }
-    );
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(configString).then(
+        function () {
+          alert("Config copied to clipboard!");
+          console.log("Copying to clipboard was successful!");
+        },
+        function (err) {
+          console.error("Could not copy text: ", err);
+        }
+      );
+    } else {
+    }
   }
 });

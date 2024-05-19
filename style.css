@@ -38,7 +38,7 @@
      address,
      big,
      cite,
-     code,
+     /* code, */
      del,
      dfn,
      em,
@@ -209,7 +209,7 @@
         margin: 2em 0;
     }
     
-    code {
+    code, pre {
         background-color: #032f3f; /* darkest color */
         color: #fdfdf1; /* lightest color */
         padding: 4px 6px;

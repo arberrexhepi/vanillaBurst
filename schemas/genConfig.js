@@ -30,9 +30,73 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           container: "config-canvas",
           className: "parentnode genform",
           children: `
-              <div id="yo"><input type='text' name='functionName' placeholder='Function Name' />
-              <textarea name='functionBody' placeholder='Function Body'></textarea>
-              <input type='submit' value='Create Function' /></div>
+          <h3>Parent Node Configuration</h3>
+          <small>Name Convention: viewnameConfig.js</small>
+          <br /><br />
+          <form id="parentConfigForm">
+              <div class="fields">
+          
+                  <input type="hidden" id="role" name="role" value="parent"><br />
+          
+                  <label for="functionName">View Name:</label><br />
+                  <input type="text" id="functionName" name="functionName" placeholder="e.g., myFunction"><br />
+          
+                  <label for="directory">Directory:</label><br />
+                  <input type="text" id="directory" name="dir" placeholder="e.g., client/views/myFunction/"><br />
+          
+                  <label for="renderMode">Render Mode: 'pause' </label><br />
+                  <small>Change manually to 'burst' if needed</small>
+                  <br /> <br />
+          
+                  <label for="originburst">Origin Burst:</label><br />
+                  <input type="text" id="originburst" name="originburst" placeholder="e.g., a custom object"><br />
+          
+                  <label for="htmlPath">HTML Path:</label><br />
+                  <input type="text" id="htmlPath" name="htmlPath"
+                      placeholder="e.g., myFunction.html (relative to Directory above)"><br />
+          
+                  <label for="cssPath">CSS Path:</label><br />
+                  <input type="text" id="cssPath" name="cssPath"
+                      placeholder="e.g., myFunction.css (relative to Directory above)"><br />
+          
+                  <label for="targetDOM">Target DOM:</label><br />
+                  <input type="text" id="targetDOM" name="targetDOM" placeholder="e.g., someDOMId"><br /><br />
+          
+          
+                  <fieldset class="subDOMTemplate" style="display: none">
+                      <legend>Sub DOM Configuration</legend>
+                      <div class=" subDOMFieldsContainer" ">
+                              <label for=" htmlPath">HTML Path:</label><br />
+                          <input type="text" name="subDOMHtmlPath" placeholder="e.g., path"><br />
+          
+                          <label for="cssPath">CSS Path:</label><br />
+                          <input type="text" name="subDOMCssPath" placeholder="e.g., path"><br />
+          
+                          <label for="targetDOM">Target DOM:</label><br />
+                          <input type="text" name="subDOMTargetDOM" placeholder="e.g., id"><br />
+          
+                          <label for="htmlAttrs">HTML Attributes:</label><br />
+                          <fieldset id="subDOMTemplate">
+                              <!-- existing fields... -->
+          
+                              <h3>HTML Attributes:</h3>
+          
+                              <label for="id">ID:</label><br />
+                              <input type="text" name="subDOMHtmlAttrId"><br />
+          
+                              <label for="cssclass">CSS Class:</label><br />
+                              <input type="text" name="subDOMHtmlAttrCssClass"><br />
+                          </fieldset>
+                      </div>
+                  </fieldset>
+                  <label for="subDOM">Sub DOM:</label><br />
+                  <button id="subDOM" class="addSubDOM" name="subDOM">Add Sub DOM</button><br /><br />
+          
+          
+              </div>
+              <button id="create-config">Create Config</button>
+          
+          </form>
             `,
           eventHandlers: "submit:preventDefault",
         },
@@ -41,9 +105,21 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           parent: true,
           id: "functionnode",
           container: "config-canvas",
-          className: "viewnode",
+          className: "genform",
           children: `
-              <div id="yo"> say hello </div>
+          <h3>View Node</h3>
+          <label for="landing">Landing:</label>
+          <input type="text" id="landing" name="landing">
+          <div class="scripts">
+              <h4>Scripts</h4>
+              <div class="script-inputs">
+                  <label for="script">Script:</label>
+                  <input type="text" id="script" name="script[]">
+              </div>
+              <button id="add-script">Add Script</button>
+          </div>
+          <label for="preloader">Preloader:</label>
+          <input type="text" id="preloader" name="preloader">
           `,
         },
       },

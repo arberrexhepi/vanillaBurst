@@ -1,4 +1,4 @@
-#vanillaFlowCanvas {
+#config-generation-container {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -6,4 +6,28 @@
     width: 100%;
     min-height: 50vh;
     justify-content: center;
+    grid-gap: 5vh;
+}
+.genform{
+    width:40vh;
+    max-width:80vw;
+    background-color: white;
+    box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.05);
+    padding:2vh;
+    border-radius:3vh;
+}
+.genform > form#parentConfigForm input{
+    width:90%;
+}
+.config-canvas{
+    justify-content: center;
+    margin-top:5vh;
+    display: flex;
+    grid-column-gap: 5vh;
+    width: 100%;
+}
+
+.config-title{
+    width: 100%;
+    text-align: center;
 }

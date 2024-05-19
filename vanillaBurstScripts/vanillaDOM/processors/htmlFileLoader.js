@@ -78,6 +78,12 @@ window.frozenVanilla(
           img.setAttribute("nonce", nonceString);
         }
 
+        let formElements = doc.getElementsByTagName("form");
+        for (let form of formElements) {
+          let nonceString = window.nonceBack();
+          form.setAttribute("nonce", nonceString);
+        }
+
         // Ensure that the HTML content is correctly extracted
         contentToUse = doc.documentElement.outerHTML;
         console.log(
