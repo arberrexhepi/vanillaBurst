@@ -52,7 +52,7 @@ window.frozenVanilla(
           script.id = scriptId;
           document.head.appendChild(script);
 
-          console.log("script nonce:", script.getAttribute("nonce")); // Log the script's nonce
+          //console.log("script nonce:", script.getAttribute("nonce")); // Log the script's nonce
 
           // Get the CSP from the meta tag
           // const cspAfter = document.querySelector(

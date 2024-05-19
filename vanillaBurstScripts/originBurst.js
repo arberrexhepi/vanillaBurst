@@ -1,3 +1,16 @@
+/**
+ * Updates the originBurst object with the provided function data.
+ *
+ * @param {Object} renderSchema - The schema defining the views and functions to render.
+ * @param {String} functionName - The name of the custom function being processed.
+ * @param {Object} passedFunction - The function definition from the renderSchema.
+ * @param {Object} fullServerResult - The full result from the server for the function.
+ * @param {Object} originBurst - The current state of the originBurst object.
+ * @returns {Object} Updated originBurst object.
+ * @global
+ *
+ * @throws {Error} If an invalid renderSchema or missing landing key is provided.
+ */
 window.frozenVanilla(
   "updateOriginBurst",
   function (
@@ -7,94 +20,88 @@ window.frozenVanilla(
     fullServerResult,
     originBurst
   ) {
-    let burst;
-
     if (!originBurst) {
       originBurst = {};
     }
-    let functionResult = functionName + "Result";
 
-    // Make sure we have a valid renderSchema with a landing property
+    // Validate the renderSchema and ensure it has a landing property
     if (!renderSchema || !renderSchema.landing) {
       console.error("Invalid renderSchema or missing landing key.");
-      return;
+      return originBurst;
     }
 
     const landingKey = renderSchema.landing;
-    const functionResultKey = functionName + "Result";
 
-    // Ensure the originBurst object exists and has a property for the landing key
+    // Initialize the landing key in originBurst if not already present
     if (!originBurst[landingKey]) {
       console.info({
         Status: "BUILDING originBurst Object",
         Scope: landingKey,
       });
 
-      console.table({
-        Status: "BUILDING originBurst",
-        Scope: landingKey,
-      });
-
       originBurst[landingKey] = {};
     }
 
-    // Ensure there is a structure for the functionName under the landing key
-
+    // Initialize the function name entry under the landing key if not already present
     if (!originBurst[landingKey][functionName]) {
-      console.log(functionName + " has no originBurst so building");
-      console.table({
-        Status: "...Spreading customFunctions originBurst",
-        Scope: landingKey + " > " + functionName,
-      });
+      // console.table({
+      //   Status: "...Spreading customFunctions originBurst",
+      //   Scope: `${landingKey} > ${functionName}`,
+      // });
 
-      if (!originBurst[landingKey][landingKey]) {
-        originBurst[landingKey][functionName] = {
-          fromSchema: passedFunction.originBurst || undefined,
-          namespace: landingKey, // Assign the landingKey as the namespace if not provided
-          serverResult: null, // Default to undefined
-          burst: true, // Indicate that this is a new entry
-        };
-      }
-      if (!originBurst[landingKey][functionName]) {
-        originBurst[landingKey][functionName] = {
-          fromSchema: passedFunction.originBurst || undefined,
-          namespace: landingKey, // Assign the landingKey as the namespace if not provided
-          serverResult: null, // Default to undefined
-          burst: true, // Indicate that this is a new entry
-        };
-      }
+      originBurst[landingKey][functionName] = {
+        fromSchema: passedFunction?.originBurst || null,
+        namespace: passedFunction?.originBurst?.namespace || landingKey,
+        serverResult: null,
+        htmlResult: null,
+        burst: true,
+      };
+
+      window.logSpacer();
+      console.log(
+        `${functionName} initial originBurst entry; New build complete.`
+      );
     } else {
-      console.log(functionName + " has originBurst so not building");
+      window.logSpacer();
+      console.log(`${functionName} initial originBurst entry: Found existing.`);
     }
 
-    // console.info({
-    //   Status: "customFunction's originBurst ready...",
-    //   functionFile: functionName,
-    //   Result: originBurst[landingKey][functionName],
-    // });
+    console.info({
+      Status: "Custom function's originBurst ready...",
+      functionFile: functionName,
+    });
 
-    //console.table({ Result: originBurst[landingKey][functionName] });
-    // Check if the existing namespace is the same as the passedFunction's originBurst
-    const isSameOrigin =
-      originBurst?.[landingKey]?.[functionName] ===
-        passedFunction.originBurst || "";
-    originBurst[landingKey][functionName].burst = !isSameOrigin;
-    originBurst[landingKey][functionName].burst;
-    console.table(
-      isSameOrigin
-        ? { "Merging origin to scope for": functionName }
-        : { "Separating origin for functionName: ": functionName }
-    );
+    console.table({ Result: originBurst[landingKey][functionName] });
+    let getLocalOriginBurst = JSON.parse(localStorage.getItem("originBurst"));
 
-    // Object.defineProperty(window, "originBurst", {
-    //   value: originBurst,
-    //   writable: true,
-    //   configurable: true,
-    // });
+    if (
+      getLocalOriginBurst &&
+      typeof originBurst === "object" &&
+      originBurst !== null
+    ) {
+      let updatedOriginBurst = { ...getLocalOriginBurst, ...originBurst };
+      localStorage.setItem("originBurst", JSON.stringify(updatedOriginBurst));
+    } else if (typeof originBurst === "object" && originBurst !== null) {
+      localStorage.setItem("originBurst", JSON.stringify(originBurst));
+    }
+    // Return the updated originBurst
     return originBurst;
   }
 );
 
+/**
+ * Updates the originBurst object with the server result.
+ *
+ * @param {Object} renderSchema - The schema defining the views and functions to render.
+ * @param {String} functionName - The name of the custom function being processed.
+ * @param {Object} passedFunction - The function definition from the renderSchema.
+ * @param {Object} originBurst - The current state of the originBurst object.
+ * @param {Object} serverResult - The server result for the function.
+ * @returns {Object} Updated originBurst object.
+ * @global
+ *
+ * @throws {Error} If an invalid renderSchema or missing landing key is provided.
+ */
 window.frozenVanilla(
   "setOriginBurst",
   function (
@@ -104,36 +111,88 @@ window.frozenVanilla(
     originBurst,
     serverResult
   ) {
-    console.log("setting originBurst, serverresult");
-    // Make sure we have a valid renderSchema with a landing property
-    if (!renderSchema || !renderSchema.landing) {
-      console.error("Invalid renderSchema or missing landing key.");
+    return new Promise((resolve, reject) => {
+      if (!renderSchema || !renderSchema.landing) {
+        console.error("Invalid renderSchema or missing landing key.");
+        resolve(originBurst);
+        return;
+      }
+
+      const landingKey = renderSchema.landing;
+
+      // Ensure the originBurst object and its structure are properly initialized
+      if (!originBurst) {
+        originBurst = {};
+      }
+
+      if (!originBurst[landingKey]) {
+        originBurst[landingKey] = {};
+      }
+
+      if (!originBurst[landingKey][functionName]) {
+        originBurst[landingKey][functionName] = {
+          serverResult: null,
+          htmlResult: null,
+          burst: true,
+        };
+      }
+
+      // Update the serverResult in the originBurst
+      originBurst[landingKey][functionName].serverResult =
+        serverResult ||
+        originBurst[landingKey][functionName].serverResult ||
+        null;
+
+      console.info({
+        Update: "New serverResult:",
+        customFunction: functionName,
+      });
+
+      console.table({ Result: originBurst[landingKey][functionName] });
+      resolve(originBurst);
       return;
-    }
-
-    const landingKey = renderSchema.landing;
-    const functionResultKey = functionName + "Result";
-
-    originBurst[landingKey][functionName].serverResult = serverResult;
-    originBurst[landingKey][functionName].serverResult || null;
-    console.info({
-      Update: "New serverResult:",
-      customFunction: functionName,
     });
-
-    console.table({ Result: originBurst[landingKey][functionName] });
-    return originBurst;
   }
 );
+/**
+ * Stores the HTML result into the originBurst object.
+ *
+ * @param {Object} vanillaPromise - The promise object containing renderSchema and originBurst information.
+ * @param {String} functionHTML - The sanitized HTML result to be stored.
+ * @returns {Object} Updated originBurst object.
+ * @global
+ *
+ * @throws {Error} If originBurst is not available or cannot find an htmlResult for the function.
+ */
 window.frozenVanilla(
   "storeBurstOrigin",
-  function (originBurst, originFunction, functionFile, safeHTML) {
-    // Check localStorage first
-    originBurst = originBurst || {};
-    originBurst[originFunction] = originBurst[originFunction] || {};
-    originBurst[originFunction][functionFile] =
-      originBurst[originFunction][functionFile] || {};
-    originBurst[originFunction][functionFile].htmlResult = safeHTML;
+  function (vanillaPromise, functionHTML, functionFile, originFunction) {
+    let originBurst =
+      JSON.parse(localStorage.getItem("originBurst")) ||
+      vanillaPromise.originBurst;
+
+    let functionName = functionFile;
+    // alert(functionHTML);
+    if (!originBurst) {
+      console.error("originBurst is not available.");
+      return originBurst;
+    }
+
+    // Ensure the originBurst object and its nested structure are properly initialized
+    if (!originBurst[originFunction]) {
+      originBurst[originFunction] = {};
+    }
+
+    if (!originBurst[originFunction][functionName]) {
+      originBurst[originFunction][functionName] = {
+        serverResult: null,
+        htmlResult: functionHTML,
+        burst: true,
+      };
+    }
+
+    originBurst[originFunction][functionName].htmlResult = functionHTML;
+
     return originBurst;
   }
 );
@@ -141,22 +200,6 @@ window.frozenVanilla(
 window.frozenVanilla(
   "storeComponentBurst",
   function (originBurst, originFunction, functionFile, DOMtype) {
-    // Check localStorage first
-    // originBurst = originBurst || {};
-    // // console.log(
-    // //   "this is the originburst at componentburst" + JSON.stringify(originBurst)
-    // // );
-    // if (!originBurst[originFunction]) {
-    //   originBurst[originFunction] = {};
-    // }
-
-    // if (!originBurst[originFunction][functionFile]) {
-    //   originBurst[originFunction][functionFile] = {};
-    // }
-
-    // if (!originBurst[originFunction][functionFile].componentBurst) {
-    //   originBurst[originFunction][functionFile].componentBurst = {};
-    // }
     if (
       DOMtype &&
       DOMtype.type?.component &&

@@ -2,103 +2,131 @@
  * Asynchronously renders the application based on the provided schema.
  *
  * @param {Object} renderSchema - The schema defining the views and functions to render.
- * @param {Array} rollCall - The list of functions to run for the view.
+ * @param {Object} originBurst - The initial state to be passed to the functions.
  * @global
  *
  * @description
- * The render function is responsible for initializing the rendering process of the requested state.
+ * The render function initializes the rendering process based on the provided schema.
  * It iterates over the customFunctions defined in the renderSchema and executes those
  * marked with the role "rollCall" and render mode "burst". It leverages the childFunction
  * to perform the actual rendering logic.
- *  * @throws {ConsoleWarning} If the renderSchema is not provided, a warning is logged.
+ *
+ * @throws {Error} If an error occurs during the rendering process, it is logged to the console.
+ * @throws {ConsoleWarning} If the renderSchema is not provided, a warning is logged to the console.
  */
-
-window.frozenVanilla(
-  "render",
-  async function render(renderSchema, originBurst) {
-    if (renderSchema) {
-      if (!localStorage.getItem("stateBurst")) {
-        localStorage.setItem("stateBurst", JSON.stringify([]));
-      }
-      runRoll = "rollBurst";
-      window.runRoll = runRoll;
-
-      rollCall = Object.keys(renderSchema.customFunctions);
-      runRoll = true;
-
-      ////////////
-
-      ///set rollcall localstorage reference store
-      // Store rollCall in localStorage
-
-      let stateBurst = localStorage.getItem("stateBurst");
-      if (!stateBurst) {
-        localStorage.setItem("stateBurst", JSON.stringify([]));
-        stateBurst = "[]";
-      }
-
-      // Store all renderSchema.landing.customFunctions[rollCall[i]].container in localStorage
-      let containers = rollCall
-        .filter((i) =>
-          renderSchema.customFunctions[i].hasOwnProperty("container")
-        )
-        .map((i) => renderSchema.customFunctions[i].container);
-
-      let componentsTargets = rollCall
-        .filter((i) =>
-          renderSchema.customFunctions[i].hasOwnProperty("components")
-        )
-        .flatMap((i) =>
-          Object.values(renderSchema.customFunctions[i].components).map(
-            (components) => components.container
-          )
-        );
-
-      let allTargets = [...containers, ...componentsTargets];
-
-      localStorage.setItem("containers", JSON.stringify(allTargets));
-
-      //////
-
-      childFunction(renderSchema, rollCall, runRoll, originBurst)
-        .then((vanillaPromises) => {
-          let containers = JSON.parse(localStorage.getItem("containers"));
-
-          if (containers) {
-            let promises = containers.map(
-              (container) =>
-                new Promise((resolve, reject) => {
-                  let checkExist = setInterval(function () {
-                    if (
-                      document.getElementById(container) ||
-                      document.querySelector(`.${container}`)
-                    ) {
-                      clearInterval(checkExist);
-                      resolve();
-                    }
-                  }, 10);
-                })
-            );
-
-            Promise.all(promises).then(() => {
-              for (let customFunctionName of rollCall) {
-                window[customFunctionName](vanillaPromises[customFunctionName]);
-                window.storeBurst(vanillaPromises[customFunctionName]);
-              }
-
-              console.log(vanillaPromises);
-              window.renderComplete = true;
-              localStorage.removeItem("stateBurst");
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
-    } else {
-      console.warn("There are no views defined in this app");
-    }
+window.frozenVanilla("render", async function render(renderSchema) {
+  if (!renderSchema) {
+    console.warn("There are no views defined in this app");
+    return;
   }
-);
+  window.logSpacer();
+  console.log(
+    "%c[Render Started]",
+    "color: white; font-weight: bold; font-size:24px;"
+  );
 
-//render data
+  let originBurst = JSON.parse(localStorage.getItem("originBurst"));
+
+  if (!originBurst) {
+    originBurst = {};
+
+    console.log("Initializing originBurst entry: originBurst = {}");
+  } else {
+    console.log("Initializing originBurst Entry: Cache found");
+  }
+
+  initializeLocalStorage();
+
+  const runRoll = true;
+  const rollCall = Object.keys(renderSchema.customFunctions);
+  window.runRoll = "rollBurst";
+
+  const containers = collectContainers(rollCall, renderSchema);
+  localStorage.setItem("containers", JSON.stringify(containers));
+
+  try {
+    const vanillaPromises = await window.childFunction(
+      renderSchema,
+      rollCall,
+      runRoll,
+      originBurst
+    );
+
+    const loadedContainers = JSON.parse(localStorage.getItem("containers"));
+    if (loadedContainers) {
+      const promises = loadedContainers.map(
+        (container) =>
+          new Promise((resolve) => {
+            const checkExist = setInterval(() => {
+              if (
+                document.getElementById(container) ||
+                document.querySelector(`.${container}`)
+              ) {
+                clearInterval(checkExist);
+                resolve();
+              }
+            }, 10);
+          })
+      );
+
+      await Promise.all(promises);
+
+      console.log(
+        "%c[Executing JavaScript!]",
+        "color: white; font-weight: bold; font-size:24px;"
+      );
+
+      for (const customFunctionName of rollCall) {
+        window[customFunctionName](vanillaPromises[customFunctionName]);
+        window.storeBurst(vanillaPromises[customFunctionName]);
+      }
+
+      window.renderComplete = true;
+      window.logSpacer();
+      console.log(
+        "%c🍦🎉 vanillaBurst COMPLETE 🎉🍦",
+        "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
+      );
+      localStorage.removeItem("stateBurst");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+});
+
+/**
+ * Initializes localStorage if required.
+ */
+function initializeLocalStorage() {
+  if (!localStorage.getItem("stateBurst")) {
+    localStorage.setItem("stateBurst", JSON.stringify([]));
+  }
+}
+
+/**
+ * Collects all containers from the renderSchema.
+ *
+ * @param {Array} rollCall - List of function names to execute for rendering.
+ * @param {Object} renderSchema - The schema defining the views and functions to render.
+ *
+ * @returns {Array} - List of containers to be added in localStorage.
+ */
+function collectContainers(rollCall, renderSchema) {
+  const containers = rollCall
+    .filter((fn) =>
+      renderSchema.customFunctions[fn].hasOwnProperty("container")
+    )
+    .map((fn) => renderSchema.customFunctions[fn].container);
+
+  const componentsTargets = rollCall
+    .filter((fn) =>
+      renderSchema.customFunctions[fn].hasOwnProperty("components")
+    )
+    .flatMap((fn) =>
+      Object.values(renderSchema.customFunctions[fn].components).map(
+        (component) => component.container
+      )
+    );
+
+  return [...containers, ...componentsTargets];
+}

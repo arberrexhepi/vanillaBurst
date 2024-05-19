@@ -1,12 +1,8 @@
-let ranScripts = false;
-
 let historyCount = 0;
 window.historyCount = historyCount;
-newRequest = false;
-window.newRequest = newRequest;
 
 window.frozenVanilla(
-  "stateDefine",
+  "vanillaBurst",
   async function (
     stateTag,
     stateTagPath,
@@ -15,40 +11,23 @@ window.frozenVanilla(
     originBurst
   ) {
     let renderSchema;
-    if (!originBurst) {
-      originBurst = {};
-    }
+    originBurst =
+      JSON.parse(localStorage.getItem("originBurst")) || originBurst || {};
 
-    //console.log(`Defining state: ${stateTag}`);
-
-    loadParams;
+    // Initialize state, stateBurst, and local storage data
     let currentState = {};
     let stateBurst = JSON.parse(localStorage.getItem("stateBurst")) || [];
-
-    originBurst =
-      originBurst || JSON.parse(localStorahe.getItem("originBurst"));
     stateTag = stateTag || stateBurst[0] || null;
     stateTagPath = stateTagPath || stateBurst[1] || null;
     loadParams = loadParams || stateBurst[2] || null;
 
-    function storeView(stateTag) {
-      //approach to take to fetch already loaded views for quick render
-      //return storepath + stateTag + '.js';
-    }
+    // Load scripts for the state
+    function stateScripts(stateTag) {
+      const { scripts: scriptUrls, preloader: preloaderUrl } =
+        window.schema[stateTag];
+      const nonceString2 = window.nonceBack();
 
-    function stateScripts(
-      stateTag,
-      stateTagPath,
-      loadParams,
-      historyCount,
-      originBurst
-    ) {
-      console.log(`Preloading state: ${stateTag}`);
-
-      const scriptUrls = window.schema[stateTag].scripts;
-      const preloaderUrl = window.schema[stateTag].preloader;
-      const nonceString2 = window.nonceBack(); // Fetch nonceString2 once
-      function loadScript(url, nonceString2) {
+      function loadScript(url) {
         return new Promise((resolve, reject) => {
           let script = document.querySelector(`script[src="${url}"]`);
           if (script) {
@@ -66,7 +45,7 @@ window.frozenVanilla(
         });
       }
 
-      function addScriptToHead(url, nonceString2) {
+      function addScriptToHead(url) {
         let script = document.querySelector(`script[src="${url}"]`);
         if (script) {
           document.head.removeChild(script);
@@ -78,20 +57,14 @@ window.frozenVanilla(
         document.head.appendChild(script);
       }
 
-      function loadScriptAndRunFunction(
-        scriptUrls,
-        preloaderUrl,
-        nonceString2
-      ) {
-        return loadScript(preloaderUrl, nonceString2)
+      function loadScriptAndRunFunction() {
+        return loadScript(preloaderUrl)
           .then(() => {
-            addScriptToHead(preloaderUrl, nonceString2);
+            addScriptToHead(preloaderUrl);
             window.preloaderAnimation();
             return Promise.all(
               scriptUrls.map((url) =>
-                loadScript(url, nonceString2).then(() =>
-                  addScriptToHead(url, nonceString2)
-                )
+                loadScript(url).then(() => addScriptToHead(url))
               )
             );
           })
@@ -105,28 +78,38 @@ window.frozenVanilla(
           });
       }
 
-      loadScriptAndRunFunction(scriptUrls, preloaderUrl, nonceString2)
+      loadScriptAndRunFunction()
         .then(() => {
           runState();
           handlePop();
           window.removeLoader();
         })
         .catch((error) => {
-          console.error("Error loading script:", error);
-          return Promise.reject(error); // Reject the promise
+          console.error("Error loading scripts:", error);
+          return Promise.reject(error);
         });
     }
-    stateScripts(stateTag, stateTagPath, loadParams, historyCount, originBurst);
+
+    // Execute the state scripts
+    stateScripts(stateTag);
 
     function runState() {
-      console.log("Running state...");
-      console.log(loadParams);
+      window.logSpacer();
+      console.log(
+        `%c[Changing state to: ${stateTag}]`,
+        "color: white; font-weight: bold; font-size:24px;"
+      );
+      if (loadParams === null) {
+        console.log("State will run with default loadParam: {}");
+      } else {
+        console.log(
+          "State will run with passed loadParam: " + JSON.stringify(loadParams)
+        );
+      }
 
       function stateParams(loadParams, tagParam) {
-        //this resource is where the new schema from viewSchemas folder should come in
         const resource =
-          window.schema?.[tagParam]?.customFunctions?.[tagParam]?.dataSchema ||
-          undefined;
+          window.schema?.[tagParam]?.customFunctions?.[tagParam]?.dataSchema;
         const resourceParent = window.schema[tagParam];
 
         if (
@@ -138,35 +121,29 @@ window.frozenVanilla(
 
           if (resource.data) {
             for (let param in resource.data) {
-              //param = resource.data[param];
-              if (resource.data[param] == undefined) {
+              if (resource.data[param] === undefined) {
                 result.data[param] = loadParams[param];
               }
             }
-            // Update the original resource.data with the new values
             resource.data = result.data;
-
             resourceParent.customFunctions[tagParam].dataSchema = resource;
             console.log(
-              "customFuncitons by tagParam aka stateTag has been updated with dynamic data",
+              "customFunctions by tagParam (stateTag) have been updated with dynamic data",
               resourceParent
             );
           } else {
             return resourceParent;
           }
-          console.log(resourceParent);
 
+          console.log(resourceParent);
           return resourceParent;
         } else {
-          //console.log("no params");
           return resourceParent;
         }
       }
-      function processState(stateTag, stateTagPath, loadParams, historyCount) {
-        console.log(`Changing state to: ${stateTag}`);
 
-        let tagParam = stateTag;
-        let renderSchema = stateParams(loadParams, tagParam);
+      function processState() {
+        let renderSchema = stateParams(loadParams, stateTag);
 
         return {
           stateTagName: stateTag,
@@ -177,63 +154,41 @@ window.frozenVanilla(
           stateCount: historyCount,
         };
       }
-      function changeState(stateTag, stateTagPath, loadParams, historyCount) {
-        if (history.state && history.state.stateCount) {
-          historyCount = history.state.stateCount;
-          historyCount++;
-        } else {
-          historyCount = window.historyCount;
-          historyCount++;
-        }
-        let buildState = processState(
-          stateTag,
-          stateTagPath,
-          loadParams,
-          historyCount
-        );
-        window.historyCount = buildState.stateCount;
 
+      function changeState() {
+        historyCount = history.state?.stateCount || window.historyCount;
+        historyCount++;
+
+        let buildState = processState();
+
+        window.historyCount = buildState.stateCount;
         history.pushState(
           buildState,
           buildState.stateTagName,
-          "/" + buildState.stateTagPath
+          `/${buildState.stateTagPath}`
         );
-
         window.render(buildState.stateTagParams);
       }
-      changeState(
-        stateTag,
-        stateTagPath,
-        loadParams,
-        historyCount,
-        originBurst
-      );
+
+      changeState();
     }
+
+    // Handle popstate events for navigation
     function handlePop() {
       window.addEventListener("popstate", (event) => {
-        //console.log('popstate detected');
-        renderComplete = window.renderComplete;
-        if (event.state && renderComplete === true) {
-          renderComplete = "false";
+        if (event.state && window.renderComplete === true) {
+          window.renderComplete = false;
           let popState = event.state;
-          popState;
-          historyCount = popState.stateCount;
-          historyCount++;
+          historyCount = popState.stateCount + 1;
           window.historyCount = historyCount;
 
           console.log(popState);
           history.replaceState(
             popState,
             popState.stateTagName,
-            "/" + popState.stateTagPath
+            `/${popState.stateTagPath}`
           );
-
-          let sendStateData = popState.stateTagData;
-
-          renderSchema = popState.stateTagParams;
-          console.log(renderSchema);
-
-          window.render(renderSchema);
+          window.render(popState.stateTagParams);
         }
       });
     }
@@ -241,9 +196,8 @@ window.frozenVanilla(
 );
 
 window.frozenVanilla("myState", function (stateBurst) {
-  // Check if stateBurst exists in localStorage
   if (history.state.stateTagName !== stateBurst[0]) {
     localStorage.setItem("stateBurst", JSON.stringify(stateBurst));
-    window.stateDefine();
+    window.vanillaBurst();
   }
 });

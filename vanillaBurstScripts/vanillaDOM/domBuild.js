@@ -1,13 +1,5 @@
-///You should try frozenVanilla! it's awesome
-
 // Centralized nonce management
-function getNonce() {
-  let nonceString = window.nonce();
-  window.nonceBack(nonceString);
-  return nonceString;
-}
 
-////for this consider making window.schema available to helper functions as a localstorage object instead, so a dev doesn't have to keep passing all this info, or change this (which i don't want to because too much reconfiguring in singlePromise.js for now)
 window.frozenVanilla(
   "loadDOM",
   async function (
@@ -19,99 +11,114 @@ window.frozenVanilla(
     initView
   ) {
     return new Promise(async (resolve, reject) => {
-      const updateVanillaPromise = await window.loadParts(
-        config,
-        domFunction,
-        originFunction,
-        initView,
-        renderSchema,
-        vanillaPromise
-      );
+      try {
+        await window.loadParts(
+          config,
+          domFunction,
+          originFunction,
+          initView,
+          renderSchema,
+          vanillaPromise,
+          resolve
+        );
 
-      if (updateVanillaPromise !== null) {
         resolve(vanillaPromise);
-      } else {
-        reject(new Error("functionHTML is falsy"));
+      } catch (error) {
+        console.warn(
+          "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
+            domFunction
+        );
+
+        resolve(vanillaPromise);
       }
-    })
-      .then()
-      .catch((error) => {
-        console.error(error);
-      });
+    });
   }
 );
 
 window.frozenVanilla(
   "loadParts",
-  function (
+  async function (
     domConfig,
     domFunction,
     originFunction,
     initView,
     renderSchema,
-    vanillaPromise
+    vanillaPromise,
+    resolve
   ) {
-    let functionFile, htmlPath, cssPath, container, passedFunction;
-
     // Determine the function to use
-    passedFunction =
+    const passedFunction =
       renderSchema.customFunctions?.[domFunction] ?? domConfig[domFunction];
 
-    if (passedFunction.functionFile) {
-      functionFile = passedFunction.functionFile;
-      htmlPath = window.baseUrl + passedFunction.htmlPath;
-      if (passedFunction.cssPath) {
-        cssPath = window.baseUrl + passedFunction.cssPath;
-      } else {
-        cssPath = null;
-      }
+    if (!passedFunction?.functionFile) {
+      // TODO: Consider adding a check for passedFunction.functionFile.container here once the rendering techniques are finalized
 
-      container = passedFunction.container;
-    } else {
-      console.error("Function file not found");
-      return;
+      return resolve(vanillaPromise);
     }
 
-    let targetElement = document.getElementById(container);
-    continueDOM(htmlPath, cssPath, container, vanillaPromise);
+    const functionFile = passedFunction.functionFile;
+    const htmlPath = window.baseUrl + passedFunction.htmlPath;
+    const cssPath = passedFunction.cssPath
+      ? window.baseUrl + passedFunction.cssPath
+      : null;
+    const container = passedFunction.container;
 
-    // Function to continue DOM processing
-    function continueDOM(htmlPath, cssPath, container, vanillaPromise) {
-      return new Promise((resolve, reject) => {
-        let originBurst;
-        console.log(vanillaPromise);
+    let originBurst = vanillaPromise.originBurst;
+
+    const targetElementPromise = new Promise((resolve, reject) => {
+      originBurst = JSON.parse(localStorage.getItem("originBurst")) || {};
+      let element = window.createNewElement(container);
+
+      ///within this function we could check for cache:true, false, dynamic or whatever else to resolve in this promise to be passed to htmlFileLoader()
+      if (!originBurst?.[originFunction]?.[functionFile]?.htmlResult) {
+        //handle potential future features
+      } else {
+        //handle potential future features
+      }
+
+      element
+        ? resolve(element)
+        : reject(new Error("Unable to create or find target element"));
+    });
+
+    targetElementPromise
+      .then((targetElement) => {
+        window.htmlFileLoader(
+          { htmlPath, cssPath, originFunction, functionFile },
+          (htmlContent) =>
+            window.updateContent(
+              htmlContent,
+              targetElement,
+              false,
+              functionFile
+            )
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "An error occurred while loading and updating HTML content:",
+          error
+        );
+      });
+
+    window.updateContent = (
+      functionHTML,
+      targetElement,
+      cached,
+      functionFile
+    ) => {
+      if (functionHTML) {
+        // Parse the HTML string into a DOM structure
         try {
-          originBurst = JSON.parse(localStorage.getItem("originBurst"));
-        } catch (error) {
-          console.error("Error parsing originBurst from localStorage:", error);
-          originBurst = {};
-        }
-        if (!originBurst) {
-          originBurst = vanillaPromise.originBurst;
-        }
-        let htmlResult =
-          originBurst?.[originFunction]?.[functionFile]?.htmlResult;
-
-        if (htmlResult) {
-          let targetElement =
-            document.getElementById(container) ||
-            document.querySelector(`div#${container}`);
-
-          if (!targetElement) {
-            targetElement = document.createElement("div");
-            let nonceString = window.nonce();
-            console.log("nonceString:", nonceString); // Check nonceString
-            window.nonceBack(nonceString);
-            targetElement.setAttribute("nonce", nonceString);
-            console.log("document.body:", document.body); // Check document.body
-            document.body.appendChild(targetElement);
-          }
-
-          console.log("htmlResult:", htmlResult); // Check htmlResult
-
-          // Parse the HTML string into a DOM structure
           let parser = new DOMParser();
-          let doc = parser.parseFromString(htmlResult, "text/html");
+          let doc = parser.parseFromString(functionHTML, "text/html");
+
+          // If doc is not defined, create a new div and set its innerHTML to functionHTML
+          if (!doc) {
+            let div = document.createElement("div");
+            div.innerHTML = functionHTML;
+            doc = div;
+          }
 
           // Add a nonce to img tags
           let imgTags = doc.getElementsByTagName("img");
@@ -121,103 +128,90 @@ window.frozenVanilla(
             img.setAttribute("nonce", nonceString);
           }
 
-          // Serialize the DOM structure back into a string
+          // // Serialize the DOM structure back into a string
           let serializer = new XMLSerializer();
           let serializedHTML = serializer.serializeToString(doc);
-
-          // Set the innerHTML of the target element
-          targetElement.innerHTML = serializedHTML;
-
-          let signalDOMUpdate = window.signalBurstDOM(
-            originFunction,
-            functionFile
+          functionHTML = serializedHTML;
+        } catch (error) {
+          console.error(
+            "An error occurred while parsing the HTML, adding nonces to img elements, and serializing the HTML:",
+            error
           );
-          // Cache the result
-          if (signalDOMUpdate === true) {
-            if (functionFile && functionFile !== undefined) {
-              functionHTML = window.sanitizeVanillaDOM(
-                targetElement.innerHTML,
-                functionFile
-              );
-              let updatedOriginBurst = window.storeBurstOrigin(
-                originBurst,
-                originFunction,
-                functionFile,
-                functionHTML
-              );
-              originBurst = updatedOriginBurst;
-              vanillaPromise.originBurst = originBurst;
-            }
-          }
-
-          window.cssFileLoader(cssPath);
-        } else {
-          window.htmlFileLoader({ htmlPath, cssPath }, (htmlContent) => {
-            // Sanitize the HTML content
-            let targetElement =
-              document.getElementById(container) ||
-              document.querySelector(`div#${container}`);
-            let functionHTML;
-
-            if (!targetElement) {
-              targetElement = document.createElement("div");
-              targetElement.id = container;
-              let nonceString = window.nonce();
-              window.nonceBack(nonceString);
-              targetElement.setAttribute("nonce", nonceString);
-              document.body.appendChild(targetElement);
-            }
-
-            if (functionFile) {
-              functionHTML = window.sanitizeVanillaDOM(
-                htmlContent,
-                functionFile
-              );
-            }
-
-            if (functionHTML) {
-              targetElement.innerHTML = functionHTML;
-            }
-
-            window.cssFileLoader(cssPath);
-            let signalDOMUpdate = window.signalBurstDOM(
-              originFunction,
-              functionFile
-            );
-            // Cache the result
-            let updatedOriginBurst = window.storeBurstOrigin(
-              originBurst,
-              originFunction,
-              functionFile,
-              functionHTML
-            );
-            originBurst = updatedOriginBurst;
-            vanillaPromise.originBurst = originBurst;
-
-            if (functionFile && functionFile !== undefined) {
-              if (signalDOMUpdate === true) {
-                functionHTML = window.sanitizeVanillaDOM(
-                  targetElement.innerHTML,
-                  functionFile
-                );
-                let updatedOriginBurst = window.storeBurstOrigin(
-                  originBurst,
-                  originFunction,
-                  functionFile,
-                  functionHTML
-                );
-                originBurst = updatedOriginBurst;
-                vanillaPromise.originBurst = originBurst;
-
-                resolve(vanillaPromise);
-              } else {
-                resolve(vanillaPromise);
-              }
-            }
-            // Resolve the Promise
-          });
         }
-      });
+
+        // Set the innerHTML of the target element
+        targetElement.innerHTML = functionHTML;
+
+        //alert("here is " + functionHTML);
+        window.updateVanillaPromise(
+          vanillaPromise,
+          targetElement,
+          functionHTML,
+          functionFile,
+          cssPath,
+          originFunction,
+          resolve
+        );
+      }
+    };
+  }
+);
+
+window.frozenVanilla("createNewElement", async function (container) {
+  //alert(container);
+  let targetElement = document.getElementById(container);
+  if (!targetElement) {
+    targetElement = document.createElement("div");
+
+    targetElement.id = container;
+    targetElement.setAttribute("nonce", window.nonceBack());
+    document.body.appendChild(targetElement);
+  }
+
+  return targetElement;
+});
+
+window.frozenVanilla(
+  "updateVanillaPromise",
+  async function (
+    vanillaPromise,
+    targetElement,
+    safeHTML,
+    functionFile,
+    cssPath,
+    originFunction,
+    resolve
+  ) {
+    //TODO: reimplement signalUpdates here. See signalBurstDOM.js in directory ./vanillaDOM/processors
+
+    function mergeOriginBursts(existingBurst, newBurst) {
+      return { ...existingBurst, ...newBurst };
     }
+
+    let updatedOriginBurst = window.storeBurstOrigin(
+      vanillaPromise,
+      safeHTML,
+      functionFile,
+      originFunction
+    );
+    vanillaPromise.originBurst = updatedOriginBurst;
+
+    let existingOriginBurst =
+      JSON.parse(localStorage.getItem("originBurst")) ||
+      vanillaPromise.originBurst;
+
+    let existingHTML =
+      existingOriginBurst?.[originFunction]?.[functionFile]?.htmlResult || "";
+
+    let sanitizedInitialHTML = safeHTML;
+    if (sanitizedInitialHTML !== existingHTML) {
+      let combinedOriginBurst = mergeOriginBursts(
+        existingOriginBurst,
+        vanillaPromise.originBurst
+      );
+      localStorage.setItem("originBurst", JSON.stringify(combinedOriginBurst));
+    }
+
+    resolve(vanillaPromise);
   }
 );

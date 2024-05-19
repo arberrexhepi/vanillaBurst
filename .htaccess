@@ -3,7 +3,9 @@ RewriteEngine On
 
 # Ensure mod_rewrite is available
 <IfModule mod_headers.c>
-    # controlled dynamically with nonceBack()
+    <FilesMatch "\.(jpg|jpeg|png|gif|svg|ico)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
 </IfModule>
 
 <IfModule mod_mime.c>
@@ -29,5 +31,8 @@ RewriteEngine On
     # Serve "index.html" for all other requests not accessing a physical file
     RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|svg|ico)$ [NC]
     RewriteRule ^ index.html [L]
+
+    SetEnvIf Request_URI "^/?burst=([^&]+)&name_space=([^&]+)&entry=([^&]+)$" statePath=?burst=%1&name_space=%2&entry=%3
+
 
 </IfModule>
