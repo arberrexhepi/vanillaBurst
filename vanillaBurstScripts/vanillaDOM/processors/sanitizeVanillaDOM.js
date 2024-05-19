@@ -1,7 +1,7 @@
 window.frozenVanilla("sanitizeVanillaDOM", function (htmlString, functionFile) {
   try {
     const config = {
-      ADD_TAGS: { "vanilla-element": ["name"], script: {} },
+      ADD_TAGS: { form: {}, "vanilla-element": ["name"], script: {} },
       USE_PROFILES: { html: true },
     };
 
