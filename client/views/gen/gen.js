@@ -112,22 +112,24 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
     let configResultDiv = document.getElementById("config-result-gen_gen");
 
-    if (configResultDiv) {
-      // Convert the finalConfigs array to a string
-      const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-      if (configResultDiv) {
-        // Convert the finalConfigs array to a string
-        const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-        configResultDiv.innerHTML = `<pre>${configString}</pre>`;
+    // Convert the finalConfigs array to a string
 
-        // vanillaComponents(functionFile, renderSchema, vanillaPromise);
+    // Convert the finalConfigs array to a string
+    const newHTML =
+      "//The 'canvasresult' component was updated and cached using \n" +
+      "//<em>window.updateComponent(vanillaPromise, newHTML, componentKey, target || undefined)</em>\n" +
+      "//The helper function used vanillaPromise to find the component config in the schema by 'canvasresult' param,\n" +
+      "//then updated the optionally set '.config-result' target.<br/><br/>" +
+      "//Here is your config code!<br/><br/>" +
+      JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
 
-        window.directComponentCache(
-          "config-result-gen_gen",
-          configResultDiv.outerHTML
-        );
-      }
-    }
+    window.updateComponent(
+      vanillaPromise,
+      newHTML,
+      "canvasresult",
+      ".config-result"
+    );
+
     if (navigator.clipboard) {
       navigator.clipboard.writeText(configString).then(
         function () {
