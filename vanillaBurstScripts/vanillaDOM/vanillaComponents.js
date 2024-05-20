@@ -1,6 +1,14 @@
 window.frozenVanilla(
   "vanillaComponents",
   function (functionFile, renderSchema, vanillaPromise) {
+    if (
+      !renderSchema &&
+      vanillaPromise &&
+      typeof vanillaPromise === "object" &&
+      vanillaPromise !== null
+    ) {
+      let renderSchema = vanillaPromise.renderSchema;
+    }
     function flattenvanillaElement(components, result = []) {
       for (let component in components) {
         result.push(components[component]);
@@ -190,3 +198,15 @@ window.frozenVanilla(
     }
   }
 );
+
+/////HELPER FUNCTIONS
+///SET A DIRECT CACHE
+
+window.frozenVanilla("directComponentCache", function (componentKey, newHTML) {
+  let storedData = JSON.parse(localStorage.getItem("originBurst"));
+  storedData.componentBurst[componentKey].htmlResult = newHTML;
+  localStorage.setItem("originBurst", JSON.stringify(storedData));
+});
+
+// Usage
+//window.directComponentCache("config-result-gen_gen", configResultDiv.outerHTML);
