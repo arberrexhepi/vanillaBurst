@@ -110,28 +110,22 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       finalConfigs.push(mergedConfig);
     });
 
-    let configResultDiv = document.getElementById("config-result");
-    let clonedDiv;
-    // Check if configResultDiv is not a descendant of configCanvas
-    if (!configCanvas.contains(configResultDiv)) {
-      // Clone the configResultDiv
-      clonedDiv = configResultDiv.cloneNode(true);
+    let configResultDiv = document.getElementById("config-result-gen_gen");
 
-      // Append the cloned div to configCanvas
-      configCanvas.append(clonedDiv);
-
-      // Remove the original div
-      configResultDiv.remove();
-    }
-
-    let readyResultDiv = clonedDiv || configResultDiv;
-    if (readyResultDiv) {
+    if (configResultDiv) {
       // Convert the finalConfigs array to a string
       const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-      if (readyResultDiv) {
+      if (configResultDiv) {
         // Convert the finalConfigs array to a string
         const configString = JSON.stringify(finalConfigs, null, 2); // Beautify the JSON string
-        readyResultDiv.innerHTML = `<pre>${configString}</pre>`;
+        configResultDiv.innerHTML = `<pre>${configString}</pre>`;
+
+        // vanillaComponents(functionFile, renderSchema, vanillaPromise);
+
+        window.directComponentCache(
+          "config-result-gen_gen",
+          configResultDiv.outerHTML
+        );
       }
     }
     if (navigator.clipboard) {

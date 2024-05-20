@@ -39,8 +39,8 @@
 .config-canvas pre{
 
     min-width: 300px;
-    width: 30vw;
-    max-width: 400px;
+    width: 67.5vw;
+    max-width: 1000px;
     background-color: #d9dfe1;
     box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.05);
     padding:2vh;

@@ -142,6 +142,13 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           <input type="text" id="preloader" name="preloader">
           `,
         },
+        canvasresult: {
+          parent: true,
+          id: "config-result",
+          container: "config-canvas",
+          className: "config-result",
+          children: "",
+        },
       },
     },
     ...sharedParts,
