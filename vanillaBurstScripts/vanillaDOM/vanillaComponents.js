@@ -202,11 +202,39 @@ window.frozenVanilla(
 /////HELPER FUNCTIONS
 ///SET A DIRECT CACHE
 
-window.frozenVanilla("directComponentCache", function (componentKey, newHTML) {
-  let storedData = JSON.parse(localStorage.getItem("originBurst"));
-  storedData.componentBurst[componentKey].htmlResult = newHTML;
-  localStorage.setItem("originBurst", JSON.stringify(storedData));
-});
+window.frozenVanilla(
+  "updateComponent",
+  function (vanillaPromise, newHTML, componentKey, target) {
+    storedComponentId =
+      vanillaPromise.passedFunction.components[componentKey].id +
+      "-" +
+      vanillaPromise.renderSchema.landing +
+      "_" +
+      vanillaPromise.this;
+
+    let componentContainer;
+    if (!target) {
+      target = storedComponentId;
+    }
+
+    if (target.startsWith("#")) {
+      componentContainer = document.getElementById(target.slice(1));
+    } else if (target.startsWith(".")) {
+      componentContainer = document.getElementsByClassName(target.slice(1))[0];
+    } else {
+      componentContainer = document.getElementById(target);
+    }
+
+    if (componentContainer) {
+      componentContainer.innerHTML = newHTML;
+    }
+
+    let storedData = JSON.parse(localStorage.getItem("originBurst"));
+    storedData.componentBurst[storedComponentId].htmlResult =
+      componentContainer.outerHTML;
+    localStorage.setItem("originBurst", JSON.stringify(storedData));
+  }
+);
 
 // Usage
 //window.directComponentCache("config-result-gen_gen", configResultDiv.outerHTML);
