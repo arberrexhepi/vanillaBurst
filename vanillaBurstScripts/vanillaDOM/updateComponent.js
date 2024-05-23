@@ -255,7 +255,6 @@ window.frozenVanilla(
         selectorClass = htmlData.selector.split(".")[1];
       }
 
-      alert("here");
       let tag = htmlData.tag || "div";
 
       // Wrap each HTML string with the specified tag
@@ -339,7 +338,6 @@ window.frozenVanilla(
             let componentBurst = parsedOriginBurst.componentBurst;
             let componentBurstLog = componentBurst["configresult-gen_gen"];
 
-            alert(componentBurstLog + target);
             let data = storedData.componentBurst[storedComponentId]; // replace 'originBurst' with the key of your data
             let storageSizeBytes = new Blob([data]).size;
             let storageSizeKB = storageSizeBytes / 1024;
@@ -348,7 +346,6 @@ window.frozenVanilla(
             let storageSizeMBLog = storageSizeMB.toFixed(2) + " MB";
 
             let verboseResult = `Storage size: ${storageSizeKBLog}\nStorage size: ${storageSizeMBLog}\nComponent Burst: ${componentBurstLog}`;
-            alert("yoaaaaa");
             // Now 'result' contains the string you want
             if (!storedData.componentBurst) {
               storedData.componentBurst = {};
