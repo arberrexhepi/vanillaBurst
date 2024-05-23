@@ -31,6 +31,7 @@ window.frozenVanilla(
     componentPrep,
     componentKey,
     target,
+    callback,
     verbose
   ) {
     ///
@@ -214,7 +215,7 @@ window.frozenVanilla(
                 htmlData.callBack &&
                 typeof htmlData.callBack === "function"
               ) {
-                htmlData.callBack();
+                htmlData.callBack(htmlData.selector);
               }
               resolve(cacheResult); // resolve the Promise with cacheResult
             } catch (error) {
