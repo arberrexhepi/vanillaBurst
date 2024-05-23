@@ -1,11 +1,17 @@
-.weather-app {
+.weather-wrapper{
+    max-width:400px;
+    min-width:250px;
+    min-height: 40vh;
     width: 80%;
     margin: 0 auto;
     text-align: center;
     transition: all 0.3s ease-in-out;
+    height: auto;
+
 }
 
-.weather-app:hover {
+
+.weather-wrapper:hover {
     transform: scale(1.02);
 }
 
@@ -31,7 +37,7 @@
     transform: scale(1.02);
 }
 
-.weather-current .temperature {
+.weather-current .temperature, .weather-timer {
     font-size: calc(var(--base-font-size) * var(--h2-scale));
     color: #fdb635;
     transition: color 0.3s ease-in-out;
@@ -61,7 +67,13 @@
     transform: rotate(360deg);
 }
 
-.weather-wrapper{
-    max-width:400px;
-    min-width:250px;
+
+
+#timer-info {
+    margin-top: 2vh;
+    color: teal;
+}
+
+.wind-speed{
+    color:cornflowerblue;
 }

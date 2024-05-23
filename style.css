@@ -410,3 +410,18 @@
         padding:2vh;
         border-radius:3vh;
     }
+
+    section{
+        display: flex;
+        flex-direction: column;
+        grid-gap: 3vh;
+    }
+    article{
+        display: flex;
+        flex-direction: column;
+        grid-gap: 4vh;
+    }
+
+    .scoop{
+        justify-content: center;
+    }
