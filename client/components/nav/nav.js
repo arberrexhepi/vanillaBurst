@@ -7,7 +7,9 @@ window.frozenVanilla(
     navLinks.forEach((link) => {
       link.addEventListener("click", function () {
         let route = this.getAttribute("data-route");
-        window.myState([route, `../?burst=${route}`]);
+        if (route) {
+          window.myState([route, `../?burst=${route}`]);
+        }
       });
     });
   },

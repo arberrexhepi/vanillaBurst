@@ -13,12 +13,13 @@
 
 
 #mainNav ul {
-    width:80%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     list-style-type: none;
-    margin:auto;
+    margin: auto;
     padding: 0;
+    align-items: center;
     overflow: hidden;
     justify-content: space-evenly;
 }
@@ -30,7 +31,7 @@
 }
 
 
-#logo-nav{
+#logo-nav, .nav-image{
     height:5vh;
 }
 
