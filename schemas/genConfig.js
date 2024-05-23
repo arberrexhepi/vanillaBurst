@@ -2,7 +2,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
   let genConfig = {};
 
   let seo = {
-    title: "Generate vanillaBurst App Views",
+    title: "Generate Configs",
     description:
       "vanillaBurst assists with planning and creation of your app's views. Streamline your JS projects with ease and efficiency.",
     keywords: [
@@ -39,7 +39,9 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           container: "doc-button_wrapper",
           className: "button round",
           children: `
-          <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button>
+          <blockquote>
+          <button class="headerbutton mydocbutton" data-route="documentation"> Documentation</button>
+          </blockquote>
             `,
           eventHandlers: "submit:preventDefault",
         },
@@ -50,73 +52,60 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           container: "config-canvas",
           className: "parentnode genform",
           children: `
-          <h3>Parent Node Configuration</h3>
-          <small>Name Convention: viewnameConfig.js</small>
-          <br /><br />
           <form id="parentConfigForm">
-              <div class="fields">
-          
-                  <input type="hidden" id="role" name="role" value="parent"><br />
-          
-                  <label for="functionName">View Name:</label><br />
-                  <input type="text" id="functionName" name="functionName" placeholder="e.g., myFunction"><br />
-          
-                  <label for="directory">Directory:</label><br />
-                  <input type="text" id="directory" name="dir" placeholder="e.g., client/views/myFunction/"><br />
-          
-                  <label for="renderMode">Render Mode: 'pause' </label><br />
-                  <small>Change manually to 'burst' if needed</small>
-                  <br /> <br />
-          
-                  <label for="originburst">Origin Burst:</label><br />
-                  <input type="text" id="originburst" name="originburst" placeholder="e.g., a custom object"><br />
-          
-                  <label for="htmlPath">HTML Path:</label><br />
-                  <input type="text" id="htmlPath" name="htmlPath"
-                      placeholder="e.g., myFunction.html (relative to Directory above)"><br />
-          
-                  <label for="cssPath">CSS Path:</label><br />
-                  <input type="text" id="cssPath" name="cssPath"
-                      placeholder="e.g., myFunction.css (relative to Directory above)"><br />
-          
-                  <label for="targetDOM">Target DOM:</label><br />
-                  <input type="text" id="targetDOM" name="targetDOM" placeholder="e.g., someDOMId"><br /><br />
-          
-          
-                  <fieldset class="subDOMTemplate" style="display: none">
-                      <legend>Sub DOM Configuration</legend>
-                      <div class=" subDOMFieldsContainer" ">
-                              <label for=" htmlPath">HTML Path:</label><br />
-                          <input type="text" name="subDOMHtmlPath" placeholder="e.g., path"><br />
-          
-                          <label for="cssPath">CSS Path:</label><br />
-                          <input type="text" name="subDOMCssPath" placeholder="e.g., path"><br />
-          
-                          <label for="targetDOM">Target DOM:</label><br />
-                          <input type="text" name="subDOMTargetDOM" placeholder="e.g., id"><br />
-          
-                          <label for="htmlAttrs">HTML Attributes:</label><br />
-                          <fieldset id="subDOMTemplate">
-                              <!-- existing fields... -->
-          
-                              <h3>HTML Attributes:</h3>
-          
-                              <label for="id">ID:</label><br />
-                              <input type="text" name="subDOMHtmlAttrId"><br />
-          
-                              <label for="cssclass">CSS Class:</label><br />
-                              <input type="text" name="subDOMHtmlAttrCssClass"><br />
-                          </fieldset>
-                      </div>
-                  </fieldset>
-                  <label for="subDOM">Sub DOM:</label><br />
-                  <button id="subDOM" class="addSubDOM" name="subDOM">Add Sub DOM</button><br /><br />
-          
-          
-              </div>
-              <button id="create-config">Create Config</button>
-          
-          </form>
+          <legend class="form-title">Landing Config</legend>
+          <small class="form-description">Name Convention: viewnameConfig.js</small>
+
+          <div class="fields">
+              <!-- First level inputs -->
+              <label for="viewName">Landing Name:</label><small>(required)</small>
+              <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
+  
+              <label for="dir">Directory:</label>
+              <input type="text" id="dir" name="dir" placeholder="default: client/views/viewName, must end with / if set" value=""><br>
+  
+              <label for="render">Render:</label>
+              <input type="text" id="render" name="render" value="pause"><br>
+  
+              <label for="requireHtmlCss">Will this landing require HTML and CSS?</label><br/>
+              <select id="requireHtmlCss" name="requireHtmlCss">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select><br>
+  
+              <label for="container">Container:</label><small>(required if HTML PATH)</small>
+              <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
+  
+              <!-- Component template -->
+              <fieldset class="componentTemplate" style="display: none">
+                <div class="componentTemplate-container">
+                  <legend>Component Configuration</legend>
+                  <div class="subDOMFieldsContainer">
+                      <label for="componentName">Name:</label> <small>(required)</small>
+                      <input type="text" class="componentName" name="componentName" placeholder="Enter Component Name"><br>
+  
+                      <label for="componentDir">Directory:</label>
+                      <input type="text" class="componentDir" name="componentDir" placeholder="Enter Component Directory"><br>
+  
+                      <label for="componentId">ID:</label><small>(required)</small>
+                      <input type="text" class="componentId" name="componentId" required placeholder="Enter Component ID"><br>
+  
+                      <label for="componentContainer">Container:</label><small>(required)</small>
+                      <input type="text" class="componentContainer" name="componentContainer" required placeholder="Enter Component Container"><br>
+  
+                      <label for="componentClassName">Class Name:</label><small>(required)</small>
+                      <input type="text" class="componentClassName" name="componentClassName" required placeholder="Enter Component Class Name"><br>
+  
+                      <label for="componentChildren">HTML Content:</label>
+                      <textarea class="componentChildren" name="componentChildren" placeholder="Enter Component Children"></textarea><br>
+                  </div>
+                  </div>
+              </fieldset>
+  
+              <button id="subDOM" class="addSubDOM" name="subDOM">Add Dynamic Component</button><br><br>
+          </div>
+          <button id="create-config">Create Config</button>
+      </form>
             `,
           eventHandlers: "submit:preventDefault",
         },
@@ -127,27 +116,18 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           container: "config-canvas",
           className: "genform",
           children: `
-          <h3>View Node</h3>
-          <label for="landing">Landing:</label>
-          <input type="text" id="landing" name="landing">
-          <div class="scripts">
-              <h4>Scripts</h4>
-              <div class="script-inputs">
-                  <label for="script">Script:</label>
-                  <input type="text" id="script" name="script[]">
-              </div>
-              <button id="add-script">Add Script</button>
-          </div>
-          <label for="preloader">Preloader:</label>
-          <input type="text" id="preloader" name="preloader">
+          <form id="parentConfigForm">
+          <legend class="form-title">Function Config</legend>
+          <small class="form-description">Info: This prepares a config for a function. These can also serve as static components or include their own components.</small><br/>
+          <small class="help-card">Update Pending</small>
           `,
         },
         canvasresult: {
           parent: true,
-          id: "config-result",
+          id: "configresult",
           container: "config-canvas",
           className: "config-result-container",
-          children: `<pre class="config-result">//Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
+          children: `<pre id="configlog" class="config-result">//Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
         },
       },
     },

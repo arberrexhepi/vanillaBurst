@@ -210,6 +210,10 @@ window.frozenVanilla(
         originBurst.componentBurst = {};
       }
 
+      if (!originBurst.componentBurst?.verbose) {
+        originBurst.componentBurst.verbose = {};
+      }
+
       // Initialize originBurst.componentBurst[functionFile] if it doesn't exist
 
       // Add or update the component

@@ -61,7 +61,7 @@ window.frozenVanilla(
         return loadScript(preloaderUrl)
           .then(() => {
             addScriptToHead(preloaderUrl);
-            window.preloaderAnimation();
+
             return Promise.all(
               scriptUrls.map((url) =>
                 loadScript(url).then(() => addScriptToHead(url))
@@ -69,6 +69,7 @@ window.frozenVanilla(
             );
           })
           .then(() => {
+            window.preloaderAnimation();
             if (typeof window.render === "function") {
               return true;
             }

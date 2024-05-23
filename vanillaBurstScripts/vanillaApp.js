@@ -142,6 +142,7 @@ const vanillaApp = window.frozenVanilla(
               "vanillaBurstScripts/vanillaDOM/processors/cssFileLoader.js",
             baseUrl +
               "vanillaBurstScripts/vanillaDOM/processors/htmlFileLoader.js",
+            baseUrl + "vanillaBurstScripts/vanillaDOM/updateComponent.js",
             baseUrl + "vanillaBurstScripts/vanillaDOM/vanillaComponents.js",
             baseUrl + "vanillaBurstScripts/vanillaDOM/domBuild.js",
             baseUrl + "vanillaBurstScripts/vanillaDOM/domPromises.js",

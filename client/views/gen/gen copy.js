@@ -17,13 +17,10 @@ window.frozenVanilla("gen", function (vanillaPromise) {
     }
   });
 
-  $("#create-config")
-    .off()
-    .on("click", function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      nodeConfigBuild();
-    });
+  $("#create-config").on("click", function (e) {
+    e.preventDefault();
+    nodeConfigBuild();
+  });
 
   //move this to its own functionName, this gen view might get more complex
   function nodeConfigBuild() {
@@ -33,11 +30,21 @@ window.frozenVanilla("gen", function (vanillaPromise) {
     const dir = $("#dir").val();
     const htmlPath = $("#htmlPath").val();
     const container = $("#container").val();
+
     // Validation for required fields
     const validations = [
       {
         condition: !viewName || viewName.trim() === "",
         message: "viewName is required",
+      },
+
+      {
+        condition: htmlPath && (!container || container.trim() === ""),
+        message: "container is required if htmlPath is set",
+      },
+      {
+        condition: container && (!htmlPath || htmlPath.trim() === ""),
+        message: "htmlPath is required if container is set",
       },
     ];
 
@@ -45,12 +52,10 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       if (condition) {
         window.updateComponent(
           vanillaPromise,
-          { tag: "pre", html: [`[validation] Error: ${message}`] },
+          `[validation] Error: ${message}`,
           "canvasresult",
           ".config-result"
         );
-        // alert("returning");
-
         return;
       }
     }
@@ -95,97 +100,52 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         },
       };
 
+      if (htmlPath) genConfig[viewName].htmlPath = htmlPath;
+      if (cssPath) genConfig[viewName].cssPath = cssPath;
+
       return genConfig;
     }
 
-    async function processConfig(viewName, dir, configString) {
+    function processConfig(viewName, dir, configString) {
       if (!viewName) {
-        //alert("viewName is empty");
+        alert("viewName is empty");
         window.updateComponent(
           vanillaPromise,
-          {
-            clear: false,
-            tag: "pre",
-            html: ["[processConfig] Error: viewName is empty"],
-          },
+          "[processConfig] Error: viewName is empty",
           "canvasresult",
-          "#configlog"
+          ".config-result"
         );
         return;
       }
 
       let jsFunctionStringBuild = `window.frozenVanilla("${viewName}", function(vanillaPromise) {\n\n`;
-      jsFunctionStringBuild += `    // Your function logic here\n\n`;
+      jsFunctionStringBuild += `  // Your function logic here\n\n`;
       jsFunctionStringBuild += `});\n\n`;
 
-      let jsFileHTML =
-        `//Create a js file named ${viewName}.js in directory path: ${dir}<br/><br/>` +
-        jsFunctionStringBuild;
+      let jsFileHTML = `//Create a js file named ${viewName}.js in directory path: ${dir}<br/><br/>
+      ${jsFunctionStringBuild}`;
+
+      const configHTML = `//The 'canvasresult' component was updated and cached using 
+//<em>window.updateComponent(vanillaPromise, htmlResults, componentKey, target || undefined)</em>
+//The helper function used vanillaPromise to find the component config in the schema by 'canvasresult' param,
+//then updated the optionally set '.config-result' target.<br/><br/>
+//Create a new js file named ${viewName}Config.js in the schemas folder with the following code:<br/><br/>
+${configString}`;
 
       let htmlResults = {
-        position: 1,
-        //insert: "after",
-        clear: true,
-        tag: "pre",
-        html: [configString, jsFileHTML],
+        //start: -1, //optional, defaults to 0 behaviour,
+        //clear: false, //optional, defaults to true
+        //position: "after", //optional only on null
+        tag: "pre", //optional
+        html: [configHTML, jsFileHTML],
       };
 
-      async function configStatusOutput(viewName) {
-        let myresult = await new Promise((resolve, reject) => {
-          let cacheCheckResult = JSON.parse(
-            localStorage.getItem("originBurst")
-          );
-          let yoo = JSON.stringify(cacheCheckResult.componentBurst.verbose);
-
-          resolve(yoo);
-        });
-
-        const configHTML =
-          `//The 'canvasresult' component was updated and cached\n` +
-          `//ran window.updateComponent(vanillaPromise, htmlResults, componentKey, target, verbose=true)\n` +
-          `//The helper function used vanillaPromise to find the component config in the schema by 'canvasresult' param,\n` +
-          `//then updated the optionally set '.config-result' target.<br/><br/>\n`;
-        window.updateComponent(
-          vanillaPromise,
-          {
-            clear: false,
-            tag: "pre",
-            html: [
-              `[vanillaBurst]Success: Generated ${viewName}Config.js and ${viewName}.js code. \n` +
-                `[verbose = true]\n` +
-                `[vanillaBurst] componentBurst Log: 
-                  ${myresult}\n` +
-                `[vanillaBurst] Manual Trace:\n` +
-                `${configHTML}`,
-            ],
-          },
-          "canvasresult",
-          "#configlog.config-result"
-        );
-      }
-
-      new Promise(async (resolve, reject) => {
-        alert(1);
-        try {
-          await window.updateComponent(
-            vanillaPromise,
-            htmlResults,
-            "canvasresult",
-            ".config-result",
-            true
-          );
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      })
-        .then(() => {
-          alert("yo");
-          configStatusOutput(viewName);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      window.updateComponent(
+        vanillaPromise,
+        htmlResults,
+        "canvasresult",
+        ".config-result"
+      );
     }
 
     function buildConfigString(config) {
@@ -194,26 +154,21 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         const passedConfig = config[functionName];
         const viewName = functionName.toLowerCase();
 
-        let functionString = `
-        //Create a new js file named ${viewName}Config.js in the schemas folder with the following code:<br/><br/>
-
-window.frozenVanilla("${functionName}", function(sharedParts) {
-
-  let ${viewName}Config = {};
-  let passedConfig = ${JSON.stringify(passedConfig, null, 2)};
-
-  ${viewName}Config = { ...vanillaConfig("${functionName}", passedConfig) };
-
-  return ${viewName}Config;
-});
-
-`;
+        let functionString = `window.frozenVanilla("${functionName}", function(sharedParts) {\n\n`;
+        functionString += `  let ${viewName}Config = {};\n`;
+        functionString += `  let passedConfig = ${JSON.stringify(
+          passedConfig,
+          null,
+          2
+        )};\n\n`;
+        functionString += `  ${viewName}Config = { ...vanillaConfig("${functionName}", passedConfig) };\n\n`;
+        functionString += `  return ${viewName}Config;\n});\n\n`;
 
         return functionString.replace(/functionName/g, viewName);
       } catch (error) {
         window.updateComponent(
           vanillaPromise,
-          { tag: "pre", html: ["[configStringBuild] Error: " + error] },
+          "[configStringBuild] Error: " + error,
           "canvasresult",
           ".config-result"
         );
@@ -256,22 +211,22 @@ window.frozenVanilla("${functionName}", function(sharedParts) {
       );
     }
 
-    // if (navigator.clipboard) {
-    //   navigator.clipboard.writeText(configString).then(
-    //     function () {
-    //       //   alert("Config copied to clipboard!");
-    //       console.log("Copying to clipboard was successful!");
-    //     },
-    //     function (err) {
-    //       window.updateComponent(
-    //         vanillaPromise,
-    //         "[clipboard] Error: " + err,
-    //         "canvasresult",
-    //         ".config-result"
-    //       );
-    //       console.error("Could not copy text: ", err);
-    //     }
-    //   );
-    // }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(configString).then(
+        function () {
+          alert("Config copied to clipboard!");
+          console.log("Copying to clipboard was successful!");
+        },
+        function (err) {
+          window.updateComponent(
+            vanillaPromise,
+            "[clipboard] Error: " + err,
+            "canvasresult",
+            ".config-result"
+          );
+          console.error("Could not copy text: ", err);
+        }
+      );
+    }
   }
 });
