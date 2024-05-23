@@ -13,6 +13,9 @@ window.frozenVanilla("myweather", async function (vanillaPromise) {
   //   parsedWeatherInfo = JSON.parse(parsedWeatherInfo);
   // }, 60000);
 
+  let counter = 0;
+  let city;
+
   async function scheduleWeatherUpdate(weathcerInfo) {
     while (true) {
       weathcerInfo = await window.serverRender(
@@ -20,7 +23,29 @@ window.frozenVanilla("myweather", async function (vanillaPromise) {
       );
       const parsedWeatherInfo = JSON.parse(weathcerInfo);
       runWeatherTopping(parsedWeatherInfo);
-      await new Promise((resolve) => setTimeout(resolve, 60000));
+      counter = 0; // Reset the counter
+      await new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+          counter++;
+          document.querySelector(".weather-timer").innerHTML = counter;
+          if (counter >= 60) {
+            clearInterval(intervalId);
+
+            // Get a random city from the cities array
+            const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
+            const randomCity =
+              cities[Math.floor(Math.random() * cities.length)];
+
+            // Split the URL at '=' and replace the second part with the random city
+            let urlParts =
+              vanillaPromise.passedFunction.dataSchema.url.split("=");
+            urlParts[1] = randomCity;
+            vanillaPromise.passedFunction.dataSchema.url = urlParts.join("=");
+
+            resolve();
+          }
+        }, 1000);
+      });
     }
   }
 

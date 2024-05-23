@@ -67,6 +67,7 @@ window.frozenVanilla(
       ? window.baseUrl + passedFunction.cssPath
       : null;
     const container = passedFunction.container;
+    const classNames = passedFunction.classNames;
 
     let originBurst = vanillaPromise.originBurst;
 
@@ -142,6 +143,12 @@ window.frozenVanilla(
             "An error occurred while parsing the HTML, adding nonces to img elements, and serializing the HTML:",
             error
           );
+        }
+        if (classNames) {
+          let classNameList = classNames.split(" ");
+          for (let className of classNameList) {
+            targetElement.classList.add(className);
+          }
         }
 
         // Set the innerHTML of the target element

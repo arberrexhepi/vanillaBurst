@@ -8,13 +8,24 @@ window.frozenVanilla("myweatherConfig", function () {
       htmlPath: "client/components/myweather/myweather.html",
       cssPath: "client/components/myweather/myweather.css",
       container: "weather-wrapper",
+      classNames: "weather-wrapper scoop card",
       //components: {},
       dataSchema: {
         resultTarget: "myweather",
         returnResult: true,
         method: "GET",
         url: "https://weatherapi-com.p.rapidapi.com/current.json?q=Pristina",
-        data: {},
+        data: {
+          cities: [
+            "Pristina",
+            "New York",
+            "Paris",
+            "San Francisco",
+            "Munich",
+            "Geneva",
+            "Tokyo",
+          ],
+        },
         headers: {
           "Content-Type": "application/json",
           "X-RapidAPI-Key":
