@@ -22,9 +22,9 @@
     
     max-width: 400px;
     background-color: white;
-
+    min-width: 300px;
     width: 30vw;
-
+    
 }
 .genform > form#parentConfigForm input{
     width:90%;
