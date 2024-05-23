@@ -21,6 +21,7 @@ window.frozenVanilla("heroHeaderConfig", function () {
           
           <blockquote>
           <small title="${window.seo.title}">${window.seo.title}</small>
+          <p>${window.seo.description}</p>
           <h2 class="myHeroHeaderh2">Just Getting Started?</h2>
           <div class="action-container">
           </blockquote>
@@ -36,6 +37,7 @@ window.frozenVanilla("heroHeaderConfig", function () {
           children: `
           <blockquote>
           <small title="${window.seo.title}">${window.seo.title}</small>
+          <p>${window.seo.description}</p>
           <h2 class="myHeroHeaderh2">Hey TLDRs...Build Quickly!</h2>
           <div class="action-container">
           </blockquote>
@@ -52,7 +54,7 @@ window.frozenVanilla("heroHeaderConfig", function () {
           <div class="button_wrapper">
               <button class="headerbutton mygenbutton" data-route="gen">Go to Config Builder</button></div>
               <br />
-              <p>${window.seo.description}</p>
+             
             `,
           eventHandlers: "submit:preventDefault",
         },
@@ -66,7 +68,6 @@ window.frozenVanilla("heroHeaderConfig", function () {
             <div class="button_wrapper">
             <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button></div>
             <br />
-            <p>${window.seo.description}</p>
             `,
           eventHandlers: "submit:preventDefault",
         },

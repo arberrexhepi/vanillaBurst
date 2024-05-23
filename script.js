@@ -129,6 +129,9 @@ window.frozenVanilla("setTrustedSources", (sources) => {
 
 // Start the application
 const start = async (baseUrl) => {
+  if (!window.seo) {
+    window.seo = {};
+  }
   //window.logSpacer();
 
   const nonceString = window.nonceBack();

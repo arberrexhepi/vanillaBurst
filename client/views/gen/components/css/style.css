@@ -62,7 +62,7 @@ input[type="text"]:focus, select:focus {
 }
 
 button {
-    background-color: #fdb635;
+    background-color: #294a55;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -83,7 +83,7 @@ button:hover {
 
 
 form .fields{
-    height: 40vh;
+    height: 42vh;
     overflow-y: scroll;
     overflow-x: hidden;
 

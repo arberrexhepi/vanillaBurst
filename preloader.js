@@ -1,4 +1,4 @@
-function preloaderAnimation() {
+window.frozenVanilla("preloaderAnimation", function () {
   // const loader = document.createElement("div");
   // loader.id = "preloader";
   // loader.nonce = window.nonceBack();
@@ -19,7 +19,7 @@ function preloaderAnimation() {
   //   }
   //   `;
   ///content policy broke this sample script, will add in the UI packages instead
-}
+});
 
 function removeLoader() {
   const loader = document.querySelector("#preloader");
@@ -28,5 +28,4 @@ function removeLoader() {
   }
 }
 
-window.preloaderAnimation = preloaderAnimation;
 window.removeLoader = removeLoader;

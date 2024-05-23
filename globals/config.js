@@ -17,7 +17,12 @@ switch (window.mode) {
 
 window.frozenVanilla("fetchDomainUrl", "");
 
-window.frozenVanilla("registeredRoutes", ["homeview", "documentation", "gen"]);
+window.frozenVanilla("registeredRoutes", [
+  // "viewWithoutPackage", //see [PACKAGELESS VIEWS] below
+  "homeview",
+  "documentation",
+  "gen",
+]);
 
 window.frozenVanilla("baseUrlIcons", "/assets/icons/");
 
@@ -29,9 +34,11 @@ window.frozenVanilla("baseUrlStyles", "/css/styles/");
 //false for shared packages
 
 // Define the routeParts based on the views
+// [PACKAGELESS VIEWS] NOTE: If no app shells you can set the name of the view directly, or it won't load.
 window.frozenVanilla(
   "schemaParts",
   Object.freeze({
+    //viewWithoutPackage:["viewWithoutPackage"] // currently not auto promised, however it is equivalent to homeview, documentation, gen, and should also be in the registered routes above
     homeview: ["appShells"],
     nav: false,
     heroHeader: false,

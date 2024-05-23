@@ -82,7 +82,8 @@
     color: #f75f88;
 }
 
-#myHeroHeader .action-container p {
+#myHeroHeader  p {
+    font-size: calc(var(--base-font-size) * var(--p-large-scale));
     color: #edf8b0;
 }
 

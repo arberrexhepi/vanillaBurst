@@ -6,7 +6,12 @@ const config = window.frozenVanilla(
     for (let part in window.schemaParts) {
       if (window.schemaParts.hasOwnProperty(part)) {
         let packageNames = window.schemaParts[part];
-        if (packageNames === false) continue; // Skip non-views
+        if (
+          packageNames === false ||
+          packageNames === true ||
+          typeof packageNames === "string"
+        )
+          continue; // Skip non-views
 
         let partConfig = window[`${part}Config`]
           ? window[`${part}Config`]()
@@ -14,20 +19,22 @@ const config = window.frozenVanilla(
         let customFunctions = partConfig.customFunctions || {};
 
         // If packageNames is a string, treat it as a direct function config call
-        if (typeof packageNames === "string") {
-          let funcNameConfig = `${packageNames}Config`;
-          if (typeof window[funcNameConfig] === "function") {
-            let result = window[funcNameConfig]();
-            if (result && typeof result === "object") {
-              Object.assign(customFunctions, result);
-            }
-          } else {
-            console.error(`Function ${funcNameConfig} not found.`);
-          }
-        }
+        // if (typeof packageNames === "string") {
+        //   let funcNameConfig = `${packageNames}Config`;
+        //   if (typeof window[funcNameConfig] === "function") {
+        //     let result = window[funcNameConfig]();
+        //     if (result && typeof result === "object") {
+        //       Object.assign(customFunctions, result);
+        //     }
+        //   } else {
+        //     console.error(
+        //       `Function ${funcNameConfig} not found. Check naming consistencys between: globals/config.js schemaParts, Schema directory filename, and function name consistancy. Expected: ${funcNameConfig}`
+        //     );
+        //   }
+        // }
 
         // If packageNames is an array, process it as a package
-        else if (Array.isArray(packageNames)) {
+        if (Array.isArray(packageNames)) {
           packageNames.forEach((packageName) => {
             let individualPackageNames = packageName.includes(",")
               ? packageName.split(",").map((name) => name.trim())
@@ -45,7 +52,9 @@ const config = window.frozenVanilla(
                       Object.assign(customFunctions, result);
                     }
                   } else {
-                    console.error(`Function ${funcNameConfig} not found.`);
+                    console.error(
+                      `Function ${funcNameConfig} not found. Check naming consistencys between: globals/config.js schemaParts, Schema directory filename, and function name consistancy. Expected: ${funcNameConfig}`
+                    );
                   }
                 });
               }
