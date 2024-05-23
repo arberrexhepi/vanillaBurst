@@ -210,7 +210,14 @@ window.frozenVanilla(
           return new Promise(async (resolve, reject) => {
             let cacheResult;
             try {
-              await cacheComponentSpawn(parentElement);
+              if (
+                vanillaPromise.passedFunction.components[componentKey].cache ===
+                false
+              ) {
+                return;
+              } else {
+                await cacheComponentSpawn(parentElement);
+              }
               if (
                 htmlData.callBack &&
                 typeof htmlData.callBack === "function"
@@ -227,7 +234,16 @@ window.frozenVanilla(
             throw new Error("Awaiting cacheComopnentSpawn: " + error.message);
           });
         } else {
-          await cacheComponentSpawn(parentElement);
+          console.log(vanillaPromise.passedFunction);
+          console.log(componentKey);
+          if (
+            vanillaPromise.passedFunction.components[componentKey].cache ===
+            false
+          ) {
+            return;
+          } else {
+            await cacheComponentSpawn(parentElement);
+          }
         }
       })
       .catch((error) => {

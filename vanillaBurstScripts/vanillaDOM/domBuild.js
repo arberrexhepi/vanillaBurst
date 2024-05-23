@@ -11,25 +11,30 @@ window.frozenVanilla(
     initView
   ) {
     return new Promise(async (resolve, reject) => {
-      try {
-        await window.loadParts(
-          config,
-          domFunction,
-          originFunction,
-          initView,
-          renderSchema,
-          vanillaPromise,
-          resolve
-        );
+      if (renderSchema?.customFunctions?.[domFunction]?.cache === false) {
+        console.log(vanillaPromise + " vanillapromise at dom build");
+        return true;
+      } else {
+        try {
+          await window.loadParts(
+            config,
+            domFunction,
+            originFunction,
+            initView,
+            renderSchema,
+            vanillaPromise,
+            resolve
+          );
 
-        resolve(vanillaPromise);
-      } catch (error) {
-        console.warn(
-          "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
-            domFunction
-        );
+          resolve(vanillaPromise);
+        } catch (error) {
+          console.warn(
+            "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
+              domFunction
+          );
 
-        resolve(vanillaPromise);
+          resolve(vanillaPromise);
+        }
       }
     });
   }

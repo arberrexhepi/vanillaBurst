@@ -9,6 +9,7 @@ window.frozenVanilla(
     ) {
       let renderSchema = vanillaPromise.renderSchema;
     }
+
     function flattenvanillaElement(components, result = []) {
       for (let component in components) {
         result.push(components[component]);
@@ -84,7 +85,12 @@ window.frozenVanilla(
                 className,
                 children,
                 container,
+                cache,
               } = flattenedvanillaElement[i];
+
+              if (cache === false) {
+                resolve(vanillaPromise);
+              }
 
               let path = window.domainUrl + window.baseUrl;
               cssPath = buildCssPath(

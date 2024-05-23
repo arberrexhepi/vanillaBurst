@@ -15,7 +15,7 @@ switch (window.mode) {
   }
 }
 
-window.frozenVanilla("fetchDomainUrl", "");
+//window.frozenVanilla("fetchDomainUrl", "");
 
 window.frozenVanilla("registeredRoutes", [
   // "viewWithoutPackage", //see [PACKAGELESS VIEWS] below
@@ -24,9 +24,9 @@ window.frozenVanilla("registeredRoutes", [
   "gen",
 ]);
 
-window.frozenVanilla("baseUrlIcons", "/assets/icons/");
-
-window.frozenVanilla("baseUrlStyles", "/css/styles/");
+window.frozenVanilla("baseUrlIcons", "globals/brandAssets/assets/icons/");
+window.frozenVanilla("baseUrlImages", "globals/brandAssets/assets/images/");
+window.frozenVanilla("baseUrlStyles", "globals/brandAssets/css/styles/");
 
 ///////////////////////////////////////////////////////////////
 //Define the routeParts based on the views
@@ -39,7 +39,8 @@ window.frozenVanilla(
   "schemaParts",
   Object.freeze({
     //viewWithoutPackage:["viewWithoutPackage"] // currently not auto promised, however it is equivalent to homeview, documentation, gen, and should also be in the registered routes above
-    homeview: ["appShells"],
+    homeview: ["appShells, toppings"],
+    myweather: false,
     nav: false,
     heroHeader: false,
     documentation: ["appShells"],
@@ -47,6 +48,7 @@ window.frozenVanilla(
   })
 );
 window.frozenVanilla("appShells", ["nav", "heroHeader"]);
+window.frozenVanilla("toppings", ["myweather"]);
 
 //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
 // Add additional levels as needed
@@ -57,6 +59,7 @@ window.frozenVanilla("trustedSources", {
     window.domainUrl,
     "https://arber.inc",
     "https://storage.googleapis.com",
+    "https://cdn.weatherapi.com",
   ],
   "media-src": [
     window.domainUrl,
@@ -74,6 +77,7 @@ window.frozenVanilla("trustedSources", {
     window.domainUrl,
     "https://arber.inc",
     "https://storage.googleapis.com",
+    "https://weatherapi-com.p.rapidapi.com",
     window.domainUrl, // Add window.domainUrl here
   ],
   "manifest-src": [

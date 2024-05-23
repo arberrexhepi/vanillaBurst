@@ -86,7 +86,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       let genConfig = {
         [viewName]: {
           role: "parent",
-          dir: dir || `cleint/views/${viewName}/`,
+          dir: dir || `client/views/${viewName}/`,
           functionFile: viewName,
           render: render,
           originBurst: {},
@@ -116,6 +116,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
       let jsFunctionStringBuild = `window.frozenVanilla("${viewName}", function(vanillaPromise) {\n\n`;
       jsFunctionStringBuild += `    // Your function logic here\n\n`;
+      jsFunctionStringBuild += `    console.log(vanillaPromise.this + "is ready and running")\n\n`;
       jsFunctionStringBuild += `});\n\n`;
 
       let jsFileHTML =
@@ -192,14 +193,15 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         const functionName = Object.keys(config)[0];
         const passedConfig = config[functionName];
         const viewName = functionName.toLowerCase();
+        const passedConfigString = stringifyObject(passedConfig);
 
         let functionString = `
         //Create a new js file named ${viewName}Config.js in the schemas folder with the following code:<br/><br/>
 
-window.frozenVanilla("${functionName}", function(sharedParts) {
+window.frozenVanilla("${functionName}Config", function(sharedParts) {
 
   let ${viewName}Config = {};
-  let passedConfig = ${JSON.stringify(passedConfig, null, 2)};
+  let passedConfig = ${passedConfigString};
 
   ${viewName}Config = { ...vanillaConfig("${functionName}", passedConfig) };
 
@@ -294,6 +296,11 @@ window.frozenVanilla("${functionName}", function(sharedParts) {
       } catch (error) {
         throw new Error("scrollToElement: " + error);
       }
+    }
+
+    function stringifyObject(obj, indent = 2) {
+      const str = JSON.stringify(obj, null, indent);
+      return str.replace(/"([^"]+)":/g, "$1:");
     }
   }
 });
