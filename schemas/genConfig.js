@@ -50,7 +50,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           parent: true,
           id: "parentnode",
           container: "config-canvas",
-          className: "parentnode genform",
+          className: "parentnode genform card",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Landing Config</legend>
@@ -114,7 +114,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           parent: true,
           id: "functionnode",
           container: "config-canvas",
-          className: "genform",
+          className: "genform card",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Function Config</legend>
