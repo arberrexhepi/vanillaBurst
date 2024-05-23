@@ -4,6 +4,7 @@ window.frozenVanilla("heroHeaderConfig", function () {
       dir: "client/views/shared/heroHeader/",
       functionFile: "heroHeader",
       render: "pause",
+
       htmlPath: "client/views/shared/heroHeader/heroHeader.html",
       cssPath: "client/views/shared/heroHeader/heroHeader.css",
       container: "myHeroHeader",

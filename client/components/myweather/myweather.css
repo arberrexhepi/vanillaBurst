@@ -1,0 +1,67 @@
+.weather-app {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-app:hover {
+    transform: scale(1.02);
+}
+
+.weather-location .city-name {
+    font-size: calc(var(--base-font-size) * var(--h1-scale));
+    color: #f75f88;
+    transition: color 0.3s ease-in-out;
+}
+
+.weather-location .city-name:hover {
+    color: #fdb635;
+}
+
+.weather-current {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.weather-current:hover {
+    transform: scale(1.02);
+}
+
+.weather-current .temperature {
+    font-size: calc(var(--base-font-size) * var(--h2-scale));
+    color: #fdb635;
+    transition: color 0.3s ease-in-out;
+}
+
+.weather-current .temperature:hover {
+    color: #16b2e4;
+}
+
+.weather-current .description {
+    font-size: calc(var(--base-font-size) * var(--p-large-scale));
+    color: #16b2e4;
+    transition: color 0.3s ease-in-out;
+}
+
+.weather-current .description:hover {
+    color: #fdb635;
+}
+
+.weather-icon img {
+    width: 100px;
+    height: 100px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.weather-icon img:hover {
+    transform: rotate(360deg);
+}
+
+.weather-wrapper{
+    max-width:400px;
+    min-width:250px;
+}

@@ -19,13 +19,12 @@
 }
 .genform{
 
-    min-width: 300px;
-    width: 30vw;
+    
     max-width: 400px;
     background-color: white;
-    box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.05);
-    padding:2vh;
-    border-radius:3vh;
+
+    width: 30vw;
+
 }
 .genform > form#parentConfigForm input{
     width:90%;

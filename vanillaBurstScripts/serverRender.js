@@ -1,3 +1,29 @@
+//[WIP]
+
+// window.frozenVanilla(
+//   "serverBurstSubscribe",
+//   async function (vanillaPromise, dataSchema, burstTime, callBack) {
+//     while (true) {
+//       try {
+//         let serverBurstSubscribeResponse;
+//         if (vanillaPromise && typeof vanillaPromise === "function") {
+//           alert("yo");
+//           serverBurstSubscribeResponse = await window.serverRender(dataSchema);
+//           const serverBurstSubscribeResponseParsed = JSON.parse(
+//             serverBurstSubscribeResponse
+//           );
+
+//           if (callBack && typeof callBack === "function")
+//             callBack(serverBurstSubscribeResponseParsed);
+//           await new Promise((resolve) => setTimeout(resolve, burstTime));
+//         }
+//       } catch (error) {
+//         throw new Error("serverBurst Subscribe Failed" + error);
+//       }
+//     }
+//   }
+// );
+
 window.frozenVanilla(
   "serverRender",
   function (data, runData, popstateEvent, originBurst) {
@@ -15,12 +41,12 @@ window.frozenVanilla(
         const target = sustainData.resultTarget;
         const resultTarget = target + "Result";
         let requestData = data.data;
-        let headers = {};
-
+        let headersObject = data.headers || {};
+        let headers;
         // Prepare headers and data for the request
-        if (data.contentType) {
-          headers["Content-Type"] = data.contentType;
-          if (data.contentType.includes("application/json")) {
+        if (headersObject) {
+          headers = new Headers(headersObject);
+          if (headers.get("Content-Type") === "application/json") {
             requestData = JSON.stringify(requestData);
           }
         } else {
@@ -41,28 +67,34 @@ window.frozenVanilla(
             body: requestData,
           };
           requestMethod(url, dataMethod, method, headers, requestData);
-        } else if (method === "GET") {
-          dataMethod = null;
+        } else if (
+          typeof method === "string" &&
+          (method === "POST" || method === "GET")
+        ) {
+          dataMethod = {
+            headers: headers,
+          };
+          if (method === "POST") {
+            dataMethod.body = requestData;
+          }
           requestMethod(url, dataMethod, method, headers);
         }
 
         function requestMethod(url, dataMethod) {
-          // Create a URL object
           const urlObj = new URL(url);
 
-          // Define a constant URL for comparison
-          const constantUrl = Object.freeze(new URL(window.fetchDomainUrl));
+          const constantUrl = url;
 
-          // Check if the hostnames match
-          if (urlObj.hostname !== constantUrl.hostname) {
-            let error = new Error("Invalid URL");
-            serverResult = error.message;
-            throw error;
-          }
+          // // Check if the hostnames match
 
           fetch(url, { ...dataMethod })
             .then((response) => {
               // Handle response based on the content type
+              console.log("Response status: ", response.status);
+              console.log(
+                "Response headers: ",
+                Array.from(response.headers.entries())
+              );
               const contentType = response.headers.get("Content-Type");
               if (contentType && contentType.includes("application/json")) {
                 return response.json();
@@ -73,7 +105,7 @@ window.frozenVanilla(
               window.removeLoader();
               responseData = JSON.stringify(responseData);
               if (responseData.length) {
-                if (returnResult && returnResult === "true") {
+                if (returnResult && returnResult === true) {
                   resolve(responseData);
                   result = responseData;
                   let targetResult = {};

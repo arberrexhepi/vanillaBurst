@@ -43,7 +43,7 @@ window.frozenVanilla("render", async function render(renderSchema) {
 
   const containers = collectContainers(rollCall, renderSchema);
   localStorage.setItem("containers", JSON.stringify(containers));
-
+  let landingReference;
   try {
     const vanillaPromises = await window.childFunction(
       renderSchema,
@@ -77,8 +77,15 @@ window.frozenVanilla("render", async function render(renderSchema) {
       );
 
       for (const customFunctionName of rollCall) {
-        window[customFunctionName](vanillaPromises[customFunctionName]);
-        window.storeBurst(vanillaPromises[customFunctionName]);
+        landingReference = customFunctionName;
+        try {
+          window[customFunctionName](vanillaPromises[customFunctionName]);
+          window.storeBurst(vanillaPromises[customFunctionName]);
+        } catch (error) {
+          throw new Error(
+            "JS File reference or errors found at: " + landingReference
+          );
+        }
       }
       let seo =
         vanillaPromises[renderSchema.landing].renderSchema.customFunctions[
@@ -97,7 +104,7 @@ window.frozenVanilla("render", async function render(renderSchema) {
       localStorage.removeItem("stateBurst");
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("An error occurred during:" + landingReference, error);
   }
 });
 
