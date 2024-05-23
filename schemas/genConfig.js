@@ -123,7 +123,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           `,
         },
         canvasresult: {
-          cache: false,
+          // cache: false,
           parent: true,
           id: "configresult",
           container: "config-canvas",
