@@ -127,7 +127,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           id: "configresult",
           container: "config-canvas",
           className: "config-result-container",
-          children: `<pre id="configlog" class="config-result">//Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
+          children: `<pre id="configlog" class="config-result">[vanillaBurst] Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
         },
       },
     },

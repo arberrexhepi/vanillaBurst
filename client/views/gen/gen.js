@@ -47,7 +47,8 @@ window.frozenVanilla("gen", function (vanillaPromise) {
           vanillaPromise,
           { tag: "pre", html: [`[validation] Error: ${message}`] },
           "canvasresult",
-          ".config-result"
+          ".config-result",
+          scrollToElement(".config-result")
         );
 
         return;
@@ -170,6 +171,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
             htmlResults,
             "canvasresult",
             ".config-result",
+            scrollToElement(".config-result"),
             true
           );
           resolve();
@@ -270,5 +272,28 @@ window.frozenVanilla("${functionName}", function(sharedParts) {
     //     }
     //   );
     // }
+
+    function scrollToElement(target, callback) {
+      // Check if target starts with '.' or '#'
+      try {
+        console.log("yooooo");
+        const prefix = target.charAt(0);
+
+        // Get the element based on whether it's a class or id
+        const element = document.querySelector(target);
+
+        // If the element exists, scroll to it
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // If a callback function was provided, call it
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } catch (error) {
+        throw new Error("scrollToElement: " + error);
+      }
+    }
   }
 });
