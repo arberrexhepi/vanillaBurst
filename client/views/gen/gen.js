@@ -49,7 +49,6 @@ window.frozenVanilla("gen", function (vanillaPromise) {
           "canvasresult",
           ".config-result"
         );
-        // alert("returning");
 
         return;
       }
@@ -165,7 +164,6 @@ window.frozenVanilla("gen", function (vanillaPromise) {
       }
 
       new Promise(async (resolve, reject) => {
-        alert(1);
         try {
           await window.updateComponent(
             vanillaPromise,
@@ -180,7 +178,6 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         }
       })
         .then(() => {
-          alert("yo");
           configStatusOutput(viewName);
         })
         .catch((error) => {
