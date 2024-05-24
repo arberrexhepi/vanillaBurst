@@ -102,7 +102,7 @@ window.frozenVanilla(
               return response.text();
             })
             .then((responseData) => {
-              window.removeLoader();
+              //window.removeLoader();
               responseData = JSON.stringify(responseData);
               if (responseData.length) {
                 if (returnResult && returnResult === true) {

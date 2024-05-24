@@ -4,65 +4,82 @@ window.frozenVanilla("myweather", async function (vanillaPromise) {
   console.log(vanillaPromise.this + "is ready and running");
 
   let weatherInfo;
-
-  // setInterval(async () => {
-  //   parsedWeatherInfo = await window.serverRender(
-  //     vanillaPromise.passedFunction.dataSchema
-  //   );
-
-  //   parsedWeatherInfo = JSON.parse(parsedWeatherInfo);
-  // }, 60000);
-
   let counter = 0;
   let city;
 
-  async function scheduleWeatherUpdate(weathcerInfo) {
-    while (true) {
-      weathcerInfo = await window.serverRender(
-        vanillaPromise.passedFunction.dataSchema
-      );
-      const parsedWeatherInfo = JSON.parse(weathcerInfo);
-      runWeatherTopping(parsedWeatherInfo);
-      counter = 0; // Reset the counter
-      await new Promise((resolve) => {
-        const intervalId = setInterval(() => {
-          counter++;
-          document.querySelector(".weather-timer").innerHTML = counter;
-          if (counter >= 60) {
-            clearInterval(intervalId);
+  updateWeatherInfo(counter, city);
 
-            // Get a random city from the cities array
-            const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
-            const randomCity =
-              cities[Math.floor(Math.random() * cities.length)];
+  function updateWeatherInfo(counter, city) {
+    alert("Yo");
+    // Get a random city from the cities array
+    const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
+    let randomCity = cities[Math.floor(Math.random() * cities.length)];
 
-            // Split the URL at '=' and replace the second part with the random city
-            let urlParts =
-              vanillaPromise.passedFunction.dataSchema.url.split("=");
-            urlParts[1] = randomCity;
-            vanillaPromise.passedFunction.dataSchema.url = urlParts.join("=");
+    // Split the URL at '=' and replace the second part with the random city
+    let urlParts = vanillaPromise.passedFunction.dataSchema.url.split("=");
+    urlParts[1] = randomCity;
+    vanillaPromise.passedFunction.dataSchema.url = urlParts.join("=");
 
-            resolve();
-          }
-        }, 1000);
+    // Fetch the weather data and update the DOM
+    window
+      .serverRender(vanillaPromise.passedFunction.dataSchema)
+      .then((weatherInfo) => {
+        const parsedWeatherInfo = JSON.parse(weatherInfo);
+        runWeatherTopping(parsedWeatherInfo);
       });
-    }
   }
 
-  scheduleWeatherUpdate(weatherInfo);
+  // Register the interval with the callback function
+  window.registerInterval(
+    "serverRepeatableWeatherCall",
+    20,
+    60000,
+    (repeat = true),
+    updateWeatherInfo,
+    "clear",
+    null
+  );
+
+  function startInterval(counter) {
+    document.querySelector(".weather-timer").innerHTML = counter;
+  }
+
+  window.registerInterval(
+    "repeatable-timer",
+    60,
+    1000,
+    (repeat = true),
+    startInterval,
+    "clear",
+    null
+  );
 
   function runWeatherTopping(parsedWeatherInfo) {
-    document.getElementById("city-name").innerHTML =
-      parsedWeatherInfo.location.name;
-    document.getElementById("country-name").innerHTML =
-      parsedWeatherInfo.location.country;
-    document.getElementById("temperature").innerHTML =
-      parsedWeatherInfo.current.temp_c + "°C";
-    document.getElementById("description").innerHTML =
-      parsedWeatherInfo.current.condition.text;
-    document.getElementById("weather-icon").src =
-      "https:" + parsedWeatherInfo.current.condition.icon;
-    document.getElementById("wind-speed").innerHTML =
-      "Wind speed: " + parsedWeatherInfo.current.wind_kph + " kph";
+    // Check if all necessary DOM elements exist
+    if (
+      document.getElementById("city-name") &&
+      document.getElementById("country-name") &&
+      document.getElementById("temperature") &&
+      document.getElementById("description") &&
+      document.getElementById("weather-icon") &&
+      document.getElementById("wind-speed")
+    ) {
+      // Update the DOM elements
+      document.getElementById("city-name").innerHTML =
+        parsedWeatherInfo.location.name;
+      document.getElementById("country-name").innerHTML =
+        parsedWeatherInfo.location.country;
+      document.getElementById("temperature").innerHTML =
+        parsedWeatherInfo.current.temp_c + "°C";
+      document.getElementById("description").innerHTML =
+        parsedWeatherInfo.current.condition.text;
+      document.getElementById("weather-icon").src =
+        "https:" + parsedWeatherInfo.current.condition.icon;
+      document.getElementById("wind-speed").innerHTML =
+        "Wind speed: " + parsedWeatherInfo.current.wind_kph + " kph";
+    } else {
+      // If not all DOM elements exist, delay the execution of the function and try again
+      setTimeout(() => runWeatherTopping(parsedWeatherInfo), 1000);
+    }
   }
 });

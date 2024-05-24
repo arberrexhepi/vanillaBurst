@@ -18,21 +18,6 @@ const config = window.frozenVanilla(
           : {};
         let customFunctions = partConfig.customFunctions || {};
 
-        // If packageNames is a string, treat it as a direct function config call
-        // if (typeof packageNames === "string") {
-        //   let funcNameConfig = `${packageNames}Config`;
-        //   if (typeof window[funcNameConfig] === "function") {
-        //     let result = window[funcNameConfig]();
-        //     if (result && typeof result === "object") {
-        //       Object.assign(customFunctions, result);
-        //     }
-        //   } else {
-        //     console.error(
-        //       `Function ${funcNameConfig} not found. Check naming consistencys between: globals/config.js schemaParts, Schema directory filename, and function name consistancy. Expected: ${funcNameConfig}`
-        //     );
-        //   }
-        // }
-
         // If packageNames is an array, process it as a package
         if (Array.isArray(packageNames)) {
           packageNames.forEach((packageName) => {
@@ -100,14 +85,16 @@ const vanillaConfig = window.frozenVanilla(
 
     window.frozenVanilla("passedVendors", passedVendors, false);
 
-    let landingRequest = landing + "Request";
+    let landingRequest = landing + "Request"; // I think this is deprecated but currently not sure yet. This was a requirement before auto config builds.
     let buildConfig = {};
     //window.passedConfig = passedConfig;
     buildConfig[landing] = {
       landing: landing,
       scripts: [
         ...window.vanillaBurstScripts,
-        ...(Array.isArray(passedVendors) ? passedVendors : []),
+        ...Object.entries(window.vendorScoops)
+          .filter(([key, namespaces]) => namespaces.includes(landing))
+          .map(([key]) => `${baseUrl}vendors/${key}.js`),
       ], // Array of required script paths
       preloader: window.baseUrl + "preloader.js", // Assuming this path is correct
       customFunctions: {
