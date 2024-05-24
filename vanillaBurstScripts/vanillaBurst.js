@@ -95,6 +95,15 @@ window.frozenVanilla(
     stateScripts(stateTag);
 
     function runState() {
+      let intervals = JSON.parse(localStorage.getItem("intervals"));
+
+      if (intervals) {
+        for (let signalName in intervals) {
+          window.unregisterInterval(signalName);
+        }
+      }
+
+      window.renderComplete = false;
       window.logSpacer();
       console.log(
         `%c[Changing state to: ${stateTag}]`,

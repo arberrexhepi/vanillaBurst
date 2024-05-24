@@ -1,6 +1,5 @@
 window.frozenVanilla("homeviewConfig", function (sharedParts) {
   let homeviewConfig = {};
-
   let seo = {
     title: "vanilla JS Framework",
     description:

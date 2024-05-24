@@ -103,7 +103,9 @@ const stateTag = getRoute("route") || window.defaultAppRoute;
 const buildPath = getRoute("buildPath");
 const loadedStateTagPath = getRoute("source_path");
 const loadParams = getRoute("loadParams");
-
+alert(stateTag);
+window.thisRoute = stateTag;
+alert(window.thisRoute);
 function buildStatePath(loadedStateTagPath, stateTag, buildPath) {
   if (loadedStateTagPath) {
     const currentSearchParams = new URLSearchParams(

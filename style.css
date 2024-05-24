@@ -192,6 +192,8 @@
     }
 
     #viewbox {
+        background-color: #fff7f4;
+        width:100%;
     grid-row: 3;
     display: flex;
     max-width: 100%; /* Use 100% for mobile and small screens */

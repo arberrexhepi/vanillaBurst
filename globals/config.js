@@ -49,9 +49,13 @@ window.frozenVanilla(
 );
 window.frozenVanilla("appShells", ["nav", "heroHeader"]);
 window.frozenVanilla("toppings", ["myweather"]);
-
 //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
 // Add additional levels as needed
+
+window.frozenVanilla("vendorScoops", {
+  vanillaParallax: ["homeview", "gen", "documentation"],
+});
+//define a vendor array or each one you want to use in the view config ie let vendors = [window.vanillaParallax] then
 
 window.frozenVanilla("trustedSources", {
   //"default-src": ["'self'"],

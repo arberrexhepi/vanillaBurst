@@ -201,3 +201,65 @@ window.frozenVanilla("myBurst", function (myPromise) {
     }
   }
 });
+
+window.frozenVanilla(
+  "registerInterval",
+  function (signalName, count, time, repeat, callBack, clear, condition) {
+    console.log("Starting interval");
+    let counter = 0;
+    let intervals = JSON.parse(localStorage.getItem("intervals")) || {};
+
+    let intervalId = setInterval(() => {
+      counter++;
+      callBack(counter);
+      console.log("Interval count: ", counter);
+      if (typeof count === "number" && counter >= count) {
+        console.log("Count reached");
+        if (repeat) {
+          console.log("Resetting counter for repeat");
+          counter = 0;
+        } else {
+          if (typeof callBack === "function") {
+            console.log("Calling callback");
+            callBack();
+          }
+          console.log("Clearing interval");
+          clearInterval(intervalId);
+        }
+      } else if (condition && typeof condition === "function") {
+        console.log("Checking condition");
+        let conditionResult = condition();
+        if (typeof callBack === "function") {
+          console.log("Calling callback with condition result");
+          callBack(conditionResult);
+        }
+        if (conditionResult) {
+          console.log("Condition met, clearing interval");
+          clearInterval(intervalId);
+        }
+      } else if (!count && !condition) {
+        console.log("No count or condition, clearing interval");
+        if (typeof callBack === "function") {
+          console.log("Calling callback");
+          callBack();
+        }
+        console.log("Clearing interval");
+        clearInterval(intervalId);
+      }
+    }, time);
+
+    intervals[signalName] = { id: intervalId, clear: clear };
+    localStorage.setItem("intervals", JSON.stringify(intervals));
+  }
+);
+
+window.frozenVanilla("unregisterInterval", function (signalName) {
+  let storedIntervals = JSON.parse(localStorage.getItem("intervals"));
+  if (
+    storedIntervals[signalName] &&
+    storedIntervals[signalName].clear === "clear"
+  ) {
+    console.log("Clearing interval with signalName including 'clear'");
+    clearInterval(storedIntervals[signalName].id);
+  }
+});
