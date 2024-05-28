@@ -433,7 +433,8 @@ article {
     display: flex;
     grid-gap: 5vh;
     justify-content: center;
-
+    height: auto;
+    min-height: fit-content;
 }
 
 .hero-scoops.scoop-wrapper {
@@ -513,13 +514,7 @@ article {
     opacity: 0.1;
 }
 
-@media (max-width: 600px) {
-
-    .ë,
-    .ë-newElement {
-        font-size: 20vh;
-    }
-}
+@media (max-width: 600px) {}
 
 /*for any animation spawn*/
 .spawn {

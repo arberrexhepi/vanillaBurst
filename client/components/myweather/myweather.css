@@ -8,7 +8,7 @@
 .weather-location {
     display: grid;
     grid-column: 1;
-    grid-row: 1 / 2;
+    grid-row: 1;
 }
 
 .city-name {
@@ -21,7 +21,7 @@
 
 .weather-current {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -35,12 +35,12 @@
 
 #timer-info {
     grid-column: 1 / 2;
-    grid-row: 4/4;
+    grid-row: 3;
 }
 
 #weather-timer-container {
     grid-column: 1;
-    grid-row: 5/5;
+    grid-row: 4;
 }
 
 

@@ -33,9 +33,9 @@
     1: {
       play: "play",
       duration: 1,
-      units: ["vw", "vh", "vh"],
-      positionStart: [0, -285, 0],
-      positionFinish: [0, 285, 0],
+      units: ["vh", "vh", "vh"],
+      positionStart: [-15, -285, 0],
+      positionFinish: [-15, 285, 0],
       target: ".ë",
       repeatCount: 999,
       offset: 1,
