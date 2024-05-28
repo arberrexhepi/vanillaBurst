@@ -1,39 +1,52 @@
-<div id="content-container">
-    <article id="gameIntro">
-        <section>
-            <h1>What is vanillaBurst?</h1>
-            <ul>
-                <li>A standalone or plugin solution.</li>
-                <li>Ensures your required files are ready for the function, DOM, and server you are interacting with.
-                </li>
-                <li>Control the behavior of an existing JS project or create your own entirely!</li>
-                <li>Builds and prepares the project as [vanillaApp].</li>
-                <li>No additional helper functions needed if all you need is JS files promised exactly where you need
-                    them.
-                </li>
-                <li>Never wonder why your clicks aren't firing again, especially in something like WordPress!</li>
-            </ul>
+<section class="paddless-wrapper">
 
-            <h2>What are vanillaScoops?</h2>
-            <small>Scoops are essentially plugins or components. A Scoop is any combination of a landing, components and
-                function filed that can be added as a package to any number of landings. These can be visual or
-                functional.
-                There's many throughout this site!</small>
+    <div class="list-wrapper">
+        <ul>
 
-            <div id="weather-wrapper"></div>
+            <li class="card">
+                <h2>Promised Renders</h2>
+                <p>Ensures that all required files are ready for your functionality, and your configuration accessible
+                    through <code>vanillaPromise</code>.
+                </p>
+            </li>
+            <li class="card">
+                <h2>Load Balancing</h2>
+                <p>Runtime serves <code> vanillaApp</code>, loading only the scripts needed for the current state.</p>
+            </li>
+            <li class="card">
+                <h2>Developer Friendly</h2>
+                <p>vanillaBurst can function as Standalone or as a Plugin, and is developer extensible through
+                    <code>vanillaScoops</code>.
+                </p>
+            </li>
 
-            <h2>What else can vanillaBurst do?</h2>
-            <ul>
-                <li>Packs and load balances a project's files by endpoint i.e: ?burst=home.</li>
-                <li>Has the capability for state caching and state interaction via server calls and signals.</li>
-                <li>The simplified server communication [helper function "serverRender"] alongside the [helper
-                    function
-                    "myBurst"] allows for dynamic and quick interaction and availability.</li>
-            </ul>
-            <br />
+        </ul>
+    </div>
+</section>
+<section class="content-container">
 
+    <div class="scoop-wrapper hero-scoops">
+        <div class="scoop  section-header">
+            <div class="scoop-img" data-img="scoop.png" data-alt="What are vanillaScoops?"></div>
+            <h2>Meet Scoops!</h2>
+            <p> - vanillaBurst JS plugins! They're a mix of landings, components, and function files.<br />
+                them to any landing for a visual or functional boost.<br />
+                Explore the site to see them in
+                action!
+            </p>
+        </div>
+        <div id="weather-wrapper"></div>
+        <div id="chatGPT-wrapper"></div>
 
-            <p>Copyright © arbër Inc | Apache 2.0 License</p>
-
-    </article>
-</div>
+    </div>
+</section>
+<section class="content-container hover">
+    <h2>What else can vanillaBurst do?</h2>
+    <ul>
+        <li>Packs and load balances a project's files by endpoint i.e: ?burst=home.</li>
+        <li>Has the capability for state caching and state interaction via server calls and signals.</li>
+        <li>The simplified server communication [helper function " serverRender"] alongside the [helper
+            function "myBurst" ] allows for dynamic and quick interaction and availability.</li>
+    </ul>
+    <p>Copyright © arbër Inc | Apache 2.0 License</p>
+</section>

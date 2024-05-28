@@ -15,7 +15,7 @@
  *   tag: "div", // The HTML tag of the component.
  *   html: ["<p>Hello, world!</p>"], // The HTML content of the component. Type requirement is array even if it's a single string.
  * };
- * window.updateComponent(
+ * ë.updateComponent(
  *   vanillaPromise, // Required. This should be a promise object.
  *   componentPrep, // Required. This should be an object containing the component preparation data.
  *   "componentKey", // Required. This should be a string representing the component key.
@@ -24,7 +24,7 @@
  * );
  */
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "updateComponent",
   async function (
     vanillaPromise,
@@ -165,6 +165,8 @@ window.frozenVanilla(
       }
     }
 
+    ////Currently stale but leaving it here. As I do like it for an earlier check, will stop at first existing call
+    ////providing a quicker feedback on selector exist
     function treatId(selector) {
       try {
         const componentRoot = document.getElementById(selector);
@@ -188,6 +190,7 @@ window.frozenVanilla(
       }
       return componentParts;
     }
+    ///end stale
 
     ///////////////////////////////////
     ///////Build

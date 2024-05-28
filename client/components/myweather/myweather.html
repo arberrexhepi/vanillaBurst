@@ -1,22 +1,26 @@
-<div id="weatherapp" class="weather-app">
+<div class="weather-app" id="weatherapp">
     <div class="weather-location">
-        <h2 id="city-name" class="city-name">Fetching Weather...</h2>
-        <p id="country-name" class="country-name"></p>
+        <h2 class="city-name" id="city-name">Geneva</h2>
+        <p class="country-name" id="country-name">Switzerland</p>
     </div>
     <div class="weather-current">
-        <div class="weather-icon">
-            <img id="weather-icon" alt="Weather icon" src=https://cdn.weatherapi.com/weather/64x64/day/113.png">
+        <div class="weather-icon-temp">
+            <div class="weather-icon">
+                <img src="https://cdn.weatherapi.com/weather/64x64/day/116.png" alt="Weather icon" id="weather-icon">
+            </div>
+            <h3 class="temperature" id="temperature">18°C</h3>
         </div>
         <div class="weather-info">
-            <h3 id="temperature" class="temperature"></h3>
-            <p id="description" class="description"></p>
-            <p id="wind-speed" class="wind-speed"></p>
+            <p class="description" id="description">Partly cloudy</p>
+            <p class="wind-speed" id="wind-speed">Wind speed: 6.1 kph</p>
         </div>
-
     </div>
-    <div id="timer-info">This Scoop updates every minute.<br />
-        It uses data from <br /><code>dataSchema.data.cities</code>
-        <div id="weather-timer-container">Will refresh city in: <div class="weather-timer"></div>
-        </div>
+    <div id="timer-info">
+        <p>This Scoop updates every minute.</p>
+        <p>It uses data from</p>
+        <p><code>dataSchema</code></p>
+    </div>
+    <div id="weather-timer-container">
+        <div class="weather-timer">14</div>
     </div>
 </div>

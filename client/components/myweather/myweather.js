@@ -1,4 +1,4 @@
-window.frozenVanilla("myweather", async function (vanillaPromise) {
+ë.frozenVanilla("myweather", async function (vanillaPromise) {
   // Your function logic here
 
   console.log(vanillaPromise.this + "is ready and running");
@@ -10,7 +10,6 @@ window.frozenVanilla("myweather", async function (vanillaPromise) {
   updateWeatherInfo(counter, city);
 
   function updateWeatherInfo(counter, city) {
-    alert("Yo");
     // Get a random city from the cities array
     const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
     let randomCity = cities[Math.floor(Math.random() * cities.length)];
@@ -21,35 +20,39 @@ window.frozenVanilla("myweather", async function (vanillaPromise) {
     vanillaPromise.passedFunction.dataSchema.url = urlParts.join("=");
 
     // Fetch the weather data and update the DOM
-    window
-      .serverRender(vanillaPromise.passedFunction.dataSchema)
-      .then((weatherInfo) => {
+    ë.serverRender(vanillaPromise.passedFunction.dataSchema).then(
+      (weatherInfo) => {
         const parsedWeatherInfo = JSON.parse(weatherInfo);
         runWeatherTopping(parsedWeatherInfo);
-      });
+      }
+    );
   }
 
-  // Register the interval with the callback function
-  window.registerInterval(
-    "serverRepeatableWeatherCall",
-    20,
-    60000,
-    (repeat = true),
-    updateWeatherInfo,
-    "clear",
-    null
-  );
+  // IT COULD BE ITS OWN SIGNAL if it there was no Display Counter, so i'll just leave this commented out for reference
+  // ë.registerInterval(
+  //   "serverRepeatableWeatherCall",
+  //   20,
+  //   60000,
+  //   (repeat = true),
+  //   updateWeatherInfo,
+  //   "clear",
+  //   null
+  // );
 
-  function startInterval(counter) {
+  function weatherRefreshDisplay(counter) {
     document.querySelector(".weather-timer").innerHTML = counter;
+    if (counter === 60) {
+      updateWeatherInfo(counter, city);
+    }
   }
 
-  window.registerInterval(
+  ë.registerInterval(
     "repeatable-timer",
+    null,
     60,
     1000,
     (repeat = true),
-    startInterval,
+    weatherRefreshDisplay,
     "clear",
     null
   );

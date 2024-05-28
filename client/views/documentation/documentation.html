@@ -1,216 +1,225 @@
-<div id="content-container" class="documentation-sections">
-    <h1>vanillaBurst Docs</h1>
+<section class="content-container">
+    <div id="content-container" class="documentation-sections">
+        <h1>vanillaBurst Docs</h1>
 
-    <article>
-        <!-- INFO SET - What is vanillaBurst? -->
-        <section>
-            <h2>What is vanillaBurst?</h2>
+        <article>
+            <!-- INFO SET - What is vanillaBurst? -->
+            <section>
+                <h2>What is vanillaBurst?</h2>
 
-            <blockquote>A vanilla Javascript Framework for Web Projects.</blockquote>
+                <blockquote>A vanilla Javascript Framework for Web Projects.</blockquote>
 
-            <p>
-                vanillaBurst is a JS packaging framework, usable as a standalone or plugin solution. It ensures your
-                required files are always ready for the function you are working with, and for the DOM and server
-                you
-                are
-                interacting with.
-            </p>
-            <ul>
-                <li>
-                    You can control the behavior of an existing JS project or create your own entirely! It builds
-                    and
-                    prepares the project as <code>vanillaApp</code>.
-                </li>
-                <li>
-                    At its core, no additional helper functions actually need to be used… if all you need is JS
-                    files
-                    promised exactly where you need them for you to work with, then <code>config.js</code>,
-                    <code>viewConfig.js</code>, and <code>view.js</code> is all that's necessary. In terms of
-                    something
-                    like
-                    WordPress, you'll - ideally - never wonder why your clicks aren't firing again!
-                </li>
-            </ul>
-        </section>
-        <!-- END INFO SET - What is vanillaBurst? -->
+                <p>
+                    vanillaBurst is a JS packaging framework, usable as a standalone or plugin solution. It ensures your
+                    required files are always ready for the function you are working with, and for the DOM and server
+                    you
+                    are
+                    interacting with.
+                </p>
+                <ul>
+                    <li>
+                        You can control the behavior of an existing JS project or create your own entirely! It builds
+                        and
+                        prepares the project as <code>vanillaApp</code>.
+                    </li>
+                    <li>
+                        At its core, no additional helper functions actually need to be used… if all you need is JS
+                        files
+                        promised exactly where you need them for you to work with, then <code>config.js</code>,
+                        <code>viewConfig.js</code>, and <code>view.js</code> is all that's necessary. In terms of
+                        something
+                        like
+                        WordPress, you'll - ideally - never wonder why your clicks aren't firing again!
+                    </li>
+                </ul>
+            </section>
+            <!-- END INFO SET - What is vanillaBurst? -->
 
-        <!-- INFO SET - What else can vanillaBurst do? -->
-        <section>
-            <h2>What else can vanillaBurst do?</h2>
-            <ul>
-                <li>
-                    Beyond packing and load balancing of a project's files by endpoint (e.g., ?burst=home), vanillaBurst
-                    has
-                    the capability for state caching and state interaction via server calls and signals.
-                </li>
-                <li>
-                    The simplified server communication <code>helper function "serverRender"</code> alongside the
-                    <code>helper function "myBurst"</code> allows for dynamic and quick interaction and availability.
-                </li>
-            </ul>
-        </section>
-        <!-- END INFO SET - What else can vanillaBurst do? -->
+            <!-- INFO SET - What else can vanillaBurst do? -->
+            <section>
+                <h2>What else can vanillaBurst do?</h2>
+                <ul>
+                    <li>
+                        Beyond packing and load balancing of a project's files by endpoint (e.g., ?burst=home),
+                        vanillaBurst
+                        has
+                        the capability for state caching and state interaction via server calls and signals.
+                    </li>
+                    <li>
+                        The simplified server communication <code>helper function "serverRender"</code> alongside the
+                        <code>helper function "myBurst"</code> allows for dynamic and quick interaction and
+                        availability.
+                    </li>
+                </ul>
+            </section>
+            <!-- END INFO SET - What else can vanillaBurst do? -->
 
-        <!-- INFO SET - How does vanillaBurst work? and how do I use it? -->
-        <section>
-            <h2>How does vanillaBurst work? and how do I use it?</h2>
-            <p>
-                From a system standpoint, vanillaBurst packs and readies your view routes as "landing" based on the
-                following
-                setups of a developer using vanillaBurst: declaring "schemaParts" along with packages for any given
-                "landing", declaring per "landing" - and/or "customFunction" <code>config.js</code>, and creating the
-                "landing" and optionally "customFunction" .js files which holds the code for the code that runs on
-                "landing"
-                render completion.
-            </p>
-            <p>
-                Provided these tasks are complete, vanillaBurst will auto-run when the "landing" is in the
-                <code>window.location.path</code>.
-            </p>
-        </section>
-        <!-- END INFO SET - How does vanillaBurst work? and how do I use it? -->
-
-        <!-- INFO SET - What are vanillaBurst configs? -->
-        <section>
-            <h2>What are vanillaBurst configs?</h2>
-            <p>
-                From a system standpoint, configs are the required setups for vanillaBurst to auto-run and balance your
-                "landing". From a developer standpoint, configs are sets of directives that control the state rendering
-                promise of vanillaBurst.
-            </p>
-            <p>
-                The benefit of configuring by vanillaBurst standards is that it provides a central observable
-                overview of how
-                a "landing", "customFunction" or the entirety of a "vanillaApp" operates. It works as a great way to
-                plan a
-                "landing" and "customFunction" and all the while painlessly taking care of the rendering, based on
-                your
-                plan!
-            </p>
-            <p>
-                This approach allows a developer to focus on functionality rather than function file management in
-                their
-                prepared .js files.
-            </p>
-        </section>
-        <!-- END INFO SET - What are vanillaBurst configs? -->
-
-        <!-- INFO SET - Config Features -->
-        <section>
-            <h2>Config Features</h2>
-            <ul>
-                <li>
-                    You can set up your data structure, access privileges by namespace, control render or pause at
-                    runtime
-                    for load balancing, you can pass custom default properties to the schema via an "originBurst"
-                    object,
-                    set up HTML and CSS calls to target for DOM Rendering to your "landing", and include vendors.
-                </li>
-                <li>
-                    The <code>config.js</code> allows for shared functions which can be set up as packages, but it's
-                    not
-                    necessary because you can decide to place "customFunction" configs within the
-                    <code>${landing}Config.js</code>. However, that's not recommended if you are planning a
-                    larger
-                    scale project.
-                </li>
-                <li>
-                    For any future reconsiderations for a growing project, reconfiguring is super simple and the
-                    vanillaApp will function as always if you set up the schemaParts[landing] with the new configs as
-                    packages.
-                </li>
-            </ul>
-        </section>
-        <!-- END INFO SET - Config Features -->
-
-        <!-- INFO SET - Server Interaction -->
-        <section>
-            <h2>Server Interaction</h2>
-            <ul>
-                <li>
-                    vanillaBurst is server agnostic, requiring nothing more than an environment that can run JS and
-                    has some
-                    form of server level directive capabilities (e.g., Apache .htaccess).
-                </li>
-                <li>
-                    vanillaBurst securely loads and sanitizes HTML files and CSS and makes calls based on config
-                    available
-                    endpoints via serverRender and can be configured as signals or a direct return.
-                </li>
-                <li>
-                    Caching is promised by default for any of these files, including any HTML and CSS that you might
-                    add to
-                    the <code>viewConfig.js</code>.
-                </li>
-            </ul>
-        </section>
-        <!-- END INFO SET - Server Interaction -->
-
-        <!-- INFO SET - CustomFunction.js -->
-        <section>
-            <h2>CustomFunction.js</h2>
-            <ul>
-                <li>
-                    CustomFunctions are .js files that are promised at runtime. They are cached, and ran each time
+            <!-- INFO SET - How does vanillaBurst work? and how do I use it? -->
+            <section>
+                <h2>How does vanillaBurst work? and how do I use it?</h2>
+                <p>
+                    From a system standpoint, vanillaBurst packs and readies your view routes as "landing" based on the
+                    following
+                    setups of a developer using vanillaBurst: declaring "schemaParts" along with packages for any given
+                    "landing", declaring per "landing" - and/or "customFunction" <code>config.js</code>, and creating
                     the
-                    "landing" is in the history event state. Efficiently, only functions set to render:"burst" and
-                    within
-                    the "landing" are ever run.
-                </li>
-                <li>
-                    Landing customFunctions that have the property dataSchema: {data: auto...} are also auto-run, or
-                    can be set
-                    to data:false for manual communication.
-                </li>
-                <li>
-                    CustomFunction.js is the unique name reference in all parts of your vanillaApp files and
-                    configs.
-                </li>
-            </ul>
-            <!-- DIRECTIVE - Naming Convention Set -->
-            <ul>
-                <li>Config file: <code>customFunctionConfig.js</code></li>
-                <li>Config function: <code>customFunctionConfig</code></li>
-                <li>Object property key name: <code>{ customFunction :{} }</code></li>
-                <li>Object property param: <code>{ ...customFunction: {functionFile: "customFunction", ...} }</code>
-                </li>
-                <li>If customFunction is the landing - set: <code>{ ...customFunction:{role: "parent", ...} }</code>
-                </li>
-            </ul>
-            <!-- DIRECTIVE SAMPLE - Basic CustomFunction.js setup -->
-            <p>The customFunction is wrapped in a helper function to disallow mutation of the function.</p>
-            <p>vanillaApp promises a "vanillaPromise" from which a developer can access and communicate with the
-                state.</p>
-            <p>
-                The code in this file can be purely vanilla JS, hence "vanillaBurst", can access helper functions, or
-                if a
-                particular library such as jQuery is included as in passedVendors property of a landingConfig, the
-                code may
-                be written in that fashion.
-            </p>
-        </section>
-        <!-- END INFO SET - CustomFunction.js -->
+                    "landing" and optionally "customFunction" .js files which holds the code for the code that runs on
+                    "landing"
+                    render completion.
+                </p>
+                <p>
+                    Provided these tasks are complete, vanillaBurst will auto-run when the "landing" is in the
+                    <code>window.location.path</code>.
+                </p>
+            </section>
+            <!-- END INFO SET - How does vanillaBurst work? and how do I use it? -->
 
-        <!-- INFO SET - Signals -->
-        <section>
-            <h2>Signals</h2>
-            <ul>
-                <li>
-                    Signals are carried out via helper function <code>window.myBurst()</code>.
-                </li>
-                <li>
-                    No additional setups are required when calling the server (provided the server responds with a
-                    signal
-                    type and data, defaults to ready and fail).
-                </li>
-            </ul>
-            <!-- DIRECTIVE SAMPLE - Signals with Server Interaction -->
-            <p>
-                For further details and samples, please refer to the <a
-                    href="https://github.com/arberrexhepi/vanillaBurstGame/blob/main/samples/notificationHandlerSample.js">
-                    GitHub repo</a>.
-            </p>
-        </section>
-        <!-- END INFO SET - Signals -->
-    </article>
-</div>
+            <!-- INFO SET - What are vanillaBurst configs? -->
+            <section>
+                <h2>What are vanillaBurst configs?</h2>
+                <p>
+                    From a system standpoint, configs are the required setups for vanillaBurst to auto-run and balance
+                    your
+                    "landing". From a developer standpoint, configs are sets of directives that control the state
+                    rendering
+                    promise of vanillaBurst.
+                </p>
+                <p>
+                    The benefit of configuring by vanillaBurst standards is that it provides a central observable
+                    overview of how
+                    a "landing", "customFunction" or the entirety of a "vanillaApp" operates. It works as a great way to
+                    plan a
+                    "landing" and "customFunction" and all the while painlessly taking care of the rendering, based on
+                    your
+                    plan!
+                </p>
+                <p>
+                    This approach allows a developer to focus on functionality rather than function file management in
+                    their
+                    prepared .js files.
+                </p>
+            </section>
+            <!-- END INFO SET - What are vanillaBurst configs? -->
+
+            <!-- INFO SET - Config Features -->
+            <section>
+                <h2>Config Features</h2>
+                <ul>
+                    <li>
+                        You can set up your data structure, access privileges by namespace, control render or pause at
+                        runtime
+                        for load balancing, you can pass custom default properties to the schema via an "originBurst"
+                        object,
+                        set up HTML and CSS calls to target for DOM Rendering to your "landing", and include vendors.
+                    </li>
+                    <li>
+                        The <code>config.js</code> allows for shared functions which can be set up as packages, but it's
+                        not
+                        necessary because you can decide to place "customFunction" configs within the
+                        <code>${landing}Config.js</code>. However, that's not recommended if you are planning a
+                        larger
+                        scale project.
+                    </li>
+                    <li>
+                        For any future reconsiderations for a growing project, reconfiguring is super simple and the
+                        vanillaApp will function as always if you set up the schemaParts[landing] with the new configs
+                        as
+                        packages.
+                    </li>
+                </ul>
+            </section>
+            <!-- END INFO SET - Config Features -->
+
+            <!-- INFO SET - Server Interaction -->
+            <section>
+                <h2>Server Interaction</h2>
+                <ul>
+                    <li>
+                        vanillaBurst is server agnostic, requiring nothing more than an environment that can run JS and
+                        has some
+                        form of server level directive capabilities (e.g., Apache .htaccess).
+                    </li>
+                    <li>
+                        vanillaBurst securely loads and sanitizes HTML files and CSS and makes calls based on config
+                        available
+                        endpoints via serverRender and can be configured as signals or a direct return.
+                    </li>
+                    <li>
+                        Caching is promised by default for any of these files, including any HTML and CSS that you might
+                        add to
+                        the <code>viewConfig.js</code>.
+                    </li>
+                </ul>
+            </section>
+            <!-- END INFO SET - Server Interaction -->
+
+            <!-- INFO SET - CustomFunction.js -->
+            <section>
+                <h2>CustomFunction.js</h2>
+                <ul>
+                    <li>
+                        CustomFunctions are .js files that are promised at runtime. They are cached, and ran each time
+                        the
+                        "landing" is in the history event state. Efficiently, only functions set to render:"burst" and
+                        within
+                        the "landing" are ever run.
+                    </li>
+                    <li>
+                        Landing customFunctions that have the property dataSchema: {data: auto...} are also auto-run, or
+                        can be set
+                        to data:false for manual communication.
+                    </li>
+                    <li>
+                        CustomFunction.js is the unique name reference in all parts of your vanillaApp files and
+                        configs.
+                    </li>
+                </ul>
+                <!-- DIRECTIVE - Naming Convention Set -->
+                <ul>
+                    <li>Config file: <code>customFunctionConfig.js</code></li>
+                    <li>Config function: <code>customFunctionConfig</code></li>
+                    <li>Object property key name: <code>{ customFunction :{} }</code></li>
+                    <li>Object property param: <code>{ ...customFunction: {functionFile: "customFunction", ...} }</code>
+                    </li>
+                    <li>If customFunction is the landing - set: <code>{ ...customFunction:{role: "parent", ...} }</code>
+                    </li>
+                </ul>
+                <!-- DIRECTIVE SAMPLE - Basic CustomFunction.js setup -->
+                <p>The customFunction is wrapped in a helper function to disallow mutation of the function.</p>
+                <p>vanillaApp promises a "vanillaPromise" from which a developer can access and communicate with the
+                    state.</p>
+                <p>
+                    The code in this file can be purely vanilla JS, hence "vanillaBurst", can access helper functions,
+                    or
+                    if a
+                    particular library such as jQuery is included as in passedVendors property of a landingConfig, the
+                    code may
+                    be written in that fashion.
+                </p>
+            </section>
+            <!-- END INFO SET - CustomFunction.js -->
+
+            <!-- INFO SET - Signals -->
+            <section>
+                <h2>Signals</h2>
+                <ul>
+                    <li>
+                        Signals are carried out via helper function <code>window.myBurst()</code>.
+                    </li>
+                    <li>
+                        No additional setups are required when calling the server (provided the server responds with a
+                        signal
+                        type and data, defaults to ready and fail).
+                    </li>
+                </ul>
+                <!-- DIRECTIVE SAMPLE - Signals with Server Interaction -->
+                <p>
+                    For further details and samples, please refer to the <a
+                        href="https://github.com/arberrexhepi/vanillaBurstGame/blob/main/samples/notificationHandlerSample.js">
+                        GitHub repo</a>.
+                </p>
+            </section>
+            <!-- END INFO SET - Signals -->
+        </article>
+    </div>
+</section>

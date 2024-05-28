@@ -1,4 +1,4 @@
-window.frozenVanilla(
+ë.frozenVanilla(
   "htmlFileLoader",
   async function (
     { htmlPath, cssPath, originFunction, functionFile },
@@ -17,7 +17,7 @@ window.frozenVanilla(
       };
 
       // Get HTML content
-      let nonceString = window.nonceBack();
+      let nonceString = ë.nonceBack();
 
       let contentToUse;
       const storedBurst = JSON.parse(localStorage.getItem("originBurst")) || {};
@@ -74,13 +74,13 @@ window.frozenVanilla(
         // Add a nonce to all img elements in the sanitized HTML
         let imgElements = doc.getElementsByTagName("img");
         for (let img of imgElements) {
-          let nonceString = window.nonceBack();
+          let nonceString = ë.nonceBack();
           img.setAttribute("nonce", nonceString);
         }
 
         let formElements = doc.getElementsByTagName("form");
         for (let form of formElements) {
-          let nonceString = window.nonceBack();
+          let nonceString = ë.nonceBack();
           form.setAttribute("nonce", nonceString);
         }
 
@@ -94,10 +94,7 @@ window.frozenVanilla(
 
       if (htmlPath) {
         if (typeof DOMFileLOADcallback === "function") {
-          functionHTML = await window.sanitizeVanillaDOM(
-            contentToUse,
-            functionFile
-          );
+          functionHTML = await ë.sanitizeVanillaDOM(contentToUse, functionFile);
           DOMFileLOADcallback(functionHTML);
         }
       }
@@ -105,7 +102,7 @@ window.frozenVanilla(
       // Apply nonce to meta and script tags in the main document
 
       // Apply CSS content using <link> tag
-      window.cssFileLoader(cssPath);
+      ë.cssFileLoader(cssPath);
     } catch (error) {
       console.error("Error:", error);
     }

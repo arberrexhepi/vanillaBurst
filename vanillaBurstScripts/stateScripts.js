@@ -1,11 +1,11 @@
-// window.frozenVanilla(
+// ë.frozenVanilla(
 //   "stateScripts",
 //   function (stateTag, stateTagPath, loadParams, historyCount, originBurst) {
 //     console.log(`Preloading state: ${stateTag}`);
 
-//     const scriptUrls = window.schema[stateTag].scripts;
-//     const preloaderUrl = window.schema[stateTag].preloader;
-//     const nonceString2 = window.nonceBack(); // Fetch nonceString2 once
+//     const scriptUrls = ë.schema[stateTag].scripts;
+//     const preloaderUrl = ë.schema[stateTag].preloader;
+//     const nonceString2 = ë.nonceBack(); // Fetch nonceString2 once
 //     alert(nonceString2);
 //     function loadScript(url, nonceString2) {
 //       return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@
 //       return loadScript(preloaderUrl, nonceString2)
 //         .then(() => {
 //           addScriptToHead(preloaderUrl, nonceString2);
-//           window.preloaderAnimation();
+//           ë.preloaderAnimation();
 //           return Promise.all(
 //             scriptUrls.map((url) =>
 //               loadScript(url, nonceString2).then(() =>
@@ -51,7 +51,7 @@
 //           );
 //         })
 //         .then(() => {
-//           if (typeof window.render === "function") {
+//           if (typeof ë.render === "function") {
 //             return true;
 //           }
 //         })
@@ -62,7 +62,7 @@
 
 //     loadScriptAndRunFunction(scriptUrls, preloaderUrl, nonceString2)
 //       .then(() => {
-//         window.removeLoader();
+//         ë.removeLoader();
 //       })
 //       .catch((error) => {
 //         console.error("Error loading script:", error);

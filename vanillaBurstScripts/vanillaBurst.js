@@ -1,7 +1,7 @@
 let historyCount = 0;
-window.historyCount = historyCount;
+ë.historyCount = historyCount;
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "vanillaBurst",
   async function (
     stateTag,
@@ -24,8 +24,8 @@ window.frozenVanilla(
     // Load scripts for the state
     function stateScripts(stateTag) {
       const { scripts: scriptUrls, preloader: preloaderUrl } =
-        window.schema[stateTag];
-      const nonceString2 = window.nonceBack();
+        ë.schema[stateTag];
+      const nonceString2 = ë.nonceBack();
 
       function loadScript(url) {
         return new Promise((resolve, reject) => {
@@ -69,8 +69,8 @@ window.frozenVanilla(
             );
           })
           .then(() => {
-            window.preloaderAnimation();
-            if (typeof window.render === "function") {
+            ë.preloaderAnimation();
+            if (typeof ë.render === "function") {
               return true;
             }
           })
@@ -83,7 +83,7 @@ window.frozenVanilla(
         .then(() => {
           runState();
           handlePop();
-          window.removeLoader();
+          ë.removeLoader();
         })
         .catch((error) => {
           console.error("Error loading scripts:", error);
@@ -99,12 +99,12 @@ window.frozenVanilla(
 
       if (intervals) {
         for (let signalName in intervals) {
-          window.unregisterInterval(signalName);
+          ë.unregisterInterval(signalName);
         }
       }
 
-      window.renderComplete = false;
-      window.logSpacer();
+      ë.renderComplete = false;
+      ë.logSpacer();
       console.log(
         `%c[Changing state to: ${stateTag}]`,
         "color: white; font-weight: bold; font-size:24px;"
@@ -119,8 +119,8 @@ window.frozenVanilla(
 
       function stateParams(loadParams, tagParam) {
         const resource =
-          window.schema?.[tagParam]?.customFunctions?.[tagParam]?.dataSchema;
-        const resourceParent = window.schema[tagParam];
+          ë.schema?.[tagParam]?.customFunctions?.[tagParam]?.dataSchema;
+        const resourceParent = ë.schema[tagParam];
 
         if (
           resource &&
@@ -158,7 +158,7 @@ window.frozenVanilla(
         return {
           stateTagName: stateTag,
           stateTagPath: stateTagPath,
-          stateTagScripts: window.schema[stateTag].scripts,
+          stateTagScripts: ë.schema[stateTag].scripts,
           stateTagLoadParams: loadParams,
           stateTagParams: renderSchema,
           stateCount: historyCount,
@@ -166,24 +166,24 @@ window.frozenVanilla(
       }
 
       function changeState() {
-        historyCount = history.state?.stateCount || window.historyCount;
+        historyCount = history.state?.stateCount || ë.historyCount;
         historyCount++;
 
         let buildState = processState();
 
-        window.historyCount = buildState.stateCount;
+        ë.historyCount = buildState.stateCount;
         history.pushState(
           buildState,
           buildState.stateTagName,
           `/${buildState.stateTagPath}`
         );
-        let seo = window.seo;
+        let seo = ë.seo;
 
-        window.setSeo(seo);
+        ë.setSeo(seo);
         console.log("Setting SEO:", seo);
         console.log("Document title set to:", seo.title);
 
-        window.render(buildState.stateTagParams);
+        ë.render(buildState.stateTagParams);
       }
 
       changeState();
@@ -191,12 +191,12 @@ window.frozenVanilla(
 
     // Handle popstate events for navigation
     function handlePop() {
-      window.addEventListener("popstate", (event) => {
-        if (event.state && window.renderComplete === true) {
-          window.renderComplete = false;
+      ë.addEventListener("popstate", (event) => {
+        if (event.state && ë.renderComplete === true) {
+          ë.renderComplete = false;
           let popState = event.state;
           historyCount = popState.stateCount + 1;
-          window.historyCount = historyCount;
+          ë.historyCount = historyCount;
 
           console.log(popState);
           history.replaceState(
@@ -204,19 +204,19 @@ window.frozenVanilla(
             popState.stateTagName,
             `/${popState.stateTagPath}`
           );
-          let seo = window.seo;
+          let seo = ë.seo;
 
-          window.setSeo(seo);
-          window.render(popState.stateTagParams);
+          ë.setSeo(seo);
+          ë.render(popState.stateTagParams);
         }
       });
     }
   }
 );
 
-window.frozenVanilla("myState", function (stateBurst) {
+ë.frozenVanilla("myState", function (stateBurst) {
   if (history.state.stateTagName !== stateBurst[0]) {
     localStorage.setItem("stateBurst", JSON.stringify(stateBurst));
-    window.vanillaBurst();
+    ë.vanillaBurst();
   }
 });

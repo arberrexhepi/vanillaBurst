@@ -1,4 +1,4 @@
-window.frozenVanilla("navConfig", function () {
+ë.frozenVanilla("navConfig", function () {
   let navConfig = {
     nav: {
       dir: "client/components/nav/",

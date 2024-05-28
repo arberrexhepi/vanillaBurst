@@ -1,4 +1,4 @@
-window.frozenVanilla(
+ë.frozenVanilla(
   "vanillaPromise",
   function (
     renderSchema,
@@ -12,7 +12,7 @@ window.frozenVanilla(
     if (!vanillaPromise || typeof vanillaPromise !== "object") {
       vanillaPromise = {};
       vanillaPromise = {
-        schema: window.schema, //TODO check if namespace equals global or not, and pass only the scopes in namespace from config
+        schema: ë.schema, //TODO check if namespace equals global or not, and pass only the scopes in namespace from config
         renderSchema: renderSchema,
         this: customFunctionName,
         landing: renderSchema.landing,

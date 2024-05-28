@@ -1,14 +1,14 @@
-const vanillaApp = window.frozenVanilla(
+const vanillaApp = ë.frozenVanilla(
   "vanillaApp",
   function vanillaApp(baseUrl) {
-    window.onload = function () {
-      window.frozenVanilla("path", window.location.pathname.replace(/^\//, ""));
+    ë.onload = function () {
+      ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
 
       // Helper function: load a single script
-      window.frozenVanilla("loadScript", function loadScript(url) {
+      ë.frozenVanilla("loadScript", function loadScript(url) {
         return new Promise((resolve, reject) => {
           const script = document.createElement("script");
-          const nonceString = window.nonceBack();
+          const nonceString = ë.nonceBack();
 
           script.src = url;
           script.setAttribute("name", "init");
@@ -25,16 +25,16 @@ const vanillaApp = window.frozenVanilla(
       const configScriptPath = "globals/config.js";
       const finalPromiseChain = [];
 
-      window.frozenVanilla("configScriptPath", configScriptPath, false);
+      ë.frozenVanilla("configScriptPath", configScriptPath, false);
 
-      window.frozenVanilla("loadInitialScripts", function () {
-        return Promise.all([window.loadScript(`${baseUrl}${configScriptPath}`)])
+      ë.frozenVanilla("loadInitialScripts", function () {
+        return Promise.all([ë.loadScript(`${baseUrl}${configScriptPath}`)])
           .then(() => {
             console.log(
-              `%cWelcome to ${window.domainUrl} 🍦`,
+              `%cWelcome to ${ë.frozenVanilla.get(domainUrl)} 🍦`,
               "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
             );
-            return window.schemaParts;
+            return ë.schemaParts;
           })
           .catch((error) => {
             console.error("Script loading error: ", error);
@@ -42,26 +42,26 @@ const vanillaApp = window.frozenVanilla(
       });
 
       function promiseSchemaParts() {
-        window.logSpacer();
+        ë.logSpacer();
 
         console.log(
           "%c[Building vanillaApp schema]",
           "color: white; font-weight: bold; font-size:24px;"
         );
-        window.logSpacer();
-        const parts = Object.keys(window.schemaParts);
+        ë.logSpacer();
+        const parts = Object.keys(ë.schemaParts);
 
-        window.frozenVanilla("parts", parts, false);
+        ë.frozenVanilla("parts", parts, false);
         console.log("Extracted parts (keys):", parts);
 
         const scriptPromises = parts.map((part) => {
           const partConfigPath = `../schemas/${part}Config.js`;
           const scriptUrl = `${baseUrl}${partConfigPath}`;
 
-          window.frozenVanilla("partConfigPath", partConfigPath, false);
-          window.frozenVanilla("scriptUrl", scriptUrl, false);
+          ë.frozenVanilla("partConfigPath", partConfigPath, false);
+          ë.frozenVanilla("scriptUrl", scriptUrl, false);
 
-          return window.loadScript(scriptUrl).catch((error) => {
+          return ë.loadScript(scriptUrl).catch((error) => {
             console.error(
               `Error loading [view]Config for part: ${part}`,
               error
@@ -70,10 +70,10 @@ const vanillaApp = window.frozenVanilla(
         });
 
         const schemaScriptPath = "vanillaBurstScripts/schema.js";
-        window.frozenVanilla("schemaScriptPath", schemaScriptPath, false);
+        ë.frozenVanilla("schemaScriptPath", schemaScriptPath, false);
 
         scriptPromises.push(
-          window.loadScript(`${baseUrl}${schemaScriptPath}`).catch((error) => {
+          ë.loadScript(`${baseUrl}${schemaScriptPath}`).catch((error) => {
             console.error("Error loading schema.js script", error);
           })
         );
@@ -83,10 +83,10 @@ const vanillaApp = window.frozenVanilla(
             console.info("CONFIG PARTS PROMISED:", parts);
             const schema = config();
             if (typeof config === "function") {
-              window.frozenVanilla("schema", schema);
+              ë.frozenVanilla("schema", schema);
               return promiseRouteAndStateLoad(schema);
             } else {
-              console.error("window.config is not a function.");
+              console.error("ë.config is not a function.");
             }
           })
           .catch((error) => {
@@ -104,15 +104,13 @@ const vanillaApp = window.frozenVanilla(
       };
 
       Object.keys(scriptPaths).forEach((key) => {
-        window.frozenVanilla(key, scriptPaths[key], false);
+        ë.frozenVanilla(key, scriptPaths[key], false);
       });
 
       async function promiseRouteAndStateLoad(schema) {
         return window
           .loadScript(`${baseUrl}${scriptPaths.vanillaBurstScriptPath}`)
-          .then(() =>
-            window.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`)
-          )
+          .then(() => ë.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`))
           .then(() => {
             console.log(
               "Scripts vanillaBurst.js and routes.js loaded successfully."
@@ -128,7 +126,7 @@ const vanillaApp = window.frozenVanilla(
       }
 
       // Freeze an array of scripts into vanillaBurstScripts
-      if (window.vanillaBurstScripts === undefined) {
+      if (ë.vanillaBurstScripts === undefined) {
         Object.defineProperty(window, "vanillaBurstScripts", {
           value: Object.freeze([
             baseUrl + "vendors/jquery-3.7.1.min.js",

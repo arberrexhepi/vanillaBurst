@@ -6,15 +6,22 @@ const baseUrls = {
   live: "/",
 };
 
+const errorLogs = true;
+
 // Define and freeze the frozenVanilla utility
 function defineFrozenVanilla() {
   if (typeof window.frozenVanilla === "undefined") {
+    const storage = {};
+
     Object.defineProperty(window, "frozenVanilla", {
       value: function frozenVanilla(prop, value, setAsWindowProp = true) {
         const frozenValue =
           typeof value === "function"
             ? Object.freeze(value.bind(this))
             : Object.freeze(value);
+
+        // Store the frozen value
+        storage[prop] = frozenValue;
 
         if (
           setAsWindowProp &&
@@ -32,6 +39,11 @@ function defineFrozenVanilla() {
       writable: false,
       configurable: false,
     });
+
+    // Add a method to get values from the storage
+    window.frozenVanilla.get = function (prop) {
+      return storage[prop];
+    };
   }
 }
 
@@ -56,16 +68,22 @@ const domainUrl = `${window.location.origin}/`;
 // Freeze the isFrozen checker
 window.frozenVanilla("isFrozen", isFrozen);
 
+////////////IDENTIFIER SET/////////////////
+
+const ë = window;
+
+////////////IDENTIFIER SET/////////////////
+
 // Set base URL based on mode
 const baseUrl = baseUrls[mode] || baseUrls.dev;
-window.frozenVanilla("mode", mode);
-window.frozenVanilla("baseUrl", baseUrl);
+ë.frozenVanilla("mode", mode);
+ë.frozenVanilla("baseUrl", baseUrl);
 
 // Set renderComplete flag
-window.renderComplete = "false";
+ë.renderComplete = "false";
 
 // Generate a nonce
-window.frozenVanilla("nonce", () => {
+ë.frozenVanilla("nonce", () => {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const length = 16;
@@ -75,7 +93,7 @@ window.frozenVanilla("nonce", () => {
 });
 
 // Retrieve or create a nonce
-window.frozenVanilla("nonceBack", () => {
+ë.frozenVanilla("nonceBack", () => {
   let metaTag = document.querySelector(
     'meta[http-equiv="Content-Security-Policy"]'
   );
@@ -83,7 +101,7 @@ window.frozenVanilla("nonceBack", () => {
     return metaTag.content.match(/'nonce-(.*?)'/)[1];
   }
 
-  const nonceString = window.nonce();
+  const nonceString = ë.nonce();
   metaTag = document.createElement("meta");
   metaTag.httpEquiv = "Content-Security-Policy";
   metaTag.content = `style-src ${domainUrl} 'nonce-${nonceString}'; script-src ${domainUrl} 'nonce-${nonceString}';`;
@@ -99,7 +117,7 @@ window.frozenVanilla("nonceBack", () => {
 });
 
 // Set trusted CSP sources
-window.frozenVanilla("setTrustedSources", (sources) => {
+ë.frozenVanilla("setTrustedSources", (sources) => {
   const cspMetaTag =
     document.querySelector('meta[http-equiv="Content-Security-Policy"]') ||
     document.createElement("meta");
@@ -129,12 +147,12 @@ window.frozenVanilla("setTrustedSources", (sources) => {
 
 // Start the application
 const start = async (baseUrl) => {
-  if (!window.seo) {
-    window.seo = {};
+  if (!ë.seo) {
+    ë.seo = {};
   }
-  //window.logSpacer();
+  //ë.logSpacer();
 
-  const nonceString = window.nonceBack();
+  const nonceString = ë.nonceBack();
   if (typeof baseUrl !== "string") {
     throw new Error("Invalid baseUrl");
   }
@@ -157,8 +175,8 @@ const start = async (baseUrl) => {
 
   try {
     await loadAppScript();
-    if (typeof window.frozenVanilla !== "function") {
-      throw new Error("window.frozenVanilla is not a function");
+    if (typeof ë.frozenVanilla !== "function") {
+      throw new Error("ë.frozenVanilla is not a function");
     }
   } catch (error) {
     console.error(error);
@@ -166,9 +184,9 @@ const start = async (baseUrl) => {
 };
 
 //set seo to head tag
-window.frozenVanilla("setSeo", function (seo) {
+ë.frozenVanilla("setSeo", function (seo) {
   if (seo) {
-    // Set window.seo to the incoming seo object
+    // Set ë.seo to the incoming seo object
 
     // Define the meta tags to be set
     const metaTags = {
@@ -213,10 +231,169 @@ window.frozenVanilla("setSeo", function (seo) {
   }
 });
 
-window.frozenVanilla("logSpacer", function () {
+ë.frozenVanilla("logSpacer", function () {
   console.log(".");
   console.log(".");
   console.log(".");
+});
+
+//as in vanillaMessage..!
+ë.frozenVanilla("vanillaMess", function (vanillaMessage, data, typeCheck) {
+  if (ë.vanillaStock !== true) {
+    new Error().stack;
+    return;
+  }
+  let vanillaTableMess = {
+    myMessage: vanillaMessage,
+    expectingType: typeCheck,
+    message: "",
+    data: data,
+    stack: null,
+  };
+  // if (!data) {
+  //   vanillaTableMess.myMessage = data;
+
+  //   return console.log("Data is undefined, 0, or false");
+  // }
+
+  if (
+    (data && data !== null) ||
+    (data && data !== null && typeCheck && typeCheck !== null)
+  ) {
+    try {
+      if (typeCheck === "check") {
+        if (data instanceof Text) {
+          vanillaTableMess.message += "Instance of Text";
+        }
+        vanillaTableMess.message +=
+          "The data has returned:" + JSON.stringify(data);
+        vanillaTableMess.message += "Data type: " + typeof data;
+        vanillaTableMess.stack = new Error().stack;
+      }
+      if (typeCheck === "array" || typeCheck === "array") {
+        if (Array.isArray(data)) {
+          vanillaTableMess.message += "Data is array: " + data;
+          vanillaTableMess.data = JSON.stringify(data);
+        } else {
+          vanillaTableMess.message += "Data is not an array: ";
+          vanillaTableMess.stack = new Error().stack;
+        }
+      }
+
+      if (typeCheck === "object" || typeCheck === "array") {
+        if (typeof data === "object" && data !== null && !Array.isArray(data)) {
+          if (data instanceof Node) {
+            vanillaTableMess.message += "Data is a DOM node";
+          } else if (data instanceof Function) {
+            vanillaTableMess.message += "Data is a function";
+          } else if (data instanceof Date) {
+            vanillaTableMess.message += "Data is a date";
+          } else if (data instanceof RegExp) {
+            vanillaTableMess.message += "Data is a regular expression";
+          } else if (data instanceof Text) {
+            vanillaTableMess.message += "Instance of Text";
+          } else {
+            vanillaTableMess.message += "Data is an object";
+          }
+          vanillaTableMess.data = data;
+        } else {
+          vanillaTableMess.message += "Data is not an object: ";
+          vanillaTableMess.data = data;
+        }
+      }
+
+      if (typeCheck === "string" || typeCheck === "array") {
+        if (typeof data === "string") {
+          vanillaTableMess.message += "String is a string";
+        } else {
+          vanillaTableMess.message += "Data is not a string: ";
+        }
+      }
+
+      if (typeCheck === "number" || typeCheck === "array") {
+        if (typeof data === "number" || data === 0) {
+          vanillaTableMess.message += "Number is Number: " + data;
+        } else {
+          vanillaTableMess.message += "Data is not a number: ";
+        }
+      }
+
+      if (typeCheck === "boolean" || typeCheck === "array") {
+        if (typeof data === "boolean") {
+          vanillaTableMess.message += "Boolean: " + true;
+          vanillaTableMess.data = data;
+        } else {
+          vanillaTableMess.message += "Boolean: " + false;
+        }
+      }
+
+      if (typeCheck === "function" || typeCheck === "array") {
+        if (typeof data === "function") {
+          vanillaTableMess.message += "Function is Function: " + data.name;
+        } else {
+          vanillaTableMess.message += "Data is not a function ";
+        }
+      }
+
+      if (typeCheck === "undefined" || typeCheck === "array") {
+        if (typeof data === "undefined") {
+          vanillaTableMess.message += "Data is indeed undefined";
+        } else {
+          vanillaTableMess.message +=
+            "Data is not undefined, hope that's what you wanted to hear! ";
+        }
+      }
+
+      if (typeCheck === "null" || typeCheck === "array") {
+        if (data === null) {
+          vanillaTableMess.message += "Data is null";
+        } else {
+          vanillaTableMess.message += "Data is not null";
+        }
+      }
+
+      if (typeCheck === "symbol" || typeCheck === "array") {
+        if (typeof data === "symbol") {
+          return true;
+        } else {
+          vanillaTableMess.message += "Data is not a symbol";
+        }
+      }
+
+      if (typeCheck === "bigint" || typeCheck === "array") {
+        if (typeof data === "bigint") {
+          vanillaTableMess.message += "Data is a bigint";
+        } else {
+          vanillaTableMess.message += "Data is not a bigint";
+        }
+      }
+      //runError(false, vanillaTableMess.message, data, typeCheck);
+    } catch (error) {
+      runError(
+        vanillaTableMess ||
+          "[vanillaMess] Something went wrong with the checks",
+        error
+      );
+      vanillaTableMess["error"] = error;
+      //throw new Error(vanillaTableMess);
+    }
+  } else {
+    runError(
+      ((vanillaTableMess.message = "Data is either undefined, null, or 0"),
+      new Error(vanillaTableMess)),
+      data
+    );
+    //throw new Error(vanillaTableMess);
+  }
+  function runError(vanillaTableMess, data) {
+    return vanillaTableMess;
+  }
+
+  while (true) {
+    vanillaMessage.stack = new Error().stack;
+    console.table(vanillaTableMess);
+    return console.warn("Scoop Message (see table above)");
+  }
 });
 
 // Trigger the start function

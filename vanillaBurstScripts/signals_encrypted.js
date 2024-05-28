@@ -1,5 +1,5 @@
 //test from here TO DO
-window.frozenVanilla(
+ë.frozenVanilla(
   "signalBurst",
   async function (signalObject, signalFunction, signalResult) {
     signalResult = signalResult;
@@ -31,7 +31,7 @@ window.frozenVanilla(
     if (originBurst?.signalBurst !== undefined) {
       originBurst.signalBurst = {
         ...originBurst.signalBurst,
-        [window.stateRoute]: {
+        [ë.stateRoute]: {
           signal: signalObject,
           signalResult: signalResult,
         },
@@ -53,16 +53,16 @@ window.frozenVanilla(
 
       signalFunction.forEach(function (element) {
         promiseChain = promiseChain.then(function () {
-          if (typeof window[element] === "function") {
-            return window[element](); // Call the function if it's indeed a function
+          if (typeof ë[element] === "function") {
+            return ë[element](); // Call the function if it's indeed a function
           } else {
             console.error("signalBurst: No such function", element);
           }
         });
       });
     } else {
-      if (typeof window[signalFunction] === "function") {
-        window[signalFunction]();
+      if (typeof ë[signalFunction] === "function") {
+        ë[signalFunction]();
       } else {
         console.error("signalBurst: No such function", signalFunction);
       }
@@ -70,7 +70,7 @@ window.frozenVanilla(
   }
 );
 
-window.frozenVanilla("getSignal", async function getSignal(signalSend) {
+ë.frozenVanilla("getSignal", async function getSignal(signalSend) {
   let encryptedSignalBurst =
     JSON.parse(localStorage.getItem("signalBurst")) || {};
   let encryptedOriginBurst =
@@ -96,14 +96,14 @@ window.frozenVanilla("getSignal", async function getSignal(signalSend) {
   return signalSend;
 });
 
-window.onpopstate = function (event) {
-  window.signalBurst("load", ["getSignal"]);
-  window.runBurst = "functionBurst";
+ë.onpopstate = function (event) {
+  ë.signalBurst("load", ["getSignal"]);
+  ë.runBurst = "functionBurst";
 };
 
 async function decryptData(encryptedData, key, iv) {
   const decoder = new TextDecoder();
-  const decryptedData = await window.crypto.subtle.decrypt(
+  const decryptedData = await ë.crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: iv,
@@ -128,29 +128,29 @@ async function decryptData(encryptedData, key, iv) {
 // }
 
 //////
-//////// WINDOW TO LOCALSTORAGE AND BACK STRATEGY
+//////// ë TO LOCALSTORAGE AND BACK STRATEGY
 /////temporary session (active browsing)
 // Initialize the state in memory
-// window.encryptedState = await encryptData(initialState);
+// ë.encryptedState = await encryptData(initialState);
 
 // // Update the state in memory as the user interacts with the application
 // function updateState(newState) {
-//   window.encryptedState = await encryptData(newState);
+//   ë.encryptedState = await encryptData(newState);
 // }
 
 // // Save the state to localStorage when the user leaves the page
-// window.addEventListener('beforeunload', function (event) {
-//   localStorage.setItem('encryptedState', JSON.stringify(window.encryptedState));
+// ë.addEventListener('beforeunload', function (event) {
+//   localStorage.setItem('encryptedState', JSON.stringify(ë.encryptedState));
 // });
 
-// window.addEventListener('beforeunload', async function (event) {
+// ë.addEventListener('beforeunload', async function (event) {
 //   // Save the current state to localStorage
 //   let originBurst = await getDecryptedData("originBurst");
 //   let encryptedOriginBurst = await encryptData(originBurst);
 //   localStorage.setItem("originBurst", JSON.stringify(encryptedOriginBurst));
 // });
 
-// window.addEventListener('load', async function (event) {
+// ë.addEventListener('load', async function (event) {
 //   // Load the saved state from localStorage when the page is loaded
 //   let encryptedOriginBurst = JSON.parse(localStorage.getItem("originBurst"));
 //   if (encryptedOriginBurst) {

@@ -1,10 +1,10 @@
 function getNonce() {
-  let nonceString = window.nonce();
-  window.nonceBack(nonceString);
+  let nonceString = ë.nonce();
+  ë.nonceBack(nonceString);
   return nonceString;
 }
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "appendScript",
   function (renderSchema, vanillaPromise, passedFunction) {
     return new Promise((resolve, reject) => {
@@ -18,7 +18,8 @@ window.frozenVanilla(
         customFunctionDirectory +
         customFunctionName +
         ".js";
-      let fetchUrl = window.domainUrl + customFunctionUrl;
+
+      let fetchUrl = ë.frozenVanilla.get("domainUrl") + customFunctionUrl;
       fetch(fetchUrl)
         .then((response) => {
           if (!response.ok) {
@@ -37,30 +38,12 @@ window.frozenVanilla(
 
           const script = document.createElement("script");
           script.type = "text/javascript";
-          let nonceString = window.nonceBack();
+          let nonceString = ë.nonceBack();
 
-          // console.log("nonceString:", nonceString); // Log the nonce
-          // // Get the CSP from the meta tag
-          // const csp = document.querySelector(
-          //   'meta[http-equiv="Content-Security-Policy"]'
-          // ).content;
-          // Extract the nonce from the CSP
-          //const metaNonce = csp.match(/'nonce-(.*?)'/)[1];
-          // console.log("meta nonce:", metaNonce); // Log the meta nonce
           script.setAttribute("nonce", nonceString);
           script.text = scriptContent;
           script.id = scriptId;
           document.head.appendChild(script);
-
-          //console.log("script nonce:", script.getAttribute("nonce")); // Log the script's nonce
-
-          // Get the CSP from the meta tag
-          // const cspAfter = document.querySelector(
-          //   'meta[http-equiv="Content-Security-Policy"]'
-          // ).content;
-          // // Extract the nonce from the CSP
-          // const metaNonceAfter = cspAfter.match(/'nonce-(.*?)'/)[1];
-          // console.log("meta nonce:", metaNonceAfter); // Log the meta nonce
 
           if (
             passedFunction.dataSchema &&

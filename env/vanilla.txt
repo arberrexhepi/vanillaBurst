@@ -1,6 +1,0 @@
->|| Vanilla Env ||<<>>||
-
-[BASE_URL] /
-[DOMAIN_URL] http://vanillaburstgame
-
-||<<>>|| Vanilla Env ||<

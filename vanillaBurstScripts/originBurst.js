@@ -11,7 +11,7 @@
  *
  * @throws {Error} If an invalid renderSchema or missing landing key is provided.
  */
-window.frozenVanilla(
+ë.frozenVanilla(
   "updateOriginBurst",
   function (
     renderSchema,
@@ -57,12 +57,12 @@ window.frozenVanilla(
         burst: true,
       };
 
-      window.logSpacer();
+      ë.logSpacer();
       console.log(
         `${functionName} initial originBurst entry; New build complete.`
       );
     } else {
-      window.logSpacer();
+      ë.logSpacer();
       console.log(`${functionName} initial originBurst entry: Found existing.`);
     }
 
@@ -102,7 +102,7 @@ window.frozenVanilla(
  *
  * @throws {Error} If an invalid renderSchema or missing landing key is provided.
  */
-window.frozenVanilla(
+ë.frozenVanilla(
   "setOriginBurst",
   function (
     renderSchema,
@@ -164,7 +164,7 @@ window.frozenVanilla(
  *
  * @throws {Error} If originBurst is not available or cannot find an htmlResult for the function.
  */
-window.frozenVanilla(
+ë.frozenVanilla(
   "storeBurstOrigin",
   function (vanillaPromise, functionHTML, functionFile, originFunction) {
     let originBurst =
@@ -197,7 +197,7 @@ window.frozenVanilla(
   }
 );
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "storeComponentBurst",
   function (originBurst, originFunction, functionFile, DOMtype) {
     if (

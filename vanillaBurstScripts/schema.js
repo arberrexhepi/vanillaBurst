@@ -1,11 +1,11 @@
-const config = window.frozenVanilla(
+const config = ë.frozenVanilla(
   "config",
   function () {
     let schema = {};
 
-    for (let part in window.schemaParts) {
-      if (window.schemaParts.hasOwnProperty(part)) {
-        let packageNames = window.schemaParts[part];
+    for (let part in ë.schemaParts) {
+      if (ë.schemaParts.hasOwnProperty(part)) {
+        let packageNames = ë.schemaParts[part];
         if (
           packageNames === false ||
           packageNames === true ||
@@ -13,9 +13,7 @@ const config = window.frozenVanilla(
         )
           continue; // Skip non-views
 
-        let partConfig = window[`${part}Config`]
-          ? window[`${part}Config`]()
-          : {};
+        let partConfig = ë[`${part}Config`] ? ë[`${part}Config`]() : {};
         let customFunctions = partConfig.customFunctions || {};
 
         // If packageNames is an array, process it as a package
@@ -26,12 +24,12 @@ const config = window.frozenVanilla(
               : [packageName];
 
             individualPackageNames.forEach((individualPackageName) => {
-              let functionNames = window[individualPackageName];
+              let functionNames = ë[individualPackageName];
               if (Array.isArray(functionNames)) {
                 functionNames.forEach((funcName) => {
                   let funcNameConfig = `${funcName}Config`;
-                  if (typeof window[funcNameConfig] === "function") {
-                    let result = window[funcNameConfig](part);
+                  if (typeof ë[funcNameConfig] === "function") {
+                    let result = ë[funcNameConfig](part);
                     if (result && typeof result === "object") {
                       // Directly merge into the customFunctions object
                       Object.assign(customFunctions, result);
@@ -59,7 +57,7 @@ const config = window.frozenVanilla(
   false
 );
 
-const vanillaConfig = window.frozenVanilla(
+const vanillaConfig = ë.frozenVanilla(
   "vanillaConfig",
   function vanillaConfig(landing, passedConfig, passedVendors) {
     function freezeConfig(passedConfig, propertyToFreeze) {
@@ -80,23 +78,26 @@ const vanillaConfig = window.frozenVanilla(
       }
     }
 
-    window.frozenVanilla("freezeConfig", freezeConfig, false);
+    ë.frozenVanilla("freezeConfig", freezeConfig, false);
     freezeConfig(passedConfig, "originBurst");
 
-    window.frozenVanilla("passedVendors", passedVendors, false);
+    ë.frozenVanilla("passedVendors", passedVendors, false);
 
-    let landingRequest = landing + "Request"; // I think this is deprecated but currently not sure yet. This was a requirement before auto config builds.
     let buildConfig = {};
-    //window.passedConfig = passedConfig;
+    //ë.passedConfig = passedConfig;
     buildConfig[landing] = {
       landing: landing,
       scripts: [
-        ...window.vanillaBurstScripts,
-        ...Object.entries(window.vendorScoops)
-          .filter(([key, namespaces]) => namespaces.includes(landing))
-          .map(([key]) => `${baseUrl}vendors/${key}.js`),
+        ...ë.vanillaBurstScripts,
+        ...Object.entries(ë.vanillaScoops)
+          .filter(
+            ([key, namespaces]) =>
+              namespaces === true ||
+              (Array.isArray(namespaces) && namespaces.includes(landing))
+          )
+          .map(([key]) => `${baseUrl}scoops/${key}/${key}.js`),
       ], // Array of required script paths
-      preloader: window.baseUrl + "preloader.js", // Assuming this path is correct
+      preloader: ë.baseUrl + "preloader.js", // Assuming this path is correct
       customFunctions: {
         //this is what the passedConfig is building out, which comes from schemas/ folder let's say homeConfig.js
         // example: {
@@ -132,14 +133,14 @@ const vanillaConfig = window.frozenVanilla(
   false
 );
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "buildRollCall",
   async function buildRollCall(rollCall, renderSchema, runFunction) {
     //custom call, depending on reload requirements, or refresh, helper function
     if (runFunction === "functionBurst") {
       //runFunction = ''
       runRoll = "rollBurst";
-      window.childFunction(renderSchema, rollCall, runRoll);
+      ë.childFunction(renderSchema, rollCall, runRoll);
     }
   }
 );
