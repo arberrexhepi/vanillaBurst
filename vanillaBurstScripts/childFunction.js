@@ -12,11 +12,11 @@
  * The childFunction loads and executes custom functions defined in the renderSchema.
  * It manages asynchronous operations, processes function data, and updates the originBurst state.
  */
-window.frozenVanilla(
+ë.frozenVanilla(
   "childFunction",
   async function (renderSchema, rollCall, runRoll, originBurst) {
     return new Promise((resolve, reject) => {
-      window.logSpacer();
+      ë.logSpacer();
       console.log(
         "%c[Starting Promising renderSchema landing customFunctions]",
         "color: white; font-weight: bold; font-size:24px;"
@@ -43,7 +43,7 @@ window.frozenVanilla(
       let vanillaPromises = {};
 
       for (const element of rollCall) {
-        //window.logSpacer();
+        //ë.logSpacer();
         console.log(
           "%cPromising " + element,
           "color: white; font-weight: bold; font-size:18px;"
@@ -61,7 +61,7 @@ window.frozenVanilla(
             updatedOriginBurst?.[renderSchema.landing]?.[customFunctionName] ||
             null;
 
-          const vanillaPromise = await window.singlePromise(
+          const vanillaPromise = await ë.singlePromise(
             renderSchema,
             serverResult,
             passedFunction,
@@ -69,28 +69,28 @@ window.frozenVanilla(
           );
           vanillaPromises[customFunctionName] = vanillaPromise;
 
-          if (typeof window[customFunctionName] === "function") {
+          if (typeof ë[customFunctionName] === "function") {
             console.log(
               "%c" + customFunctionName + " has been successfully rendered.",
               "color: white; font-weight: bold; font-size:18px;"
             );
-            window.logSpacer();
+            ë.logSpacer();
           } else {
             console.warn(
-              "window." +
+              "ë." +
                 customFunctionName +
                 " is not a function. HINT: Naming conflicts in files, or reference name exists as some other Global name such as a DIV element ID."
             );
           }
 
-          window.storeBurst(vanillaPromise);
+          ë.storeBurst(vanillaPromise);
 
           if (count >= maxCount) {
             console.log(
               "%c[Completed Promising renderSchema landing customFunctions]",
               "color: white; font-weight: bold; font-size:24px;"
             );
-            window.logSpacer();
+            ë.logSpacer();
             return vanillaPromises;
           }
         } catch (error) {
@@ -117,7 +117,7 @@ window.frozenVanilla(
         if (passedFunction) {
           originBurst =
             JSON.parse(localStorage.getItem("originBurst")) ||
-            window.updateOriginBurst(
+            ë.updateOriginBurst(
               renderSchema,
               customFunctionName,
               passedFunction,
@@ -126,13 +126,13 @@ window.frozenVanilla(
 
           let serverResult;
           if (passedFunction.dataSchema?.data?.auto === true) {
-            serverResult = window.serverRender(
+            serverResult = ë.serverRender(
               passedFunction.dataSchema,
               "serverBurst"
             );
           }
 
-          originBurst = window.setOriginBurst(
+          originBurst = ë.setOriginBurst(
             renderSchema,
             customFunctionName,
             passedFunction,
@@ -156,12 +156,12 @@ window.frozenVanilla(
  *
  * @description
  * The reRollFunctions function iterates over the provided rollCall and re-runs
- * each specified custom function if it exists on the window object.
+ * each specified custom function if it exists on the ë object.
  */
-window.frozenVanilla("reRollFunctions", function (rollCall) {
+ë.frozenVanilla("reRollFunctions", function (rollCall) {
   function runReRoll(customFunctionName) {
-    if (typeof window[customFunctionName] === "function") {
-      window[customFunctionName]();
+    if (typeof ë[customFunctionName] === "function") {
+      ë[customFunctionName]();
     }
   }
 

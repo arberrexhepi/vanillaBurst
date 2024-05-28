@@ -1,4 +1,4 @@
-window.frozenVanilla("myweatherConfig", function () {
+ë.frozenVanilla("myweatherConfig", function () {
   let myweatherConfig = {
     myweather: {
       dir: "client/components/myweather/",
@@ -24,6 +24,7 @@ window.frozenVanilla("myweatherConfig", function () {
             "Munich",
             "Geneva",
             "Tokyo",
+            "Halifax",
           ],
         },
         headers: {

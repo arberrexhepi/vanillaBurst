@@ -1,7 +1,5 @@
-window.frozenVanilla("gen", function (vanillaPromise) {
+ë.frozenVanilla("gen", function (vanillaPromise) {
   console.log(vanillaPromise.this + " ran");
-
-  //let button = document.getElementById("create-config");
 
   let subDomClicks = 0;
   $(".addSubDOM").on("click", function (e) {
@@ -33,7 +31,6 @@ window.frozenVanilla("gen", function (vanillaPromise) {
     const dir = $("#dir").val();
     const htmlPath = $("#htmlPath").val();
     const container = $("#container").val();
-    // Validation for required fields
     const validations = [
       {
         condition: !viewName || viewName.trim() === "",
@@ -43,7 +40,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
     for (const { condition, message } of validations) {
       if (condition) {
-        window.updateComponent(
+        ë.updateComponent(
           vanillaPromise,
           { tag: "pre", html: [`[validation] Error: ${message}`] },
           "canvasresult",
@@ -101,7 +98,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
     async function processConfig(viewName, dir, configString) {
       if (!viewName) {
         //alert("viewName is empty");
-        window.updateComponent(
+        ë.updateComponent(
           vanillaPromise,
           {
             clear: false,
@@ -114,7 +111,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         return;
       }
 
-      let jsFunctionStringBuild = `window.frozenVanilla("${viewName}", function(vanillaPromise) {\n\n`;
+      let jsFunctionStringBuild = `ë.frozenVanilla("${viewName}", function(vanillaPromise) {\n\n`;
       jsFunctionStringBuild += `    // Your function logic here\n\n`;
       jsFunctionStringBuild += `    console.log(vanillaPromise.this + "is ready and running")\n\n`;
       jsFunctionStringBuild += `});\n\n`;
@@ -143,10 +140,10 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
         const configHTML =
           `//The 'canvasresult' component was updated and cached\n` +
-          `//ran window.updateComponent(vanillaPromise, htmlResults, componentKey, target, verbose=true)\n` +
+          `//ran ë.updateComponent(vanillaPromise, htmlResults, componentKey, target, verbose=true)\n` +
           `//The helper function used vanillaPromise to find the component config in the schema by 'canvasresult' param,\n` +
           `//then updated the optionally set '.config-result' target.<br/><br/>\n`;
-        window.updateComponent(
+        ë.updateComponent(
           vanillaPromise,
           {
             clear: false,
@@ -167,7 +164,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
 
       new Promise(async (resolve, reject) => {
         try {
-          await window.updateComponent(
+          await ë.updateComponent(
             vanillaPromise,
             htmlResults,
             "canvasresult",
@@ -198,7 +195,7 @@ window.frozenVanilla("gen", function (vanillaPromise) {
         let functionString = `
         //Create a new js file named ${viewName}Config.js in the schemas folder with the following code:<br/><br/>
 
-window.frozenVanilla("${functionName}Config", function(sharedParts) {
+ë.frozenVanilla("${functionName}Config", function(sharedParts) {
 
   let ${viewName}Config = {};
   let passedConfig = ${passedConfigString};
@@ -212,13 +209,13 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
 
         return functionString.replace(/functionName/g, viewName);
       } catch (error) {
-        window.updateComponent(
+        ë.updateComponent(
           vanillaPromise,
           { tag: "pre", html: ["[configStringBuild] Error: " + error] },
           "canvasresult",
           ".config-result"
         );
-        throw error; // Ensure the error is rethrown so the caller knows it occurred
+        throw error;
       }
     }
 
@@ -231,7 +228,7 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
         let mergedConfig = { ...nodeConfig, ...sharedParts };
         finalConfigs.push(mergedConfig);
       } catch (error) {
-        window.updateComponent(
+        ë.updateComponent(
           vanillaPromise,
           "[generateConfig] Error: " + error,
           "canvasresult",
@@ -249,7 +246,7 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
     try {
       processConfig(viewName, dir, configString);
     } catch (error) {
-      window.updateComponent(
+      ë.updateComponent(
         vanillaPromise,
         "[processConfig] Error: " + error,
         "canvasresult",
@@ -257,6 +254,7 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
       );
     }
 
+    //Clipboar support, not tested yet
     // if (navigator.clipboard) {
     //   navigator.clipboard.writeText(configString).then(
     //     function () {
@@ -264,7 +262,7 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
     //       console.log("Copying to clipboard was successful!");
     //     },
     //     function (err) {
-    //       window.updateComponent(
+    //       ë.updateComponent(
     //         vanillaPromise,
     //         "[clipboard] Error: " + err,
     //         "canvasresult",
@@ -276,9 +274,7 @@ window.frozenVanilla("${functionName}Config", function(sharedParts) {
     // }
 
     function scrollToElement(target, callback) {
-      // Check if target starts with '.' or '#'
       try {
-        console.log("yooooo");
         const prefix = target.charAt(0);
 
         // Get the element based on whether it's a class or id

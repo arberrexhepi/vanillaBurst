@@ -1,4 +1,4 @@
-window.frozenVanilla("storeBurst", function (vanillaPromise) {
+ë.frozenVanilla("storeBurst", function (vanillaPromise) {
   let key = Object.values(vanillaPromise.originBurst)[0];
 
   let signalBurst, originBurst;
@@ -76,7 +76,7 @@ window.frozenVanilla("storeBurst", function (vanillaPromise) {
 
 async function encryptData(data) {
   const encoder = new TextEncoder();
-  const key = await window.crypto.subtle.generateKey(
+  const key = await ë.crypto.subtle.generateKey(
     {
       name: "AES-GCM",
       length: 256,
@@ -84,9 +84,9 @@ async function encryptData(data) {
     true,
     ["encrypt", "decrypt"]
   );
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const iv = ë.crypto.getRandomValues(new Uint8Array(12));
   const encodedData = encoder.encode(JSON.stringify(data));
-  const encryptedData = await window.crypto.subtle.encrypt(
+  const encryptedData = await ë.crypto.subtle.encrypt(
     {
       name: "AES-GCM",
       iv: iv,
@@ -97,7 +97,7 @@ async function encryptData(data) {
   return { key, iv, encryptedData };
 }
 
-window.frozenVanilla("myBurst", function (myPromise) {
+ë.frozenVanilla("myBurst", function (myPromise) {
   //myBurstObject
   // myPromise = {
   //   signal: "name of event, ie load, set, delete, etc",
@@ -105,7 +105,7 @@ window.frozenVanilla("myBurst", function (myPromise) {
   //   origin: "where you call myburst",
   //   target: "receiving function",
   //   container: "optional", //by ID currently
-  //   callBack: "functionFile by name", //ie window.completeCheckout functionFile name is completeCheckout
+  //   callBack: "functionFile by name", //ie ë.completeCheckout functionFile name is completeCheckout
   //   action: "set, watch, cancel",
   //   namespace: ["namespace1", "namespace2", "namespace3"],
   //   data: "data to pass", //optional
@@ -121,12 +121,12 @@ window.frozenVanilla("myBurst", function (myPromise) {
   let callBack = myPromise.callBack;
   let data = myPromise.data || null;
 
-  if (callBack && typeof window[callBack] === "function") {
-    callBack = window[callBack];
+  if (callBack && typeof ë[callBack] === "function") {
+    callBack = ë[callBack];
   }
 
   let checkInterval = setInterval(() => {
-    if (typeof window[target] === "function") {
+    if (typeof ë[target] === "function") {
       clearInterval(checkInterval);
       startBurst();
     } else {
@@ -174,7 +174,7 @@ window.frozenVanilla("myBurst", function (myPromise) {
         callBack();
       }
     } else if (action === "watch") {
-      window.addEventListener("storage", function (event) {
+      ë.addEventListener("storage", function (event) {
         if (event.key === "signalBurst") {
           if (!privilegedNamespaces.includes(namespace)) {
             signalBurstPack = {
@@ -197,69 +197,106 @@ window.frozenVanilla("myBurst", function (myPromise) {
       });
     } else if (action === "cancel") {
       // Remove the storage event listener
-      window.removeEventListener("storage");
+      ë.removeEventListener("storage");
     }
   }
 });
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "registerInterval",
-  function (signalName, count, time, repeat, callBack, clear, condition) {
-    console.log("Starting interval");
+  async function (signalName, init, count, time, repeat, callBack, clear) {
     let counter = 0;
-    let intervals = JSON.parse(localStorage.getItem("intervals")) || {};
 
-    let intervalId = setInterval(() => {
+    if (init) {
+      await init();
+    }
+    let intervals = JSON.parse(localStorage.getItem("intervals")) || {};
+    count = count ? count : 999;
+    let intervalId = setInterval(async () => {
       counter++;
-      callBack(counter);
-      console.log("Interval count: ", counter);
+      if (typeof callBack === "function") {
+        await callBack(counter);
+      }
       if (typeof count === "number" && counter >= count) {
-        console.log("Count reached");
         if (repeat) {
-          console.log("Resetting counter for repeat");
           counter = 0;
         } else {
-          if (typeof callBack === "function") {
-            console.log("Calling callback");
-            callBack();
-          }
-          console.log("Clearing interval");
           clearInterval(intervalId);
         }
-      } else if (condition && typeof condition === "function") {
-        console.log("Checking condition");
-        let conditionResult = condition();
+      } else if (!count) {
         if (typeof callBack === "function") {
-          console.log("Calling callback with condition result");
-          callBack(conditionResult);
+          await callBack();
         }
-        if (conditionResult) {
-          console.log("Condition met, clearing interval");
-          clearInterval(intervalId);
-        }
-      } else if (!count && !condition) {
-        console.log("No count or condition, clearing interval");
-        if (typeof callBack === "function") {
-          console.log("Calling callback");
-          callBack();
-        }
-        console.log("Clearing interval");
         clearInterval(intervalId);
       }
     }, time);
 
-    intervals[signalName] = { id: intervalId, clear: clear };
+    intervals[signalName] = {
+      id: intervalId,
+      clear: clear,
+      repeatOnCount: count,
+      repeat: repeat,
+      time: time,
+    };
     localStorage.setItem("intervals", JSON.stringify(intervals));
   }
 );
 
-window.frozenVanilla("unregisterInterval", function (signalName) {
+ë.frozenVanilla("unregisterInterval", function (signalName) {
   let storedIntervals = JSON.parse(localStorage.getItem("intervals"));
   if (
     storedIntervals[signalName] &&
     storedIntervals[signalName].clear === "clear"
   ) {
-    console.log("Clearing interval with signalName including 'clear'");
     clearInterval(storedIntervals[signalName].id);
   }
 });
+
+///thinking about this update where an interval controls signalBurst
+
+// ë.registerInterval(
+//   "myBurstWatcher",
+//   () => {
+//     // Check the condition here
+//     // For example, you could check if a certain value in vanillaPromise.passedFunction has changed
+//     if (vanillaPromise.passedFunction?.someValue !== previousValue) {
+//       // If the condition is met, return true to start the interval
+//       return true;
+//     } else {
+//       // If the condition is not met, return false to prevent the interval from starting
+//       return false;
+//     }
+//   },
+//   1000, // Interval duration
+//   true, // Repeat
+//   () => {
+//     // Callback function to be executed on each interval
+//     // This is where you would put the logic for your background process
+//     // For example, you could call myBurst with an action to clear the cache
+//     ë.myBurst({
+//       signal: "clearCache",
+//       landing: vanillaPromise.renderSchema.landing,
+//       origin: "myBurstWatcher",
+//       target: "signalBurst",
+//       action: "clear",
+//     });
+//   },
+//   "clear",
+//   () => {
+//     // This function will be executed when the interval is cleared
+//   }
+// );
+
+//simplify the call lower level
+// ë.clearBurst = function(landing, origin, target, action) {
+//   ë.myBurst({
+//     signal: "clearCache",
+//     landing: landing,
+//     origin: origin,
+//     target: target,
+//     action: action,
+//   });
+// };
+
+///simplify the call option 2 -- simplifying even further for lowest level, active coding use
+// ë.clearBurst(vanillaPromise.renderSchema.landing, 'myBurstWatcher', 'signalBurst', 'clear');

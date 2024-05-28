@@ -1,6 +1,6 @@
 //[WIP]
 
-// window.frozenVanilla(
+// ë.frozenVanilla(
 //   "serverBurstSubscribe",
 //   async function (vanillaPromise, dataSchema, burstTime, callBack) {
 //     while (true) {
@@ -8,7 +8,7 @@
 //         let serverBurstSubscribeResponse;
 //         if (vanillaPromise && typeof vanillaPromise === "function") {
 //           alert("yo");
-//           serverBurstSubscribeResponse = await window.serverRender(dataSchema);
+//           serverBurstSubscribeResponse = await ë.serverRender(dataSchema);
 //           const serverBurstSubscribeResponseParsed = JSON.parse(
 //             serverBurstSubscribeResponse
 //           );
@@ -24,7 +24,7 @@
 //   }
 // );
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "serverRender",
   function (data, runData, popstateEvent, originBurst) {
     if (data && data !== null) {
@@ -57,7 +57,7 @@ window.frozenVanilla(
           }
         }
 
-        window.preloaderAnimation();
+        ë.preloaderAnimation();
 
         let dataMethod = {};
         if (method === "POST") {
@@ -102,7 +102,7 @@ window.frozenVanilla(
               return response.text();
             })
             .then((responseData) => {
-              //window.removeLoader();
+              //ë.removeLoader();
               responseData = JSON.stringify(responseData);
               if (responseData.length) {
                 if (returnResult && returnResult === true) {

@@ -1,4 +1,4 @@
-window.frozenVanilla("genConfig", function (sharedParts) {
+ë.frozenVanilla("genConfig", function (sharedParts) {
   let genConfig = {};
 
   let seo = {
@@ -16,8 +16,8 @@ window.frozenVanilla("genConfig", function (sharedParts) {
       "Load Balancing",
     ],
     author: "vanillaBurst Team",
-    image: "URL to the image for social sharing", // Replace with the actual URL of the image
-    url: "URL of the page", // Replace with the actual URL of the page
+    image: ë.baseUrlImages + "wordmark.png", // Replace with the actual URL of the image
+    url: domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
 
@@ -50,7 +50,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           parent: true,
           id: "parentnode",
           container: "config-canvas",
-          className: "parentnode genform card",
+          className: "parentnode genform card hover",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Landing Config</legend>
@@ -114,7 +114,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
           parent: true,
           id: "functionnode",
           container: "config-canvas",
-          className: "genform card",
+          className: "genform card hover",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Function Config</legend>
@@ -137,7 +137,7 @@ window.frozenVanilla("genConfig", function (sharedParts) {
 
   genConfig = { ...vanillaConfig("gen", passedConfig) };
 
-  window.seo = seo;
+  ë.seo = seo;
 
   return genConfig;
 });

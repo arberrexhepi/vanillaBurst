@@ -1,6 +1,6 @@
 .mygenbutton {
     padding: 10px 20px;
-    background-color: #fdb635;
+    background-color: var(--color-vanilla-orange);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -13,7 +13,7 @@
 
 .mydocbutton {
     padding: 10px 20px;
-    background-color: #16b2e4;
+    background-color: var(--color-vanilla-blue);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -24,13 +24,18 @@
     text-align: center;
 }
 
-.headerbutton{
+.headerbutton {
     min-height: 5vh;
 }
 
-button{
+button {
     font-size: calc(var(--base-font-size) * var(--button-text-title));
     min-width: 250px;
     max-width: 400px;
-    max-height:8vh;
+    max-height: 8vh;
+    transition: var(--hover-transition);
+}
+
+button:hover {
+    transform: var(--hover-scale);
 }

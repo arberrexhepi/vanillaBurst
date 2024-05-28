@@ -1,4 +1,4 @@
-window.frozenVanilla("homeviewConfig", function (sharedParts) {
+ë.frozenVanilla("homeviewConfig", function (sharedParts) {
   let homeviewConfig = {};
   let seo = {
     title: "vanilla JS Framework",
@@ -15,8 +15,8 @@ window.frozenVanilla("homeviewConfig", function (sharedParts) {
       "Load Balancing",
     ],
     author: "vanillaBurst Team",
-    image: "URL to the image for social sharing", // Replace with the actual URL of the image
-    url: "URL of the page", // Replace with the actual URL of the page
+    image: ë.baseUrlImages + "wordmark.png", // Replace with the actual URL of the image
+    url: domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
 
@@ -40,7 +40,7 @@ window.frozenVanilla("homeviewConfig", function (sharedParts) {
 
   homeviewConfig = { ...vanillaConfig("homeview", passedConfig) };
 
-  window.seo = seo;
+  ë.seo = seo;
 
   return homeviewConfig;
 });

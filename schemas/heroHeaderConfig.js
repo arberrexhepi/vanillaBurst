@@ -1,4 +1,4 @@
-window.frozenVanilla("heroHeaderConfig", function () {
+ë.frozenVanilla("heroHeaderConfig", function () {
   let heroHeaderConfig = {
     heroHeader: {
       dir: "client/views/shared/heroHeader/",
@@ -21,8 +21,8 @@ window.frozenVanilla("heroHeaderConfig", function () {
           children: `
           
           <blockquote>
-          <small title="${window.seo.title}">${window.seo.title}</small>
-          <p>${window.seo.description}</p>
+          <small title="${ë.seo.title}">${ë.seo.title}</small>
+          <p>${ë.seo.description}</p>
           <h2 class="myHeroHeaderh2">Just Getting Started?</h2>
           <div class="action-container">
           </blockquote>
@@ -37,9 +37,9 @@ window.frozenVanilla("heroHeaderConfig", function () {
           className: "blockquote",
           children: `
           <blockquote>
-          <small title="${window.seo.title}">${window.seo.title}</small>
-          <p>${window.seo.description}</p>
-          <h2 class="myHeroHeaderh2">Hey TLDRs...Build Quickly!</h2>
+          <small title="${ë.seo.title}">${ë.seo.title}</small>
+          <p>${ë.seo.description}</p>
+          <h2 class="myHeroHeaderh2">Build Quickly!</h2>
           <div class="action-container">
           </blockquote>
             `,

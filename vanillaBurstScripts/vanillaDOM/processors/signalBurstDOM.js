@@ -1,6 +1,6 @@
 ////SIGNAL BURST UPDATES
 
-window.frozenVanilla("signalBurstDOM", function (originFunction, functionFile) {
+ë.frozenVanilla("signalBurstDOM", function (originFunction, functionFile) {
   // Get signalResult and container from signalBurst
   let signalBurst = JSON.parse(localStorage.getItem("signalBurst")) || {};
   let signalResult =

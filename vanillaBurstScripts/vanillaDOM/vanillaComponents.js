@@ -1,4 +1,4 @@
-window.frozenVanilla(
+ë.frozenVanilla(
   "vanillaComponents",
   function (functionFile, renderSchema, vanillaPromise) {
     if (
@@ -92,7 +92,7 @@ window.frozenVanilla(
                 resolve(vanillaPromise);
               }
 
-              let path = window.domainUrl + window.baseUrl;
+              let path = ë.frozenVanilla.get("domainUrl") + ë.baseUrl;
               cssPath = buildCssPath(
                 path,
                 dir,
@@ -135,7 +135,7 @@ window.frozenVanilla(
                 children = originBurst.componentBurst[id].htmlResult;
               }
 
-              let sanitizedChildren = window.sanitizeVanillaDOM(children);
+              let sanitizedChildren = ë.sanitizeVanillaDOM(children);
 
               if (viewContainer.contains(targetContainer) && renderComponent) {
                 let elementBuild = createSanitizedElement(
@@ -158,9 +158,7 @@ window.frozenVanilla(
                   targetContainer.append(elementBuild);
                 }
 
-                componentHTML = window.sanitizeVanillaDOM(
-                  elementBuild.innerHTML
-                );
+                componentHTML = ë.sanitizeVanillaDOM(elementBuild.innerHTML);
                 let existingOriginBurst =
                   JSON.parse(localStorage.getItem("originBurst")) || {};
                 existingOriginBurst.componentBurst =
@@ -168,7 +166,7 @@ window.frozenVanilla(
 
                 let DOMtype = { type: { component: [id, componentHTML] } };
 
-                let updatedOriginBurst = window.storeComponentBurst(
+                let updatedOriginBurst = ë.storeComponentBurst(
                   existingOriginBurst,
                   originFunction,
                   functionFile,
@@ -184,7 +182,7 @@ window.frozenVanilla(
                   JSON.stringify(originBurst)
                 );
 
-                window.cssFileLoader(cssPath);
+                ë.cssFileLoader(cssPath);
               }
             }
             if (componentHTML) {

@@ -1,4 +1,4 @@
-window.frozenVanilla("sanitizeVanillaDOM", function (htmlString, functionFile) {
+ë.frozenVanilla("sanitizeVanillaDOM", function (htmlString, functionFile) {
   try {
     const config = {
       ADD_TAGS: {

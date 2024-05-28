@@ -1,6 +1,6 @@
 // Centralized nonce management
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "loadDOM",
   async function (
     config,
@@ -16,7 +16,7 @@ window.frozenVanilla(
         return true;
       } else {
         try {
-          await window.loadParts(
+          await ë.loadParts(
             config,
             domFunction,
             originFunction,
@@ -40,7 +40,7 @@ window.frozenVanilla(
   }
 );
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "loadParts",
   async function (
     domConfig,
@@ -62,9 +62,9 @@ window.frozenVanilla(
     }
 
     const functionFile = passedFunction.functionFile;
-    const htmlPath = window.baseUrl + passedFunction.htmlPath;
+    const htmlPath = ë.baseUrl + passedFunction.htmlPath;
     const cssPath = passedFunction.cssPath
-      ? window.baseUrl + passedFunction.cssPath
+      ? ë.baseUrl + passedFunction.cssPath
       : null;
     const container = passedFunction.container;
     const classNames = passedFunction.classNames;
@@ -73,7 +73,7 @@ window.frozenVanilla(
 
     const targetElementPromise = new Promise((resolve, reject) => {
       originBurst = JSON.parse(localStorage.getItem("originBurst")) || {};
-      let element = window.createNewElement(container);
+      let element = ë.createNewElement(container);
 
       ///within this function we could check for cache:true, false, dynamic or whatever else to resolve in this promise to be passed to htmlFileLoader()
       if (!originBurst?.[originFunction]?.[functionFile]?.htmlResult) {
@@ -89,15 +89,10 @@ window.frozenVanilla(
 
     targetElementPromise
       .then((targetElement) => {
-        window.htmlFileLoader(
+        ë.htmlFileLoader(
           { htmlPath, cssPath, originFunction, functionFile },
           (htmlContent) =>
-            window.updateContent(
-              htmlContent,
-              targetElement,
-              false,
-              functionFile
-            )
+            ë.updateContent(htmlContent, targetElement, false, functionFile)
         );
       })
       .catch((error) => {
@@ -107,12 +102,7 @@ window.frozenVanilla(
         );
       });
 
-    window.updateContent = (
-      functionHTML,
-      targetElement,
-      cached,
-      functionFile
-    ) => {
+    ë.updateContent = (functionHTML, targetElement, cached, functionFile) => {
       if (functionHTML) {
         // Parse the HTML string into a DOM structure
         try {
@@ -129,8 +119,8 @@ window.frozenVanilla(
           // Add a nonce to img tags
           let imgTags = doc.getElementsByTagName("img");
           for (let img of imgTags) {
-            let nonceString = window.nonce();
-            window.nonceBack(nonceString);
+            let nonceString = ë.nonce();
+            ë.nonceBack(nonceString);
             img.setAttribute("nonce", nonceString);
           }
 
@@ -155,7 +145,7 @@ window.frozenVanilla(
         targetElement.innerHTML = functionHTML;
 
         //alert("here is " + functionHTML);
-        window.updateVanillaPromise(
+        ë.updateVanillaPromise(
           vanillaPromise,
           targetElement,
           functionHTML,
@@ -169,21 +159,21 @@ window.frozenVanilla(
   }
 );
 
-window.frozenVanilla("createNewElement", async function (container) {
+ë.frozenVanilla("createNewElement", async function (container) {
   //alert(container);
   let targetElement = document.getElementById(container);
   if (!targetElement) {
     targetElement = document.createElement("div");
 
     targetElement.id = container;
-    targetElement.setAttribute("nonce", window.nonceBack());
+    targetElement.setAttribute("nonce", ë.nonceBack());
     document.body.appendChild(targetElement);
   }
 
   return targetElement;
 });
 
-window.frozenVanilla(
+ë.frozenVanilla(
   "updateVanillaPromise",
   async function (
     vanillaPromise,
@@ -200,7 +190,7 @@ window.frozenVanilla(
       return { ...existingBurst, ...newBurst };
     }
 
-    let updatedOriginBurst = window.storeBurstOrigin(
+    let updatedOriginBurst = ë.storeBurstOrigin(
       vanillaPromise,
       safeHTML,
       functionFile,

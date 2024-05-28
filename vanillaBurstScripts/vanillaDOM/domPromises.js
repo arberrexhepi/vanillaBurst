@@ -1,4 +1,4 @@
-window.frozenVanilla(
+ë.frozenVanilla(
   "domPromises",
   function (renderSchema, customFunctionName, vanillaPromise) {
     return new Promise((resolve, reject) => {
@@ -78,6 +78,8 @@ window.frozenVanilla(
             //     customFunctionName +
             //     JSON.stringify(vanillaPromise)
             // );
+            ë.vanillaCSS(true);
+
             resolve(vanillaPromise);
           })
           .catch((error) => {
@@ -85,6 +87,8 @@ window.frozenVanilla(
             reject(error);
           });
       } else {
+        ë.vanillaCSS(true);
+
         resolve(vanillaPromise);
       }
     });

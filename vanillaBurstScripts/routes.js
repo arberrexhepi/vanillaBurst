@@ -1,7 +1,7 @@
 // Sets one route on the initial path and is not called again until a full page reload or AJAX re-rendering
-window.frozenVanilla("getRoute", function (param) {
-  const path = window.location.pathname;
-  const searchParams = new URLSearchParams(window.location.search);
+ë.frozenVanilla("getRoute", function (param) {
+  const path = ë.location.pathname;
+  const searchParams = new URLSearchParams(ë.location.search);
 
   const burstRoute = searchParams.get("burst");
   const namespace = searchParams.get("name_space");
@@ -71,12 +71,10 @@ window.frozenVanilla("getRoute", function (param) {
 
   switch (param) {
     case "route":
-      return routeCheck(appRoutes) || window.appRoute;
+      return routeCheck(appRoutes) || ë.appRoute;
 
     case "source_path":
-      return (
-        routeCheckPath(appRoutes) || routeCheck(appRoutes) || window.appRoute
-      );
+      return routeCheckPath(appRoutes) || routeCheck(appRoutes) || ë.appRoute;
 
     case "buildPath":
       return buildPath(appRoutes);
@@ -95,21 +93,18 @@ window.frozenVanilla("getRoute", function (param) {
 
     /////////////////////////////////
     default:
-      return window.defaultAppRoute;
+      return ë.defaultAppRoute;
   }
 });
 
-const stateTag = getRoute("route") || window.defaultAppRoute;
+const stateTag = getRoute("route") || ë.defaultAppRoute;
 const buildPath = getRoute("buildPath");
 const loadedStateTagPath = getRoute("source_path");
 const loadParams = getRoute("loadParams");
-alert(stateTag);
-window.thisRoute = stateTag;
-alert(window.thisRoute);
 function buildStatePath(loadedStateTagPath, stateTag, buildPath) {
   if (loadedStateTagPath) {
     const currentSearchParams = new URLSearchParams(
-      window.location.search
+      ë.location.search
     ).toString();
 
     if (currentSearchParams !== buildPath) {
@@ -118,19 +113,18 @@ function buildStatePath(loadedStateTagPath, stateTag, buildPath) {
       }
 
       const burstRoute =
-        new URLSearchParams(window.location.search).get("burst") || stateTag;
+        new URLSearchParams(ë.location.search).get("burst") || stateTag;
       const namespace =
-        new URLSearchParams(window.location.search).get("name_space") ||
-        stateTag;
+        new URLSearchParams(ë.location.search).get("name_space") || stateTag;
       const entry =
-        new URLSearchParams(window.location.search).get("entry") || "init";
+        new URLSearchParams(ë.location.search).get("entry") || "init";
 
       return `?burst=${burstRoute}&name_space=${namespace}&entry=${entry}`;
     }
 
     return currentSearchParams.split("?")[0];
   } else {
-    const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(ë.location.search);
     const burstRoute = searchParams.get("burst") || stateTag;
     const namespace = searchParams.get("name_space") || stateTag;
     const entry = searchParams.get("entry") || "init";
@@ -142,13 +136,13 @@ function buildStatePath(loadedStateTagPath, stateTag, buildPath) {
 const stateTagPath =
   buildStatePath(loadedStateTagPath, stateTag, buildPath) || stateTag;
 localStorage.setItem("stateBurst", JSON.stringify([stateTag, stateTagPath]));
-
+ë.frozenVanilla("stateTagPath", stateTagPath);
 // Burst the state
-window.vanillaBurst(stateTag, stateTagPath, loadParams);
+ë.vanillaBurst(stateTag, stateTagPath, loadParams);
 
 // Helper function to go back to a previous state
-window.frozenVanilla("goBack", function goBack() {
-  if (history.state?.stateTagName !== window.appRoute) {
+ë.frozenVanilla("goBack", function goBack() {
+  if (history.state?.stateTagName !== ë.appRoute) {
     if (history.state && typeof history.state.stateCount === "number") {
       history.go(-history.state.stateCount + 1);
     } else {
@@ -158,7 +152,7 @@ window.frozenVanilla("goBack", function goBack() {
 });
 
 // Experimental: Functionality for state jump
-window.frozenVanilla(
+ë.frozenVanilla(
   "vanillaGo",
   async function (stateKey, vanillaGoRoute, originBurst) {
     vanillaGoRoute = vanillaGoRoute || stateKey;

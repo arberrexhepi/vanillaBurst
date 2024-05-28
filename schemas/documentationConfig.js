@@ -1,4 +1,4 @@
-window.frozenVanilla("documentationConfig", function (sharedParts) {
+ë.frozenVanilla("documentationConfig", function (sharedParts) {
   let documentationConfig = {};
 
   let seo = {
@@ -16,8 +16,8 @@ window.frozenVanilla("documentationConfig", function (sharedParts) {
       "Load Balancing",
     ],
     author: "vanillaBurst Team",
-    image: "URL to the image for social sharing", // Replace with the actual URL of the image
-    url: "URL of the page", // Replace with the actual URL of the page
+    image: ë.baseUrlImages + "wordmark.png", // Replace with the actual URL of the image
+    url: domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
 
@@ -32,25 +32,13 @@ window.frozenVanilla("documentationConfig", function (sharedParts) {
       cssPath: "client/views/documentation/documentation.css",
       ...{ seo: seo },
       container: "viewbox",
-      // components: {
-      //   myButtonName: {
-      //     dir: "buttons/",
-      //     id: "genbutton",
-      //     container: "gen-button_wrapper",
-      //     className: "button round",
-      //     children: `
-      //     <button class="headerbutton mygenbutton" data-route="gen">Go to the Config Builder</button>
-      //       `,
-      //     eventHandlers: "submit:preventDefault",
-      //   },
-      // },
     },
     ...sharedParts,
   };
 
   documentationConfig = { ...vanillaConfig("documentation", passedConfig) };
 
-  window.seo = seo;
+  ë.seo = seo;
 
   return documentationConfig;
 });

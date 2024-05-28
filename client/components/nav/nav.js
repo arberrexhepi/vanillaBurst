@@ -1,4 +1,4 @@
-window.frozenVanilla(
+ë.frozenVanilla(
   "nav",
   function (vanillaPromise) {
     console.log(vanillaPromise.this + " ran");
@@ -8,7 +8,7 @@ window.frozenVanilla(
       link.addEventListener("click", function () {
         let route = this.getAttribute("data-route");
         if (route) {
-          window.myState([route, `../?burst=${route}`]);
+          ë.myState([route, `../?burst=${route}`]);
         }
       });
     });

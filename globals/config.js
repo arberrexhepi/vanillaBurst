@@ -1,32 +1,46 @@
 //
 
-window.frozenVanilla("defaultAppRoute", "homeview");
+ë.frozenVanilla("defaultAppRoute", "homeview");
 
-window.appRoute = window.defaultAppRoute;
+ë.appRoute = ë.defaultAppRoute;
 
-switch (window.mode) {
+switch (ë.mode) {
   case "dev": {
-    window.frozenVanilla("domainUrl", "http://vanillaburstgame");
+    ë.frozenVanilla("domainUrl", "http://vanillaburstgame", false);
+    ë.frozenVanilla("vanillaStock", false);
     break;
   }
   case "live": {
-    window.frozenVanilla("domainUrl", "https://vanillaburstgame.onrender.com");
+    ë.frozenVanilla(
+      "domainUrl",
+      "https://vanillaburstgame.onrender.com",
+      false
+    );
+    ë.frozenVanilla("vanillaStock", false);
+
     break;
   }
 }
 
-//window.frozenVanilla("fetchDomainUrl", "");
+//ë.frozenVanilla("fetchDomainUrl", ""); if default you can set it here, or set it per call to dataSchema.url in functionConfig.js
 
-window.frozenVanilla("registeredRoutes", [
-  // "viewWithoutPackage", //see [PACKAGELESS VIEWS] below
-  "homeview",
-  "documentation",
-  "gen",
-]);
+ë.frozenVanilla(
+  "registeredRoutes",
+  [
+    // "viewWithoutPackage", //see [PACKAGELESS VIEWS] below
+    "homeview",
+    "documentation",
+    "gen",
+  ],
+  false
+);
 
-window.frozenVanilla("baseUrlIcons", "globals/brandAssets/assets/icons/");
-window.frozenVanilla("baseUrlImages", "globals/brandAssets/assets/images/");
-window.frozenVanilla("baseUrlStyles", "globals/brandAssets/css/styles/");
+ë.frozenVanilla("baseUrlIcons", "globals/brandAssets/assets/icons/");
+ë.frozenVanilla(
+  "baseUrlImages",
+  "https://storage.googleapis.com/arberinc_public/vanillaBurst/brandAssets/images/"
+);
+ë.frozenVanilla("baseUrlStyles", "globals/brandAssets/css/styles/"); //preparing for built-in css system
 
 ///////////////////////////////////////////////////////////////
 //Define the routeParts based on the views
@@ -35,73 +49,71 @@ window.frozenVanilla("baseUrlStyles", "globals/brandAssets/css/styles/");
 
 // Define the routeParts based on the views
 // [PACKAGELESS VIEWS] NOTE: If no app shells you can set the name of the view directly, or it won't load.
-window.frozenVanilla(
+ë.frozenVanilla(
   "schemaParts",
   Object.freeze({
-    //viewWithoutPackage:["viewWithoutPackage"] // currently not auto promised, however it is equivalent to homeview, documentation, gen, and should also be in the registered routes above
-    homeview: ["appShells, toppings"],
-    myweather: false,
-    nav: false,
-    heroHeader: false,
-    documentation: ["appShells"],
-    gen: ["appShells"], //
+    //viewWithoutPackage:["viewWithoutPackage"] //[PACKAGELESS VIEWS] currently you pass the very same function as a package
+    homeview: ["appShells, toppings"], //[VIEW with package]
+    myweather: false, //[SHARED PACKAGE FUNCTION]
+    nav: false, //[SHARED PACKAGE FUNCTION]
+    heroHeader: false, //[SHARED PACKAGE FUNCTION]
+    documentation: ["appShells"], //[VIEW with package]
+    gen: ["appShells"], //[VIEW with package]
   })
 );
-window.frozenVanilla("appShells", ["nav", "heroHeader"]);
-window.frozenVanilla("toppings", ["myweather"]);
-//'example':['uiPackage'], //['uiPackage'] means this function spreads configs from window.uiPackage
+ë.frozenVanilla("appShells", ["nav", "heroHeader"]);
+ë.frozenVanilla("toppings", ["myweather"]); //this is particular package is a scoop but it is an internal scoop not installed as plugin, so it can be set as a package
+//'example':['uiPackage'], //['uiPackage'] means this function spreads configs from ë.uiPackage
 // Add additional levels as needed
 
-window.frozenVanilla("vendorScoops", {
-  vanillaParallax: ["homeview", "gen", "documentation"],
-});
-//define a vendor array or each one you want to use in the view config ie let vendors = [window.vanillaParallax] then
-
-window.frozenVanilla("trustedSources", {
-  //"default-src": ["'self'"],
-  "img-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-    "https://cdn.weatherapi.com",
-  ],
-  "media-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-  ],
-  "style-src": [window.domainUrl],
-  "object-src": ["'none'"],
-  "font-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-  ],
-  "connect-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-    "https://weatherapi-com.p.rapidapi.com",
-    window.domainUrl, // Add window.domainUrl here
-  ],
-  "manifest-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-  ],
-  "worker-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-  ],
-  "child-src": [
-    window.domainUrl,
-    "https://arber.inc",
-    "https://storage.googleapis.com",
-  ],
-  // "frame-ancestors": ["'none'"], // Not supported in <meta> tag
-  // "form-action": ["'none'"],
-  // "base-uri": ["'self'"],
+//scoops should be in scoops/scoopName/scoopName.js
+ë.frozenVanilla("vanillaScoops", {
+  //vanillaAnimation: ["homeview", "gen", "documentation"], OR set it as global as below
+  vanillaAnimation: true,
+  vanillaCSS: true,
+  gptScoop: ["homeview"],
 });
 
-window.setTrustedSources(window.trustedSources);
+//define a vendor array or each one you want to use in the view config ie let vendors = [ë.vanillaParallax] then
+
+ë.frozenVanilla(
+  "trustedSources",
+  {
+    //"default-src": ["'self'"],
+    "img-src": [
+      ë.frozenVanilla.get("domainUrl"),
+      "https://arber.inc",
+      "https://storage.googleapis.com",
+      "https://cdn.weatherapi.com",
+    ],
+    "media-src": [
+      ë.frozenVanilla.get("domainUrl"),
+      "https://arber.inc",
+      "https://storage.googleapis.com",
+    ],
+    "style-src": [ë.domainUrl],
+    "object-src": ["'none'"],
+    "font-src": [
+      ë.frozenVanilla.get("domainUrl"),
+      "https://arber.inc",
+      "https://storage.googleapis.com",
+    ],
+    "connect-src": [
+      ë.frozenVanilla.get("domainUrl"),
+      "https://arber.inc",
+      "https://storage.googleapis.com",
+      "https://weatherapi-com.p.rapidapi.com",
+      "https://jsonplaceholder.typicode.com",
+      ë.frozenVanilla.get("domainUrl"), // Add ë.domainUrl here
+    ],
+    "manifest-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
+    "worker-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
+    "child-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
+    // "frame-ancestors": ["'none'"], // Not supported in <meta> tag
+    // "form-action": ["'none'"],
+    // "base-uri": ["'self'"],
+  },
+  false
+);
+
+ë.setTrustedSources(ë.frozenVanilla.get("trustedSources"));

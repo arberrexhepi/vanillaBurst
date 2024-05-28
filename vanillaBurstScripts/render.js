@@ -14,12 +14,12 @@
  * @throws {Error} If an error occurs during the rendering process, it is logged to the console.
  * @throws {ConsoleWarning} If the renderSchema is not provided, a warning is logged to the console.
  */
-window.frozenVanilla("render", async function render(renderSchema) {
+ë.frozenVanilla("render", async function render(renderSchema) {
   if (!renderSchema) {
     console.warn("There are no views defined in this app");
     return;
   }
-  window.logSpacer();
+  ë.logSpacer();
   console.log(
     "%c[Render Started]",
     "color: white; font-weight: bold; font-size:24px;"
@@ -39,13 +39,13 @@ window.frozenVanilla("render", async function render(renderSchema) {
 
   const runRoll = true;
   const rollCall = Object.keys(renderSchema.customFunctions);
-  window.runRoll = "rollBurst";
+  ë.runRoll = "rollBurst";
 
   const containers = collectContainers(rollCall, renderSchema);
   localStorage.setItem("containers", JSON.stringify(containers));
   let landingReference;
   try {
-    const vanillaPromises = await window.childFunction(
+    const vanillaPromises = await ë.childFunction(
       renderSchema,
       rollCall,
       runRoll,
@@ -79,9 +79,10 @@ window.frozenVanilla("render", async function render(renderSchema) {
       for (const customFunctionName of rollCall) {
         landingReference = customFunctionName;
         try {
-          window[customFunctionName](vanillaPromises[customFunctionName]);
-          window.storeBurst(vanillaPromises[customFunctionName]);
+          ë[customFunctionName](vanillaPromises[customFunctionName]);
+          ë.storeBurst(vanillaPromises[customFunctionName]);
         } catch (error) {
+          ë.vanillaMess("render", error, "checking");
           throw new Error(
             "JS File reference or errors found at: " + landingReference
           );
@@ -92,10 +93,10 @@ window.frozenVanilla("render", async function render(renderSchema) {
           renderSchema.landing
         ].seo;
 
-      window.setSeo(seo);
+      ë.setSeo(seo);
 
-      window.logSpacer();
-      window.renderComplete = true;
+      ë.logSpacer();
+      ë.renderComplete = true;
 
       console.log(
         "%c🍦🎉 vanillaBurst COMPLETE 🎉🍦",

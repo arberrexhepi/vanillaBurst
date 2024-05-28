@@ -1,6 +1,9 @@
-window.frozenVanilla("cssFileLoader", function (cssPath) {
+ë.frozenVanilla("cssFileLoader", function (cssPath) {
   // Define the paths for the default CSS file and the CSS file specified by cssPath
-  const cssPaths = [window.domainUrl + baseUrl + "style.css", cssPath];
+  const cssPaths = [
+    ë.frozenVanilla.get("domainUrl") + baseUrl + "style.css",
+    cssPath,
+  ];
 
   // Load each CSS file
   cssPaths.forEach((path) => {
@@ -9,7 +12,7 @@ window.frozenVanilla("cssFileLoader", function (cssPath) {
         `link[data-css-path="${path}"]`
       );
       if (!linkTag) {
-        const nonceString = window.nonceBack();
+        const nonceString = ë.nonceBack();
 
         linkTag = document.createElement("link");
         linkTag.setAttribute("rel", "stylesheet");
