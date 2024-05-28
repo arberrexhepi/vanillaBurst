@@ -19,32 +19,8 @@ function getNonce() {
         customFunctionName +
         ".js";
 
-      let fetchUrl = ë.frozenVanilla.get("domainUrl") + customFunctionUrl;
-      fetch(fetchUrl)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then((scriptContent) => {
-          const scriptId = customFunctionName + "_vanilla";
-
-          // Remove existing script tag if it exists
-          const existingScript = document.getElementById(scriptId);
-          if (existingScript) {
-            existingScript.remove();
-          }
-
-          const script = document.createElement("script");
-          script.type = "text/javascript";
-          let nonceString = ë.nonceBack();
-
-          script.setAttribute("nonce", nonceString);
-          script.text = scriptContent;
-          script.id = scriptId;
-          document.head.appendChild(script);
-
+      ë.loadScript(customFunctionUrl)
+        .then(() => {
           if (
             passedFunction.dataSchema &&
             passedFunction.dataSchema.auto !== false

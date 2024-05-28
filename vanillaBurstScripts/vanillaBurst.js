@@ -22,51 +22,46 @@ let historyCount = 0;
     loadParams = loadParams || stateBurst[2] || null;
 
     // Load scripts for the state
+    let loadedScripts = {};
+
     function stateScripts(stateTag) {
       const { scripts: scriptUrls, preloader: preloaderUrl } =
         ë.schema[stateTag];
       const nonceString2 = ë.nonceBack();
 
-      function loadScript(url) {
-        return new Promise((resolve, reject) => {
-          let script = document.querySelector(`script[src="${url}"]`);
-          if (script) {
-            document.head.removeChild(script);
-          }
-          script = document.createElement("script");
-          script.src = url;
-          script.type = "text/javascript";
-          script.setAttribute("name", "burst");
-          script.setAttribute("nonce", nonceString2);
-          script.onload = () => resolve(script);
-          script.onerror = () =>
-            reject(new Error(`Failed to load script at ${url}`));
-          document.head.appendChild(script);
-        });
-      }
+      // function loadScript(url) {
+      //   return new Promise((resolve, reject) => {
+      //     const version = "v1.0.0.1";
+      //     const urlWithVersion = `${url}?version=${version}`;
 
-      function addScriptToHead(url) {
-        let script = document.querySelector(`script[src="${url}"]`);
-        if (script) {
-          document.head.removeChild(script);
-        }
-        script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
-        script.setAttribute("nonce", nonceString2);
-        document.head.appendChild(script);
-      }
+      //     // Check if a script with the same src attribute already exists
+      //     const existingScript = document.head.querySelector(
+      //       `script[src="${urlWithVersion}"]`
+      //     );
+      //     if (existingScript) {
+      //       let nonceString = ë.nonceBack(); // Generate a new nonce
+      //       existingScript.setAttribute("nonce", nonceString); // Update the nonce of the existing script
+      //       resolve(existingScript);
+      //       return;
+      //     }
+
+      //     let script = document.createElement("script");
+      //     script.src = urlWithVersion;
+      //     script.type = "text/javascript";
+      //     script.setAttribute("nonce", ë.nonceBack());
+
+      //     script.onload = () => resolve(script);
+      //     script.onerror = () =>
+      //       reject(new Error(`Script load error for ${url}`));
+      //     document.head.appendChild(script);
+      //   });
+      // }
 
       function loadScriptAndRunFunction() {
-        return loadScript(preloaderUrl)
+        return ë
+          .loadScript(preloaderUrl)
           .then(() => {
-            addScriptToHead(preloaderUrl);
-
-            return Promise.all(
-              scriptUrls.map((url) =>
-                loadScript(url).then(() => addScriptToHead(url))
-              )
-            );
+            return Promise.all(scriptUrls.map((url) => loadScript(url)));
           })
           .then(() => {
             ë.preloaderAnimation();
