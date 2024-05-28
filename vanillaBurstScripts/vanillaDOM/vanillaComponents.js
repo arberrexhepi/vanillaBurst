@@ -58,6 +58,7 @@
 
       let elementBuild = document.createElement("div");
       elementBuild.id = id;
+      elementBuild.setAttribute("nonce", ë.nonceBack());
       elementBuild.className = className;
       while (doc.body.firstChild) {
         elementBuild.appendChild(doc.body.firstChild);

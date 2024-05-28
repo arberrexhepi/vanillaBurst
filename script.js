@@ -1,5 +1,5 @@
-const mode = "live"; // "dev" or "live"
-
+const mode = "dev"; // "dev" or "live"
+const version = "0.9.0.2";
 // Define base URLs for different modes
 const baseUrls = {
   dev: "/",
@@ -78,6 +78,7 @@ const ë = window;
 const baseUrl = baseUrls[mode] || baseUrls.dev;
 ë.frozenVanilla("mode", mode);
 ë.frozenVanilla("baseUrl", baseUrl);
+ë.frozenVanilla("version", version);
 
 // Set renderComplete flag
 ë.renderComplete = "false";

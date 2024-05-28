@@ -39,6 +39,7 @@
           // If doc is not defined, create a new div and set its innerHTML to the HTML result
           if (!doc || !doc.body) {
             div = document.createElement("div");
+            div.setAttribute("nonce", ë.nonceBack());
             div.innerHTML =
               storedBurst[originFunction][functionFile].htmlResult;
           }

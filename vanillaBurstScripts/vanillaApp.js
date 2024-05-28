@@ -4,19 +4,29 @@ const vanillaApp = ë.frozenVanilla(
     ë.onload = function () {
       ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
 
-      // Helper function: load a single script
       ë.frozenVanilla("loadScript", function loadScript(url) {
         return new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          const nonceString = ë.nonceBack();
+          const version = ë.version;
+          const urlWithVersion = `${url}?version=${version}`;
 
-          script.src = url;
-          script.setAttribute("name", "init");
-          script.setAttribute("nonce", nonceString);
+          const existingScript = document.head.querySelector(
+            `script[src="${urlWithVersion}"]`
+          );
+          if (existingScript) {
+            let nonceString = ë.nonceBack(); // Generate a new nonce
+            existingScript.setAttribute("nonce", nonceString); // Update the nonce of the existing script
+            resolve(existingScript);
+            return;
+          }
+
+          let script = document.createElement("script");
+          script.src = urlWithVersion;
+          script.type = "text/javascript";
+          script.setAttribute("nonce", ë.nonceBack());
+
           script.onload = () => resolve(script);
           script.onerror = () =>
-            reject(new Error(`Failed to load script: ${url}`));
-
+            reject(new Error(`Script load error for ${url}`));
           document.head.appendChild(script);
         });
       });
