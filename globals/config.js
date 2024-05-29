@@ -11,11 +11,7 @@ switch (ë.mode) {
     break;
   }
   case "live": {
-    ë.frozenVanilla(
-      "domainUrl",
-      "https://vanillaburstgame.onrender.com",
-      false
-    );
+    ë.frozenVanilla("domainUrl", "https://vanillaburstgame.onrender.com");
     ë.frozenVanilla("vanillaStock", false);
 
     break;
@@ -104,7 +100,6 @@ switch (ë.mode) {
       "https://storage.googleapis.com",
       "https://weatherapi-com.p.rapidapi.com",
       "https://jsonplaceholder.typicode.com",
-      ë.domainUrl, // Add ë.domainUrl here
     ],
     "manifest-src": [ë.domainUrl, "https://arber.inc"],
     "worker-src": [ë.domainUrl, "https://arber.inc"],
