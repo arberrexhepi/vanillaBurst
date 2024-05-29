@@ -20,9 +20,11 @@
     return;
   }
   ë.logSpacer();
-  console.log(
+  ë.logSpacer(
     "%c[Render Started]",
-    "color: white; font-weight: bold; font-size:24px;"
+    "",
+    "color: white; font-weight: bold; font-size:24px;",
+    true
   );
 
   let originBurst = JSON.parse(localStorage.getItem("originBurst"));
@@ -30,9 +32,19 @@
   if (!originBurst) {
     originBurst = {};
 
-    console.log("Initializing originBurst entry: originBurst = {}");
+    ë.logSpacer(
+      "Initializing originBurst entry: originBurst = {}",
+      null,
+      null,
+      true
+    );
   } else {
-    console.log("Initializing originBurst Entry: Cache found");
+    ë.logSpacer(
+      "Initializing originBurst Entry: Cache found",
+      null,
+      null,
+      true
+    );
   }
 
   initializeLocalStorage();
@@ -71,8 +83,9 @@
 
       await Promise.all(promises);
 
-      console.log(
+      ë.logSpacer(
         "%c[Executing JavaScript!]",
+        "",
         "color: white; font-weight: bold; font-size:24px;"
       );
 
@@ -95,7 +108,6 @@
 
       ë.setSeo(seo);
 
-      ë.logSpacer();
       ë.renderComplete = true;
 
       console.log(

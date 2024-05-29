@@ -17,9 +17,11 @@
   async function (renderSchema, rollCall, runRoll, originBurst) {
     return new Promise((resolve, reject) => {
       ë.logSpacer();
-      console.log(
+      ë.logSpacer(
         "%c[Starting Promising renderSchema landing customFunctions]",
-        "color: white; font-weight: bold; font-size:24px;"
+        "",
+        "color: white; font-weight: bold; font-size:24px;",
+        true
       );
       if (!runRoll || !Array.isArray(rollCall) || rollCall.length === 0) {
         resolve({});
@@ -44,9 +46,11 @@
 
       for (const element of rollCall) {
         //ë.logSpacer();
-        console.log(
+        ë.logSpacer(
           "%cPromising " + element,
-          "color: white; font-weight: bold; font-size:18px;"
+          "",
+          "color: white; font-weight: bold; font-size:18px;",
+          true
         );
         count++;
         const passedFunction = renderSchema.customFunctions[element];
@@ -70,31 +74,37 @@
           vanillaPromises[customFunctionName] = vanillaPromise;
 
           if (typeof ë[customFunctionName] === "function") {
-            console.log(
+            ë.logSpacer(
               "%c" + customFunctionName + " has been successfully rendered.",
-              "color: white; font-weight: bold; font-size:18px;"
+              "color: white; font-weight: bold; font-size:18px;",
+              true
             );
-            ë.logSpacer();
           } else {
-            console.warn(
-              "ë." +
-                customFunctionName +
-                " is not a function. HINT: Naming conflicts in files, or reference name exists as some other Global name such as a DIV element ID."
+            ë.logSpacer(
+              console.warn(
+                "ë." +
+                  customFunctionName +
+                  " is not a function. HINT: Naming conflicts in files, or reference name exists as some other Global name such as a DIV element ID.",
+                "",
+                null,
+                true
+              )
             );
           }
 
           ë.storeBurst(vanillaPromise);
 
           if (count >= maxCount) {
-            console.log(
+            ë.logSpacer(
               "%c[Completed Promising renderSchema landing customFunctions]",
-              "color: white; font-weight: bold; font-size:24px;"
+              "",
+              "color: white; font-weight: bold; font-size:24px;",
+              true
             );
-            ë.logSpacer();
             return vanillaPromises;
           }
         } catch (error) {
-          console.error(error);
+          ë.logSpacer(console.error(error), null, null, true);
         }
       }
     }
@@ -108,11 +118,14 @@
      */
     function processFunction(passedFunction, customFunctionName) {
       return new Promise((resolve) => {
-        console.info({
-          Status: "STARTING rollCall for customFunction",
-          customFunctionName,
-          passedFunction,
-        });
+        ë.logSpacer(
+          {
+            Status: "STARTING rollCall for customFunction",
+            customFunctionName,
+            passedFunction,
+          },
+          true
+        );
 
         if (passedFunction) {
           originBurst =

@@ -93,7 +93,7 @@
                 resolve(vanillaPromise);
               }
 
-              let path = ë.frozenVanilla.get("domainUrl") + ë.baseUrl;
+              let path = ë.domainUrl + ë.baseUrl;
               cssPath = buildCssPath(
                 path,
                 dir,
@@ -136,7 +136,10 @@
                 children = originBurst.componentBurst[id].htmlResult;
               }
 
-              let sanitizedChildren = ë.sanitizeVanillaDOM(children);
+              let sanitizedChildren = ë.sanitizeVanillaDOM(
+                children,
+                functionFile
+              );
 
               if (viewContainer.contains(targetContainer) && renderComponent) {
                 let elementBuild = createSanitizedElement(
@@ -150,12 +153,14 @@
                 elements.forEach((element) => {
                   if (element.id.includes(element.id.split("-")[0])) {
                     //element.remove();
+                    element.setAttribute("nonce", ë.nonceBack());
                   }
                 });
                 if (
                   !targetContainer.hasChildNodes() ||
                   !targetContainer.querySelector(`#${elementBuild.id}`)
                 ) {
+                  targetContainer.setAttribute("nonce", ë.nonceBack());
                   targetContainer.append(elementBuild);
                 }
 
@@ -199,7 +204,7 @@
           throw error;
         });
     } catch (error) {
-      console.error(error);
+      ë.logSpacer(console.error(error), null, null, true);
     }
   }
 );

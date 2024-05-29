@@ -154,14 +154,21 @@
           case "class":
             let element = document.querySelector(selector);
             if (!element) {
-              console.log(`No element matches the selector: ${selector}`);
+              ë.logSpacer(
+                console.log(
+                  `No element matches the selector: ${selector}, please check your functionConfig.js or HTML`,
+                  null,
+                  null,
+                  true
+                )
+              );
               return;
             }
             return element;
             break;
         }
       } catch (error) {
-        console.log(error);
+        ë.logSpacer(console.log(error), null, null, true);
       }
     }
 
@@ -173,7 +180,7 @@
         if (componentRoot) {
           componentRoot.classList.add("componentRoot");
           // componentRoot.innerHTML(html);
-          console.log(componentRoot);
+          ë.logSpacer(console.log(componentRoot), null, null, true);
           return componentRoot;
         }
       } catch (error) {
@@ -230,15 +237,15 @@
               resolve(cacheResult); // resolve the Promise with cacheResult
             } catch (error) {
               console.trace();
-              console.log(error);
+              ë.logSpacer(console.log(error), null, null, true);
               reject(error);
             }
           }).catch((error) => {
-            throw new Error("Awaiting cacheComopnentSpawn: " + error.message);
+            throw new Error("Awaiting cacheComponentSpawn: " + error.message);
           });
         } else {
-          console.log(vanillaPromise.passedFunction);
-          console.log(componentKey);
+          ë.logSpacer(vanillaPromise.passedFunction, null, null, true);
+          ë.logSpacer(componentKey, null, null, true);
           if (
             vanillaPromise.passedFunction.components[componentKey].cache ===
             false
@@ -295,7 +302,6 @@
       // Convert the children of parentElement to an array
       let childrenArray = Array.from(parentElement.children);
 
-      console.log("childrenArray length " + childrenArray.length);
       if (index === -1) {
         index = childrenArray.length;
       } else if (!index) {
@@ -325,7 +331,6 @@
       if (htmlData.clear === true || htmlData.clear === undefined) {
         childrenArray = childrenArray.slice(0, index);
       }
-      console.log("childrenArray length sliced " + childrenArray.length);
 
       // Insert the new HTML at the specified index
       childrenArray.splice(index, 0, ...Array.from(fragment.children));
@@ -350,7 +355,7 @@
 
         storedData.componentBurst[storedComponentId].htmlResult =
           HTMLUpdateReady;
-        console.log("Data to store:", storedData);
+        ë.logSpacer("Data to store:", storedData, null, null, true);
         if (verboseCache === true) {
           try {
             let originBurst = localStorage.getItem("originBurst");
@@ -374,16 +379,16 @@
             storedData.componentBurst.verbose = verboseResult;
             localStorage.setItem("originBurst", JSON.stringify(storedData));
           } catch (error) {
-            console.log(error);
+            ë.logSpacer(console.log(error), null, null, true);
             throw error;
           }
         } else {
           localStorage.setItem("originBurst", JSON.stringify(storedData));
         }
 
-        console.log(
+        ë.logSpacer(
           "Stored data:",
-          JSON.parse(localStorage.getItem("originBurst"))
+          JSON.parse(localStorage.getItem("originBurst"), null, true)
         );
       } catch (error) {
         throw new Error("Caching: " + error.message);

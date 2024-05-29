@@ -55,7 +55,12 @@ function getNonce() {
           resolve(vanillaPromise);
         })
         .catch((error) => {
-          console.error("Error loading script:", fetchUrl, error);
+          ë.logSpacer(
+            console.error("Error loading script:", fetchUrl, error),
+            null,
+            null,
+            true
+          );
           reject(new Error(`Error loading script: ${fetchUrl}`));
         });
     });

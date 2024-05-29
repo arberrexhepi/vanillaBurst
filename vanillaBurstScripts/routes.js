@@ -146,7 +146,7 @@ localStorage.setItem("stateBurst", JSON.stringify([stateTag, stateTagPath]));
     if (history.state && typeof history.state.stateCount === "number") {
       history.go(-history.state.stateCount + 1);
     } else {
-      console.log("No previous page");
+      ë.logSpacer("No previous page");
     }
   }
 });

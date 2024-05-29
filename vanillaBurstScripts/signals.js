@@ -130,7 +130,9 @@ async function encryptData(data) {
       clearInterval(checkInterval);
       startBurst();
     } else {
-      console.log("not ran yet");
+      ë.logSpacer(
+        `myBurst() from ${myPromise.origin} for target ${myPromise.target} has not ran yet`
+      );
     }
   }, 500); // Check every 1000 milliseconds (1 second)
 
@@ -188,7 +190,7 @@ async function encryptData(data) {
               namespace: privilegedNamespaces,
               signalResult: data,
             };
-            console.log(
+            ë.logSpacer(
               "Access denied: " + namespace + " is not a privileged namespace."
             );
             return;

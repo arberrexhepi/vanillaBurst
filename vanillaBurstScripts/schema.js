@@ -51,7 +51,7 @@ const config = ë.frozenVanilla(
       }
     }
 
-    console.log("Schema built:", schema);
+    ë.logSpacer("Schema built:", schema, "", true);
     return schema;
   },
   false
