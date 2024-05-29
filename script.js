@@ -1,5 +1,5 @@
 const mode = "live"; // "dev" or "live"
-const version = "0.9.0.2";
+const version = "0.9.0.3";
 // Define base URLs for different modes
 const baseUrls = {
   dev: "/",
