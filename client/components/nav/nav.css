@@ -38,6 +38,12 @@
     max-height: 5vh;
 }
 
+@media (max-width: 768px) {
+    .nav-image {
+        height: 3.5vh;
+        max-height: 3.5vh;
+    }
+}
 
 #mainNav ul li span {
     display: inline-block;

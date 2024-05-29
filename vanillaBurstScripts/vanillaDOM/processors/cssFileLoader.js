@@ -1,9 +1,6 @@
 ë.frozenVanilla("cssFileLoader", function (cssPath) {
   // Define the paths for the default CSS file and the CSS file specified by cssPath
-  const cssPaths = [
-    ë.frozenVanilla.get("domainUrl") + baseUrl + "style.css",
-    cssPath,
-  ];
+  const cssPaths = [ë.domainUrl + baseUrl + "style.css", cssPath];
 
   // Load each CSS file
   cssPaths.forEach((path) => {

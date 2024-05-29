@@ -4,33 +4,6 @@ const vanillaApp = ë.frozenVanilla(
     ë.onload = function () {
       ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
 
-      ë.frozenVanilla("loadScript", function loadScript(url) {
-        return new Promise((resolve, reject) => {
-          const version = ë.version;
-          const urlWithVersion = `${url}?version=${version}`;
-
-          const existingScript = document.head.querySelector(
-            `script[src="${urlWithVersion}"]`
-          );
-          if (existingScript) {
-            let nonceString = ë.nonceBack(); // Generate a new nonce
-            existingScript.setAttribute("nonce", nonceString); // Update the nonce of the existing script
-            resolve(existingScript);
-            return;
-          }
-
-          let script = document.createElement("script");
-          script.src = urlWithVersion;
-          script.type = "text/javascript";
-          script.setAttribute("nonce", ë.nonceBack());
-
-          script.onload = () => resolve(script);
-          script.onerror = () =>
-            reject(new Error(`Script load error for ${url}`));
-          document.head.appendChild(script);
-        });
-      });
-
       // Load initial scripts and manage promise chains
       const configScriptPath = "globals/config.js";
       const finalPromiseChain = [];
@@ -40,8 +13,9 @@ const vanillaApp = ë.frozenVanilla(
       ë.frozenVanilla("loadInitialScripts", function () {
         return Promise.all([ë.loadScript(`${baseUrl}${configScriptPath}`)])
           .then(() => {
-            console.log(
-              `%cWelcome to ${ë.frozenVanilla.get(domainUrl)} 🍦`,
+            ë.logSpacer(
+              `%cWelcome to ${ë.domainUrl} 🍦`,
+              null,
               "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
             );
             return ë.schemaParts;
@@ -52,17 +26,16 @@ const vanillaApp = ë.frozenVanilla(
       });
 
       function promiseSchemaParts() {
-        ë.logSpacer();
-
-        console.log(
+        ë.logSpacer(
           "%c[Building vanillaApp schema]",
+          "",
           "color: white; font-weight: bold; font-size:24px;"
         );
         ë.logSpacer();
         const parts = Object.keys(ë.schemaParts);
 
         ë.frozenVanilla("parts", parts, false);
-        console.log("Extracted parts (keys):", parts);
+        ë.logSpacer("Extracted parts (keys):", parts, null, true);
 
         const scriptPromises = parts.map((part) => {
           const partConfigPath = `../schemas/${part}Config.js`;
@@ -90,7 +63,7 @@ const vanillaApp = ë.frozenVanilla(
 
         return Promise.all(scriptPromises)
           .then(() => {
-            console.info("CONFIG PARTS PROMISED:", parts);
+            ë.logSpacer("CONFIG PARTS PROMISED:", parts, null, true);
             const schema = config();
             if (typeof config === "function") {
               ë.frozenVanilla("schema", schema);
@@ -122,8 +95,8 @@ const vanillaApp = ë.frozenVanilla(
           .loadScript(`${baseUrl}${scriptPaths.vanillaBurstScriptPath}`)
           .then(() => ë.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`))
           .then(() => {
-            console.log(
-              "Scripts vanillaBurst.js and routes.js loaded successfully."
+            ë.logSpacer(
+              "State init Scripts vanillaBurst.js and routes.js loaded successfully."
             );
           })
           .catch((error) => {

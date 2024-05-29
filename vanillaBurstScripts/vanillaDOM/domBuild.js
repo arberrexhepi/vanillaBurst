@@ -12,7 +12,12 @@
   ) {
     return new Promise(async (resolve, reject) => {
       if (renderSchema?.customFunctions?.[domFunction]?.cache === false) {
-        console.log(vanillaPromise + " vanillapromise at dom build");
+        ë.logSpacer(
+          console.error(vanillaPromise + " vanillapromise at dom build"),
+          null,
+          null,
+          true
+        );
         return true;
       } else {
         try {
@@ -28,9 +33,14 @@
 
           resolve(vanillaPromise);
         } catch (error) {
-          console.warn(
-            "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
-              domFunction
+          ë.logSpacer(
+            console.warn(
+              "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
+                domFunction,
+              null,
+              null,
+              true
+            )
           );
 
           resolve(vanillaPromise);
@@ -96,9 +106,13 @@
         );
       })
       .catch((error) => {
-        console.error(
-          "An error occurred while loading and updating HTML content:",
-          error
+        ë.logSpacer(
+          console.error(
+            "An error occurred while loading and updating HTML content:",
+            error
+          ),
+          null,
+          true
         );
       });
 

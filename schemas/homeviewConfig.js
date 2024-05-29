@@ -16,7 +16,7 @@
     ],
     author: "vanillaBurst Team",
     image: ë.baseUrlImages + "wordmark.png", // Replace with the actual URL of the image
-    url: domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
+    url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
 

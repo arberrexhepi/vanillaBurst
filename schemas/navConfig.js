@@ -1,4 +1,5 @@
 ë.frozenVanilla("navConfig", function () {
+  ///this is as basic as a Shared package function aka Scoop can get!
   let navConfig = {
     nav: {
       dir: "client/components/nav/",

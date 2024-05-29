@@ -1,7 +1,7 @@
 ë.frozenVanilla(
   "nav",
   function (vanillaPromise) {
-    console.log(vanillaPromise.this + " ran");
+    ë.logSpacer(vanillaPromise.this + " ran");
 
     const navLinks = document.querySelectorAll(".nav-link");
     navLinks.forEach((link) => {

@@ -1,3 +1,3 @@
 ë.frozenVanilla("documentation", function (vanillaPromise) {
-  console.log(vanillaPromise.this + " ran");
+  ë.logSpacer(vanillaPromise.this + " ran");
 });

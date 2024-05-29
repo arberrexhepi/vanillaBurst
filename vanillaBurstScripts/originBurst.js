@@ -26,7 +26,9 @@
 
     // Validate the renderSchema and ensure it has a landing property
     if (!renderSchema || !renderSchema.landing) {
-      console.error("Invalid renderSchema or missing landing key.");
+      ë.logSpacer(
+        console.error("Invalid renderSchema or missing landing key.")
+      );
       return originBurst;
     }
 
@@ -34,7 +36,7 @@
 
     // Initialize the landing key in originBurst if not already present
     if (!originBurst[landingKey]) {
-      console.info({
+      ë.logSpacer({
         Status: "BUILDING originBurst Object",
         Scope: landingKey,
       });
@@ -58,20 +60,35 @@
       };
 
       ë.logSpacer();
-      console.log(
+      ë.logSpacer(
         `${functionName} initial originBurst entry; New build complete.`
       );
     } else {
       ë.logSpacer();
-      console.log(`${functionName} initial originBurst entry: Found existing.`);
+      ë.logSpacer(
+        `${functionName} initial originBurst entry: Found existing.`,
+        null,
+        null,
+        true
+      );
     }
 
-    console.info({
-      Status: "Custom function's originBurst ready...",
-      functionFile: functionName,
-    });
+    ë.logSpacer(
+      {
+        Status: "Custom function's originBurst ready...",
+        functionFile: functionName,
+      },
+      null,
+      null,
+      true
+    );
 
-    console.table({ Result: originBurst[landingKey][functionName] });
+    ë.logSpacer(
+      console.table({ Result: originBurst[landingKey][functionName] }),
+      null,
+      null,
+      true
+    );
     let getLocalOriginBurst = JSON.parse(localStorage.getItem("originBurst"));
 
     if (
@@ -113,7 +130,12 @@
   ) {
     return new Promise((resolve, reject) => {
       if (!renderSchema || !renderSchema.landing) {
-        console.error("Invalid renderSchema or missing landing key.");
+        ë.logSpacer(
+          console.error("Invalid renderSchema or missing landing key."),
+          null,
+          null,
+          true
+        );
         resolve(originBurst);
         return;
       }
@@ -143,12 +165,17 @@
         originBurst[landingKey][functionName].serverResult ||
         null;
 
-      console.info({
-        Update: "New serverResult:",
-        customFunction: functionName,
-      });
+      ë.logSpacer(
+        {
+          Update: "New serverResult:",
+          customFunction: functionName,
+        },
+        null,
+        null,
+        true
+      );
 
-      console.table({ Result: originBurst[landingKey][functionName] });
+      ë.logSpacer({ Result: originBurst[landingKey][functionName] });
       resolve(originBurst);
       return;
     });
@@ -174,7 +201,12 @@
     let functionName = functionFile;
     // alert(functionHTML);
     if (!originBurst) {
-      console.error("originBurst is not available.");
+      ë.logSpacer(
+        console.error("originBurst is not available."),
+        null,
+        null,
+        true
+      );
       return originBurst;
     }
 

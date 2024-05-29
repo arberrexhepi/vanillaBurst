@@ -17,7 +17,7 @@
     ],
     author: "vanillaBurst Team",
     image: ë.baseUrlImages + "wordmark.png", // Replace with the actual URL of the image
-    url: domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
+    url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
 
@@ -57,8 +57,7 @@
           <small class="form-description">Name Convention: viewnameConfig.js</small>
 
           <div class="fields">
-              <!-- First level inputs -->
-              <label for="viewName">Landing Name:</label><small>(required)</small>
+\              <label for="viewName">Landing Name:</label><small>(required)</small>
               <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
   
               <label for="dir">Directory:</label>
@@ -76,8 +75,7 @@
               <label for="container">Container:</label><small>(required if HTML PATH)</small>
               <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
   
-              <!-- Component template -->
-              <fieldset class="componentTemplate" style="display: none">
+\              <fieldset class="componentTemplate">
                 <div class="componentTemplate-container">
                   <legend>Component Configuration</legend>
                   <div class="subDOMFieldsContainer">

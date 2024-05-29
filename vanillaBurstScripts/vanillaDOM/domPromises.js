@@ -78,16 +78,16 @@
             //     customFunctionName +
             //     JSON.stringify(vanillaPromise)
             // );
-            ë.vanillaCSS(true);
+            ë.vanillaImages(true);
 
             resolve(vanillaPromise);
           })
           .catch((error) => {
-            console.error(error);
+            ë.logSpacer(console.error(error), null, null, true);
             reject(error);
           });
       } else {
-        ë.vanillaCSS(true);
+        ë.vanillaImages(true);
 
         resolve(vanillaPromise);
       }

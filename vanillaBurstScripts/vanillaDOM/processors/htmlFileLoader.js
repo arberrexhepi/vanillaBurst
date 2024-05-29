@@ -47,8 +47,9 @@
           // Determine the root element (either the div or the body of the doc)
           let root = div || doc.body;
 
-          console.log(
+          ë.logSpacer(
             "%c" + functionFile + " proceeding to render with cache",
+            "",
             "color: white; font-weight: bold; font-size:18px;"
           );
 
@@ -87,9 +88,11 @@
 
         // Ensure that the HTML content is correctly extracted
         contentToUse = doc.documentElement.outerHTML;
-        console.log(
+        ë.logSpacer(
           "%c" + functionFile + " proceeding to render without cache",
-          "color: white; font-weight: bold; font-size:18px;"
+          "",
+          "color: white; font-weight: bold; font-size:18px;",
+          true
         );
       }
 
@@ -105,7 +108,7 @@
       // Apply CSS content using <link> tag
       ë.cssFileLoader(cssPath);
     } catch (error) {
-      console.error("Error:", error);
+      ë.logSpacer(console.error("Error:", error), null, null, true);
     }
   }
 );

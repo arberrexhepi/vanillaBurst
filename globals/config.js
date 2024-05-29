@@ -6,7 +6,7 @@
 
 switch (ë.mode) {
   case "dev": {
-    ë.frozenVanilla("domainUrl", "http://vanillaburstgame", false);
+    ë.frozenVanilla("domainUrl", "http://vanillaburstgame");
     ë.frozenVanilla("vanillaStock", false);
     break;
   }
@@ -70,7 +70,7 @@ switch (ë.mode) {
 ë.frozenVanilla("vanillaScoops", {
   //vanillaAnimation: ["homeview", "gen", "documentation"], OR set it as global as below
   vanillaAnimation: true,
-  vanillaCSS: true,
+  vanillaImages: true,
   gptScoop: ["homeview"],
 });
 
@@ -81,34 +81,34 @@ switch (ë.mode) {
   {
     //"default-src": ["'self'"],
     "img-src": [
-      ë.frozenVanilla.get("domainUrl"),
+      ë.domainUrl,
       "https://arber.inc",
       "https://storage.googleapis.com",
       "https://cdn.weatherapi.com",
     ],
     "media-src": [
-      ë.frozenVanilla.get("domainUrl"),
+      ë.domainUrl,
       "https://arber.inc",
       "https://storage.googleapis.com",
     ],
     "style-src": [ë.domainUrl],
     "object-src": ["'none'"],
     "font-src": [
-      ë.frozenVanilla.get("domainUrl"),
+      ë.domainUrl,
       "https://arber.inc",
       "https://storage.googleapis.com",
     ],
     "connect-src": [
-      ë.frozenVanilla.get("domainUrl"),
+      ë.domainUrl,
       "https://arber.inc",
       "https://storage.googleapis.com",
       "https://weatherapi-com.p.rapidapi.com",
       "https://jsonplaceholder.typicode.com",
-      ë.frozenVanilla.get("domainUrl"), // Add ë.domainUrl here
+      ë.domainUrl, // Add ë.domainUrl here
     ],
-    "manifest-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
-    "worker-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
-    "child-src": [ë.frozenVanilla.get("domainUrl"), "https://arber.inc"],
+    "manifest-src": [ë.domainUrl, "https://arber.inc"],
+    "worker-src": [ë.domainUrl, "https://arber.inc"],
+    "child-src": [ë.domainUrl, "https://arber.inc"],
     // "frame-ancestors": ["'none'"], // Not supported in <meta> tag
     // "form-action": ["'none'"],
     // "base-uri": ["'self'"],

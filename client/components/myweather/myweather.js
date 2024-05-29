@@ -1,7 +1,7 @@
 ë.frozenVanilla("myweather", async function (vanillaPromise) {
   // Your function logic here
 
-  console.log(vanillaPromise.this + "is ready and running");
+  ë.logSpacer(vanillaPromise.this + "is ready and running", null, null, true);
 
   let weatherInfo;
   let counter = 0;

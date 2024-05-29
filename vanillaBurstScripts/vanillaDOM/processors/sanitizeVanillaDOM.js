@@ -16,13 +16,10 @@
 
     let cleanHTML;
 
-    // Check if the document was successfully parsed
     if (doc.body) {
-      // Extract the body content
       let bodyContent = doc.body.innerHTML;
       cleanHTML = DOMPurify.sanitize(bodyContent, config);
     } else {
-      // If the document was not successfully parsed, sanitize the htmlString directly
       cleanHTML = DOMPurify.sanitize(htmlString, config);
     }
 
@@ -30,10 +27,8 @@
       throw new Error("cleanHTML is undefined");
     }
 
-    // Parse the sanitized HTML
     let sanitizedDoc = parser.parseFromString(cleanHTML, "text/html");
 
-    // Get the final HTML with nonces
     let finalHTML = sanitizedDoc.body.innerHTML;
 
     return finalHTML;

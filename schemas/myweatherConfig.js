@@ -1,4 +1,5 @@
 ë.frozenVanilla("myweatherConfig", function () {
+  //this is featured as a vanillaScoop on the main landing page "homview"
   let myweatherConfig = {
     myweather: {
       dir: "client/components/myweather/",
@@ -9,7 +10,7 @@
       cssPath: "client/components/myweather/myweather.css",
       container: "weather-wrapper",
       classNames: "weather-wrapper scoop card",
-      //components: {},
+      //components: {}, //this Scoop could have its own components, ie if a Scoop is a dashboard Scoop, you could have lots!
       dataSchema: {
         resultTarget: "myweather",
         returnResult: true,
@@ -27,6 +28,8 @@
             "Halifax",
           ],
         },
+        //api setting such as below are not recommended for secure and private API communication,
+        //you'd proxy this, ie Wordpress users would set actions in the data property, with a nonce
         headers: {
           "Content-Type": "application/json",
           "X-RapidAPI-Key":

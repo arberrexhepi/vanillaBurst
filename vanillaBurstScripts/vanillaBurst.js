@@ -29,34 +29,6 @@ let historyCount = 0;
         ë.schema[stateTag];
       const nonceString2 = ë.nonceBack();
 
-      // function loadScript(url) {
-      //   return new Promise((resolve, reject) => {
-      //     const version = "v1.0.0.1";
-      //     const urlWithVersion = `${url}?version=${version}`;
-
-      //     // Check if a script with the same src attribute already exists
-      //     const existingScript = document.head.querySelector(
-      //       `script[src="${urlWithVersion}"]`
-      //     );
-      //     if (existingScript) {
-      //       let nonceString = ë.nonceBack(); // Generate a new nonce
-      //       existingScript.setAttribute("nonce", nonceString); // Update the nonce of the existing script
-      //       resolve(existingScript);
-      //       return;
-      //     }
-
-      //     let script = document.createElement("script");
-      //     script.src = urlWithVersion;
-      //     script.type = "text/javascript";
-      //     script.setAttribute("nonce", ë.nonceBack());
-
-      //     script.onload = () => resolve(script);
-      //     script.onerror = () =>
-      //       reject(new Error(`Script load error for ${url}`));
-      //     document.head.appendChild(script);
-      //   });
-      // }
-
       function loadScriptAndRunFunction() {
         return ë
           .loadScript(preloaderUrl)
@@ -99,16 +71,26 @@ let historyCount = 0;
       }
 
       ë.renderComplete = false;
-      ë.logSpacer();
-      console.log(
+      ë.logSpacer(
         `%c[Changing state to: ${stateTag}]`,
-        "color: white; font-weight: bold; font-size:24px;"
+        "",
+        "color: white; font-weight: bold; font-size:24px;",
+        true
       );
+
       if (loadParams === null) {
-        console.log("State will run with default loadParam: {}");
+        ë.logSpacer(
+          "State will run with default loadParam: {}",
+          null,
+          null,
+          true
+        );
       } else {
-        console.log(
-          "State will run with passed loadParam: " + JSON.stringify(loadParams)
+        ë.logSpacer(
+          "State will run with passed loadParam: " + JSON.stringify(loadParams),
+          null,
+          null,
+          true
         );
       }
 
@@ -132,15 +114,17 @@ let historyCount = 0;
             }
             resource.data = result.data;
             resourceParent.customFunctions[tagParam].dataSchema = resource;
-            console.log(
+            ë.logSpacer(
               "customFunctions by tagParam (stateTag) have been updated with dynamic data",
-              resourceParent
+              resourceParent,
+              null,
+              true
             );
           } else {
             return resourceParent;
           }
 
-          console.log(resourceParent);
+          ë.logSpacer(resourceParent, null, null, true);
           return resourceParent;
         } else {
           return resourceParent;
@@ -175,8 +159,8 @@ let historyCount = 0;
         let seo = ë.seo;
 
         ë.setSeo(seo);
-        console.log("Setting SEO:", seo);
-        console.log("Document title set to:", seo.title);
+        ë.logSpacer("Setting SEO:", JSON.stringify(seo), null, true);
+        ë.logSpacer("Document title set to:", seo.title, null, true);
 
         ë.render(buildState.stateTagParams);
       }
@@ -193,7 +177,7 @@ let historyCount = 0;
           historyCount = popState.stateCount + 1;
           ë.historyCount = historyCount;
 
-          console.log(popState);
+          ë.logSpacer(popState, null, null, true);
           history.replaceState(
             popState,
             popState.stateTagName,

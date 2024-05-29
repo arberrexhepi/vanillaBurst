@@ -90,8 +90,8 @@
           fetch(url, { ...dataMethod })
             .then((response) => {
               // Handle response based on the content type
-              console.log("Response status: ", response.status);
-              console.log(
+              ë.logSpacer("Response status: ", response.status);
+              ë.logSpacer(
                 "Response headers: ",
                 Array.from(response.headers.entries())
               );
@@ -121,14 +121,14 @@
                   resolve(targetResult);
                   return targetResult;
                 } else {
-                  console.log("done");
+                  ë.logSpacer("Server response successful and resolving here");
 
                   resolve(responseData);
                 }
               }
             })
             .catch((error) => {
-              console.error("Error in fetch: ", error);
+              ë.logSpacer("Error in fetch: ", error);
               reject(error);
             });
         }

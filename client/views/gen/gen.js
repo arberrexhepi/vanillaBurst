@@ -1,5 +1,5 @@
 ë.frozenVanilla("gen", function (vanillaPromise) {
-  console.log(vanillaPromise.this + " ran");
+  ë.logSpacer(vanillaPromise.this + " ran");
 
   let subDomClicks = 0;
   $(".addSubDOM").on("click", function (e) {
