@@ -1,17 +1,11 @@
 ë.frozenVanilla("heroHeader", function (vanillaPromise) {
-  let buttons = document.querySelectorAll("button.headerbutton");
-  buttons.forEach((button) => {
-    button.addEventListener("click", function (event) {
-      let route = event.target.getAttribute("data-route");
-
-      ë.myState([route, `../?burst=${route}`]);
-    });
-  });
+  ë.linkBurst("button.headerbutton");
 
   /////vendorScoop vanillaAnimation js is in: scoops/vanillaAnimation, for now styles are not programmatic, so just root folder and inlineHTML style tag declaration, DEFINITELY a WIP but it was a great way to implement vanillaScoops installation logic and ë.vanillaMess type checker and logger
 
   ë.vanillaAnimation({
     0: {
+      vanillaPromise,
       play: "play", //or scroll
       duration: 1,
       units: ["vw", "vh", "vh"],
@@ -29,8 +23,11 @@
       randomize: false,
       effects: ["pan"],
       spawn: null,
+      namespace: true,
     },
     1: {
+      vanillaPromise,
+      namespace: true,
       play: "play",
       duration: 1,
       units: ["vh", "vh", "vh"],

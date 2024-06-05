@@ -1,77 +1,172 @@
-ë.frozenVanilla("storeBurst", function (vanillaPromise) {
-  let key = Object.values(vanillaPromise.originBurst)[0];
+function defineSignalStore() {
+  if (typeof window.signalStore === "undefined") {
+    const storage = {};
 
-  let signalBurst, originBurst;
+    Object.defineProperty(window, "signalStore", {
+      value: function signalStore(prop, value, setAsWindowProp = true) {
+        const frozenValue =
+          typeof value === "function"
+            ? Object.freeze(value.bind(this))
+            : Object.freeze(value);
 
-  try {
-    signalBurst = JSON.parse(localStorage.getItem("signalBurst"));
-  } catch (e) {
-    console.error("Failed to parse signalBurst from localStorage:", e);
-    signalBurst = {};
-  }
+        // If the value is an object, add get and set methods to it
+        if (typeof frozenValue === "object" && frozenValue !== null) {
+          frozenValue.get = function (name) {
+            return this[name];
+          };
+          frozenValue.set = function (name, func) {
+            this[name] = func;
+          };
+        }
 
-  try {
-    originBurst =
-      JSON.parse(localStorage.getItem("originBurst")) ||
-      vanillaPromise.originBurst;
-  } catch (e) {
-    console.error("Failed to parse originBurst from localStorage:", e);
-    originBurst = {};
-  }
+        // Store the frozen value
+        storage[prop] = frozenValue;
 
-  let burstSchema = vanillaPromise.renderSchema.landing;
-
-  for (let [key, value] of Object.entries(vanillaPromise.originBurst)) {
-    // Check if signalBurst[burstSchema] exists, if not initialize it to an empty object
-    if (!signalBurst) {
-      signalBurst = {};
-    }
-    if (!signalBurst?.[burstSchema]) {
-      signalBurst[burstSchema] = {};
-    }
-
-    // Merge the new data with the existing data
-    signalBurst[burstSchema] = {
-      ...signalBurst?.[burstSchema],
-      [vanillaPromise.this]: {
-        signal: "load",
-        landing: vanillaPromise.renderSchema.landing || null,
-        origin: vanillaPromise.this || null,
-        target: vanillaPromise.this || null,
-        container: null,
-        callBack: null,
-        action: null,
-        namespace:
-          [vanillaPromise.renderSchema.landing, vanillaPromise.this] || null,
-        signalResult:
-          vanillaPromise?.originBurst?.[burstSchema]?.[vanillaPromise.this]
-            ?.serverResult || null,
+        if (
+          setAsWindowProp &&
+          (typeof window[prop] === "undefined" ||
+            Object.getOwnPropertyDescriptor(window, prop).writable)
+        ) {
+          Object.defineProperty(window, prop, {
+            value: frozenValue,
+            writable: false,
+            configurable: false,
+          });
+        }
+        return frozenValue;
       },
+      writable: false,
+      configurable: false,
+    });
+
+    // Add a method to get values from the storage
+    window.signalStore.get = function (prop) {
+      return storage[prop];
     };
 
-    // Merge the new data with the existing data
-    for (let [key, value] of Object.entries(vanillaPromise.originBurst)) {
-      // Check if originBurst[key] exists, if not initialize it to an empty object
-      if (!originBurst.hasOwnProperty(key)) {
-        originBurst[key] = {};
-      }
-      //Merge the new data with the existing data
-      originBurst[key] = {
-        ...originBurst[key],
-        ...value,
-      };
-    }
+    // Add a method to set values in the storage
+    window.signalStore.set = function (prop, value) {
+      const frozenValue =
+        typeof value === "function"
+          ? Object.freeze(value.bind(this))
+          : Object.freeze(value);
+      storage[prop] = frozenValue;
+      return frozenValue;
+    };
+
+    window.signalStore.remove = function (prop) {
+      delete storage[prop];
+    };
   }
+}
 
-  localStorage.setItem("signalBurst", JSON.stringify(signalBurst));
-  // encryptData(signalBurst).then((encryptedSignalBurst) => {
-  //   localStorage.setItem("signalBurst", JSON.stringify(encryptedSignalBurst));
-  // });
-  localStorage.setItem("originBurst", JSON.stringify(originBurst));
+try {
+  defineSignalStore();
+} catch (error) {
+  console.error(
+    "Oops, looks like we've mixed up signals, we'll try preparing it again!",
+    error
+  );
+  window.location.reload();
+}
 
-  // encryptData(originBurst).then((encryptedOriginBurst) => {
-  //   localStorage.setItem("originBurst", JSON.stringify(encryptedOriginBurst));
-  // });
+ë.frozenVanilla("tsunami", function (namespace, functionName) {
+  if (Array.isArray(functionName)) {
+    return functionName.reduce((acc, name) => {
+      acc[name] = this.signalStore.get(namespace)[name];
+      return acc;
+    }, {});
+  } else {
+    return this.signalStore.get(namespace)[functionName];
+  }
+});
+
+ë.frozenVanilla("storeBurst", function (vanillaPromise, signalObject) {
+  return new Promise((resolve, reject) => {
+    let key = Object.values(vanillaPromise.originBurst)[0];
+
+    let signalBurst, originBurst;
+
+    try {
+      signalBurst = JSON.parse(localStorage.getItem("signalBurst"));
+    } catch (e) {
+      console.error("Failed to parse signalBurst from localStorage:", e);
+      signalBurst = {};
+    }
+
+    try {
+      originBurst =
+        JSON.parse(localStorage.getItem("originBurst")) ||
+        vanillaPromise.originBurst;
+    } catch (e) {
+      console.error("Failed to parse originBurst from localStorage:", e);
+      originBurst = {};
+    }
+
+    let burstSchema = vanillaPromise.renderSchema.landing;
+
+    for (let [key, value] of Object.entries(vanillaPromise.originBurst)) {
+      // Check if signalBurst[burstSchema] exists, if not initialize it to an empty object
+      if (!signalBurst) {
+        signalBurst = {};
+      }
+      if (!signalBurst?.[burstSchema]) {
+        signalBurst[burstSchema] = {};
+      }
+
+      // Merge the new data with the existing data
+      signalBurst[burstSchema] = {
+        ...signalBurst?.[burstSchema],
+        [vanillaPromise.this]: {
+          verbose: vanillaPromise.passedFunction?.signal?.verbose || false,
+          name: vanillaPromise.passedFunction?.signal?.name || null,
+          signalStore:
+            vanillaPromise.passedFunction?.signal?.signalStore || null,
+          action: vanillaPromise.passedFunction?.signal?.action || null,
+          onEvent: vanillaPromise.passedFunction?.signal?.onEvent,
+          init: vanillaPromise.passedFunction?.signal?.init,
+          intermittent: vanillaPromise.passedFunction?.signal?.intermittent,
+          callBack: vanillaPromise.passedFunction?.signal?.callBack,
+          landing: vanillaPromise.renderSchema.landing || null,
+          caller: signalObject?.caller || null,
+          target: vanillaPromise.this || null,
+          container: vanillaPromise.passedFunction.container || null,
+          affectors: vanillaPromise.passedFunction?.signal?.affectors || null,
+          data:
+            signalObject?.data ||
+            vanillaPromise.passedFunction?.signal?.data ||
+            null,
+          vanillaDOM: vanillaPromise.passedFunction?.signal?.vanillaDOM || null,
+          clearable: vanillaPromise.passedFunction?.signal?.clearable || false,
+        },
+      };
+
+      // Merge the new data with the existing data
+      for (let [key, value] of Object.entries(vanillaPromise.originBurst)) {
+        // Check if originBurst[key] exists, if not initialize it to an empty object
+        if (!originBurst.hasOwnProperty(key)) {
+          originBurst[key] = {};
+        }
+        //Merge the new data with the existing data
+        originBurst[key] = {
+          ...originBurst[key],
+          ...value,
+        };
+      }
+    }
+    if (signalBurst && signalBurst !== null) {
+      resolve(signalBurst);
+    }
+    localStorage.setItem("signalBurst", JSON.stringify(signalBurst));
+    // encryptData(signalBurst).then((encryptedSignalBurst) => {
+    //   localStorage.setItem("signalBurst", JSON.stringify(encryptedSignalBurst));
+    // });
+    localStorage.setItem("originBurst", JSON.stringify(originBurst));
+
+    // encryptData(originBurst).then((encryptedOriginBurst) => {
+    //   localStorage.setItem("originBurst", JSON.stringify(encryptedOriginBurst));
+    // });
+  });
 });
 
 async function encryptData(data) {
@@ -97,182 +192,25 @@ async function encryptData(data) {
   return { key, iv, encryptedData };
 }
 
-ë.frozenVanilla("myBurst", function (myPromise) {
-  //myBurstObject
-  // myPromise = {
-  //   signal: "name of event, ie load, set, delete, etc",
-  //   landing: vanillaPromise.renderSchema.landing,
-  //   origin: "where you call myburst",
-  //   target: "receiving function",
-  //   container: "optional", //by ID currently
-  //   callBack: "functionFile by name", //ie ë.completeCheckout functionFile name is completeCheckout
-  //   action: "set, watch, cancel",
-  //   namespace: ["namespace1", "namespace2", "namespace3"],
-  //   data: "data to pass", //optional
-  // };
+///thinking about this update where an signal controls signalBurst
 
-  // List of privileged namespaces
-  const privilegedNamespaces = myPromise.namespace;
-  let signal = myPromise.signal || "load";
-  let landing = myPromise.landing || null;
-  let target = myPromise.target || myPromise.origin;
-  let container = myPromise.container;
-  let action = myPromise.action || null;
-  let callBack = myPromise.callBack;
-  let data = myPromise.data || null;
-
-  if (callBack && typeof ë[callBack] === "function") {
-    callBack = ë[callBack];
-  }
-
-  let checkInterval = setInterval(() => {
-    if (typeof ë[target] === "function") {
-      clearInterval(checkInterval);
-      startBurst();
-    } else {
-      ë.logSpacer(
-        `myBurst() from ${myPromise.origin} for target ${myPromise.target} has not ran yet`
-      );
-    }
-  }, 500); // Check every 1000 milliseconds (1 second)
-
-  // Check if the provided namespace is privileged
-  function startBurst() {
-    let signalBurst = JSON.parse(localStorage.getItem("signalBurst")) || {};
-    let signalBurstPack = signalBurst[landing][target] || {};
-    if (action === "get") {
-      if (typeof callBack === "function") {
-        callBack(signalBurstPack);
-      }
-      return signalBurstPack;
-    }
-
-    if (action === "set") {
-      signalBurstPack = {
-        signal: signal,
-        landing: landing,
-        origin: target,
-        target: target,
-        container: container,
-        callBack: callBack,
-        action: action,
-        namespace: privilegedNamespaces,
-        signalResult: data,
-      };
-
-      let originBurstPack =
-        JSON.parse(localStorage.getItem("originBurst")) || {};
-      if (container) {
-        if (!originBurstPack?.[landing]?.[target].htmlResult) {
-          originBurstPack[landing][target]["htmlResult"] = data;
-        }
-        originBurstPack[landing][target].htmlResult = data;
-      }
-
-      // Now, set this to the signalBurst in localStorage
-      signalBurst[landing][target] = signalBurstPack;
-      localStorage.setItem("signalBurst", JSON.stringify(signalBurst));
-      if (typeof callBack === "function") {
-        callBack();
-      }
-    } else if (action === "watch") {
-      ë.addEventListener("storage", function (event) {
-        if (event.key === "signalBurst") {
-          if (!privilegedNamespaces.includes(namespace)) {
-            signalBurstPack = {
-              signal: signal,
-              landing: landing,
-              origin: target,
-              target: target,
-              container: container,
-              callBack: callBack,
-              action: action,
-              namespace: privilegedNamespaces,
-              signalResult: data,
-            };
-            ë.logSpacer(
-              "Access denied: " + namespace + " is not a privileged namespace."
-            );
-            return;
-          }
-        }
-      });
-    } else if (action === "cancel") {
-      // Remove the storage event listener
-      ë.removeEventListener("storage");
-    }
-  }
-});
-
-ë.frozenVanilla(
-  "registerInterval",
-  async function (signalName, init, count, time, repeat, callBack, clear) {
-    let counter = 0;
-
-    if (init) {
-      await init();
-    }
-    let intervals = JSON.parse(localStorage.getItem("intervals")) || {};
-    count = count ? count : 999;
-    let intervalId = setInterval(async () => {
-      counter++;
-      if (typeof callBack === "function") {
-        await callBack(counter);
-      }
-      if (typeof count === "number" && counter >= count) {
-        if (repeat) {
-          counter = 0;
-        } else {
-          clearInterval(intervalId);
-        }
-      } else if (!count) {
-        if (typeof callBack === "function") {
-          await callBack();
-        }
-        clearInterval(intervalId);
-      }
-    }, time);
-
-    intervals[signalName] = {
-      id: intervalId,
-      clear: clear,
-      repeatOnCount: count,
-      repeat: repeat,
-      time: time,
-    };
-    localStorage.setItem("intervals", JSON.stringify(intervals));
-  }
-);
-
-ë.frozenVanilla("unregisterInterval", function (signalName) {
-  let storedIntervals = JSON.parse(localStorage.getItem("intervals"));
-  if (
-    storedIntervals[signalName] &&
-    storedIntervals[signalName].clear === "clear"
-  ) {
-    clearInterval(storedIntervals[signalName].id);
-  }
-});
-
-///thinking about this update where an interval controls signalBurst
-
-// ë.registerInterval(
+// ë.signalInterval(
 //   "myBurstWatcher",
 //   () => {
 //     // Check the condition here
 //     // For example, you could check if a certain value in vanillaPromise.passedFunction has changed
 //     if (vanillaPromise.passedFunction?.someValue !== previousValue) {
-//       // If the condition is met, return true to start the interval
+//       // If the condition is met, return true to start the signal
 //       return true;
 //     } else {
-//       // If the condition is not met, return false to prevent the interval from starting
+//       // If the condition is not met, return false to prevent the signal from starting
 //       return false;
 //     }
 //   },
 //   1000, // Interval duration
 //   true, // Repeat
 //   () => {
-//     // Callback function to be executed on each interval
+//     // Callback function to be executed on each signal
 //     // This is where you would put the logic for your background process
 //     // For example, you could call myBurst with an action to clear the cache
 //     ë.myBurst({
@@ -285,7 +223,7 @@ async function encryptData(data) {
 //   },
 //   "clear",
 //   () => {
-//     // This function will be executed when the interval is cleared
+//     // This function will be executed when the signal is cleared
 //   }
 // );
 

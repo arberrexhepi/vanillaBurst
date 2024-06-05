@@ -24,11 +24,13 @@
     text-align: center;
 }
 
+
+
 .headerbutton {
     min-height: 5vh;
 }
 
-button {
+button::not(.weatherapp-buttons) {
     font-size: calc(var(--base-font-size) * var(--button-text-title));
     min-width: 250px;
     max-width: 400px;
@@ -38,4 +40,29 @@ button {
 
 button:hover {
     transform: var(--hover-scale);
+}
+
+.weatherapp-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: auto;
+    justify-content: center;
+}
+
+.inner_button_wrapper {
+    display: flex;
+    grid-gap: 1vh;
+}
+
+.weatherapp-button {
+    background-color: var(--color-vanilla-blue);
+    border: none;
+    transition: var(--hover-transition);
+    max-width: 90%;
+    height: 5vh;
+    width: 5vh;
+    max-height: 10vh;
+    max-width: 10vh;
+    border-radius: 100%;
 }

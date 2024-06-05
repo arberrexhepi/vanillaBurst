@@ -92,8 +92,59 @@
       for (const customFunctionName of rollCall) {
         landingReference = customFunctionName;
         try {
-          ë[customFunctionName](vanillaPromises[customFunctionName]);
-          ë.storeBurst(vanillaPromises[customFunctionName]);
+          let thisSB =
+            vanillaPromises?.[customFunctionName]?.signalBurst?.[
+              vanillaPromises?.[customFunctionName]?.renderSchema?.landing
+            ]?.[customFunctionName] || null;
+
+          if (thisSB && thisSB.name && thisSB.init) {
+            console.log(JSON.stringify(thisSB) + "  thisSB");
+
+            if (!ë.signalStore.get(thisSB.name)) {
+              ë.signalStore(thisSB.name, {
+                [thisSB.name + "_runner"]: function (thisVanillaPromise) {
+                  ë.vanillaSignal({
+                    vanillaPromise: thisVanillaPromise,
+                    signalName: thisSB?.name,
+                    namespace: true, //this will only run in the namespaces that were set in the config myweatherConfig.js
+                    action: thisSB?.action,
+                    onEvent: thisSB?.onEvent,
+                    vanillaDOM: thisSB?.vanillaDOM,
+                    init: thisSB?.init ? thisSB.init : null, ///in
+                    count: 5,
+                    time: 1000,
+                    repeat: true,
+                    intermittent: thisSB?.intermittent
+                      ? thisSB.intermittent
+                      : null,
+                    callBack: thisSB?.callBack ? thisSB.callBack : null,
+                    clearable: thisSB.clearable, ///clear conditional function
+                    affectors: thisSB.affectors,
+                  });
+                },
+              });
+            }
+          }
+          try {
+            ë[customFunctionName](vanillaPromises[customFunctionName]);
+            ë.storeBurst(vanillaPromises[customFunctionName]);
+          } catch {
+            ë.vanillaMess(
+              `[${customFunctionName}.js]`,
+              [ë[customFunctionName], ë.storeBurst],
+              "array"
+            );
+          }
+
+          if (thisSB?.name && thisSB.init) {
+            let signalName = thisSB.name;
+            let thisVanillaPromise = vanillaPromises[customFunctionName];
+            if (ë.signalStore.get(signalName)) {
+              ë.signalStore
+                .get(signalName)
+                [`${signalName}_runner`](thisVanillaPromise);
+            }
+          }
         } catch (error) {
           ë.vanillaMess("render", error, "checking");
           throw new Error(
@@ -107,8 +158,14 @@
         ].seo;
 
       ë.setSeo(seo);
-
       ë.renderComplete = true;
+
+      let checkTimeSignal = ë.getSignal("timeSignal");
+      if (checkTimeSignal.id) {
+        ë.vanillaSignal({ signalName: "timeSignal", action: "go" });
+      } else {
+        ë.vanillaSignal({ signalName: "timeSignal", action: "go" });
+      }
 
       console.log(
         "%c🍦🎉 vanillaBurst COMPLETE 🎉🍦",

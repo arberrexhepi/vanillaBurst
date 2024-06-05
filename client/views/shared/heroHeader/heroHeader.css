@@ -1,6 +1,6 @@
 #myHeroHeader {
   text-align: center;
-  background-color: var(--color-vanilla-light);
+  /* background-color: var(--color-vanilla-light); */
   min-height: 70vh;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,6 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  min-height: 20vh;
   align-items: center;
 }
 
@@ -78,33 +77,21 @@
   max-width: 40vh;
 }
 
-.action-container {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
 
-.action-container p {
-  line-height: 1.6;
-  color: var(--color-vanilla-dark);
-  font-size: calc(var(--base-font-size) * var(--p-large-scale));
-}
+/* ë.frozenVanilla animated element */
 
-#myHeroHeader blockquote {
+
+.ë,
+.ë-newElement {
   color: var(--color-vanilla-pink);
-  min-height: 30vh;
-  max-width: 600px;
-  width: 60vw;
-  min-width: 300px;
-  margin: auto;
-  width: 80%;
-  padding: 0;
-  align-items: center;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  writing-mode: vertical-lr;
+  position: absolute;
+  font-size: 40vh;
+  opacity: 0.1;
+  display: none;
 }
+
+
 
 .icecream {
   background-image: var(--assets-var);
@@ -115,4 +102,5 @@
   width: 60vh;
   z-index: -1;
   opacity: 0.5;
+  display: none;
 }

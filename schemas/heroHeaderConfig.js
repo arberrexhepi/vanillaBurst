@@ -1,4 +1,4 @@
-ë.frozenVanilla("heroHeaderConfig", function () {
+ë.frozenVanilla("heroHeaderConfig", function (burstTo) {
   let heroHeaderConfig = {
     heroHeader: {
       dir: "client/views/shared/heroHeader/",
@@ -9,15 +9,15 @@
       cssPath: "client/views/shared/heroHeader/heroHeader.css",
       container: "myHeroHeader",
       originBurst: {
-        namespace: null,
+        namespace: [burstTo],
       },
       components: {
         documentationHeaderBlockquote: {
-          namespace: ["homeview", "gen"],
-          //parent: true,
+          namespace: ["homeview", "generate"],
+          parent: true,
           id: "blockquote-container",
           container: "blockquote-wrapper",
-          className: "blockquote",
+          classNames: "blockquote",
           children: `
           
           <blockquote>
@@ -31,10 +31,10 @@
         },
         generateHeaderBlockquote: {
           namespace: ["documentation"],
-          //parent: true,
+          parent: true,
           id: "blockquote-container",
           container: "blockquote-wrapper",
-          className: "blockquote",
+          classNames: "blockquote",
           children: `
           <blockquote>
           <small title="${ë.seo.title}">${ë.seo.title}</small>
@@ -50,21 +50,21 @@
           dir: "buttons/",
           id: "genbutton",
           container: "action-container",
-          className: "button round",
+          classNames: "button round",
           children: `
           <div class="button_wrapper">
-              <button class="headerbutton mygenbutton" data-route="gen">Go to Config Builder</button></div>
+              <button class="headerbutton mygenbutton" data-route="generate">Go to Config Builder</button></div>
               <br />
              
             `,
           eventHandlers: "submit:preventDefault",
         },
         docButtonHeader: {
-          namespace: ["homeview", "gen"],
+          namespace: ["homeview", "generate"],
           dir: "buttons/",
           id: "docbutton",
           container: "action-container",
-          className: "button round",
+          classNames: "button round",
           children: `
             <div class="button_wrapper">
             <button class="headerbutton mydocbutton" data-route="documentation">View Documentation</button></div>

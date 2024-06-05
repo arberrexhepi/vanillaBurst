@@ -62,11 +62,11 @@ let historyCount = 0;
     stateScripts(stateTag);
 
     function runState() {
-      let intervals = JSON.parse(localStorage.getItem("intervals"));
+      let signals = JSON.parse(localStorage.getItem("signals"));
 
-      if (intervals) {
-        for (let signalName in intervals) {
-          ë.unregisterInterval(signalName);
+      if (signals) {
+        for (let signalName in signals) {
+          ë.unregisterSignal(signalName);
         }
       }
 

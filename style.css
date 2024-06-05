@@ -87,7 +87,7 @@ body {
 
 body {
     display: none;
-    grid-template-rows: 15vh 75vh auto;
+    grid-template-rows: 15vh 75vh auto auto;
     grid-gap: 3vh;
     min-height: 100vh;
     min-width: 100%;
@@ -101,7 +101,9 @@ body {
 
 #mainNav {
     grid-row: 1;
+    padding: 0;
     width: 100vw;
+    min-width: 100vw;
     height: 100%;
     margin: auto;
     position: relative;
@@ -114,17 +116,38 @@ body {
     grid-row: 2;
     position: relative;
     min-width: 100vw;
+    width: 100vw;
+    padding: 0;
+    margin: auto;
     overflow: hidden;
 }
 
 #viewbox {
-    width: 100%;
+    width: 100vw;
+    min-width: 100vw;
+    padding: 0;
     grid-row: 3;
     display: flex;
     flex-wrap: wrap;
     max-width: 100vw;
     flex-grow: 1;
-    margin-bottom: 5vh;
+    margin: auto;
+    height: auto;
+    position: relative;
+    justify-self: center;
+}
+
+#myfooter {
+    grid-row: 4;
+    width: 100vw;
+    min-width: 100vw;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100vw;
+    flex-grow: 1;
+    margin: auto;
+    height: auto;
     position: relative;
     justify-self: center;
 }
@@ -345,6 +368,7 @@ article {
     flex-direction: column;
     grid-gap: 15vh;
     padding-top: 10vh;
+    padding-bottom: 10vh;
 }
 
 
@@ -469,7 +493,7 @@ article {
     .hero-scoops.scoop-wrapper {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr auto;
         grid-gap: 5vh;
     }
 
@@ -502,21 +526,28 @@ article {
 }
 
 
-/* ë.frozenVanilla animated element */
 
-
-.ë,
-.ë-newElement {
-    color: var(--color-vanilla-pink);
-    writing-mode: vertical-lr;
-    position: absolute;
-    font-size: 40vh;
-    opacity: 0.1;
-}
 
 @media (max-width: 600px) {}
 
 /*for any animation spawn*/
 .spawn {
     display: none;
+}
+
+#fixed-content {
+    grid-row: 2;
+    text-align: center;
+    background-color: var(--color-vanilla-light);
+    min-height: 70vh;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    z-index: 0;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100vw;
+    position: absolute;
+    top: 20vh;
 }

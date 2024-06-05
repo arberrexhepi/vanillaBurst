@@ -19,6 +19,8 @@ RewriteEngine On
     # Dynamically rewrite any path to /?burst=path
     RewriteCond %{REQUEST_URI} !^/env/vanilla\.txt$
     RewriteCond %{REQUEST_URI} !^vanilla\.txt$
+    RewriteCond %{REQUEST_URI} !^/env/vanilla\.css$
+    RewriteCond %{REQUEST_URI} !^vanilla\.css$
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)$ /?burst=$1 [L,QSA,R=301]
