@@ -1,4 +1,4 @@
-ë.frozenVanilla("navConfig", function () {
+ë.frozenVanilla("navConfig", function (burstTo) {
   ///this is as basic as a Shared package function aka Scoop can get!
   let navConfig = {
     nav: {
@@ -6,10 +6,10 @@
       functionFile: "nav",
       render: "pause",
       htmlPath: "client/components/nav/nav.html",
-      cssPath: "client/components/nav/nav.css",
+      cssPath: "client/components/nav/css/style.css",
       container: "mainNav",
       originBurst: {
-        namespace: null,
+        namespace: [burstTo, "homeview", "generate", "documentation"],
       },
     },
   };

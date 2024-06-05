@@ -29,3 +29,5 @@
     return vanillaPromise;
   }
 );
+
+//signalBurst gets packaged to it once all the files are promised

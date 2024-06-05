@@ -496,7 +496,9 @@
             ? 1
             : 0;
 
-        ë.registerInterval(
+        ë.simpleSignal(
+          animationConfig.vanillaPromise,
+          animationConfig.namespace,
           animationConfig.target + "watchingDirection",
           () => {
             root.style.setProperty(
@@ -517,6 +519,11 @@
           },
           null
         );
+      }
+      let domTargets = document.querySelectorAll(animationConfig.target);
+
+      for (let target of domTargets) {
+        target.style.display = "unset";
       }
     }
 
@@ -683,12 +690,12 @@
       canvasPositionDeltas,
       animationTarget
     ) {
-      setAnimationRootVariables(animationConfig, effect);
       set3DScaleVariables(animationConfig);
+      setAnimationRootVariables(animationConfig, effect);
+
       document
         .querySelector(animationConfig.target)
         .classList.add(effect + "-" + animationTarget);
-
       return true;
     }
 
@@ -698,11 +705,13 @@
       canvasPositionDeltas,
       animationTarget
     ) {
-      setAnimationRootVariables(animationConfig, animationTarget);
       setPositionVariables(animationConfig, animationTarget);
+      setAnimationRootVariables(animationConfig, animationTarget);
+
       document
         .querySelector(animationConfig.target)
         .classList.add(effect + "-" + animationTarget);
+
       return true;
     }
   }

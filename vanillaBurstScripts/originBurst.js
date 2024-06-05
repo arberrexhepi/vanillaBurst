@@ -46,10 +46,10 @@
 
     // Initialize the function name entry under the landing key if not already present
     if (!originBurst[landingKey][functionName]) {
-      // console.table({
-      //   Status: "...Spreading customFunctions originBurst",
-      //   Scope: `${landingKey} > ${functionName}`,
-      // });
+      ë.logSpacer({
+        Status: "...Spreading customFunctions originBurst",
+        Scope: `${landingKey} > ${functionName}`,
+      });
 
       originBurst[landingKey][functionName] = {
         fromSchema: passedFunction?.originBurst || null,

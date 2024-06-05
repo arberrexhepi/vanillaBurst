@@ -1,16 +1,65 @@
-ë.frozenVanilla("myweatherConfig", function () {
+ë.frozenVanilla("myweatherConfig", function (burstTo) {
   //this is featured as a vanillaScoop on the main landing page "homview"
   let myweatherConfig = {
     myweather: {
       dir: "client/components/myweather/",
       functionFile: "myweather",
       render: "pause",
-      originBurst: {},
+      originBurst: {
+        namespace: [burstTo], //auto assign namespace to where it was included as a package, or include your own
+      },
       htmlPath: "client/components/myweather/myweather.html",
-      cssPath: "client/components/myweather/myweather.css",
+      cssPath: "client/components/myweather/css/style.css",
       container: "weather-wrapper",
       classNames: "weather-wrapper scoop card",
-      //components: {}, //this Scoop could have its own components, ie if a Scoop is a dashboard Scoop, you could have lots!
+      signal: {
+        verbose: false,
+        clearable: true,
+        name: "weatherSignal",
+        action: "pause",
+        onEvent: ["#start-weather-signal", "click"],
+        signalStore: "signalStore.weatherSignal",
+        init: "updateWeatherInfo",
+        intermittent: "weatherRefreshDisplay",
+        callBack: "updateWeatherInfo",
+        affectors: [
+          "start-weather-signal",
+          "pause-weather-signal",
+          "reset-weather-signal",
+          "remove-weather-signal",
+        ],
+        vanillaDOM: {
+          component: "weatherappButtons",
+          container: ".inner_button_wrapper",
+          clear: true,
+        },
+        affectors: [
+          ["#pause-weather-signal", "click", "pause"],
+          ["#start-weather-signal", "click", "go"],
+          ["#reset-weather-signal", "click", "reset"],
+          ["#remove-weather-signal", "click", "remove", "cache"],
+        ],
+      },
+      components: {
+        weatherappButtons: {
+          namespace: ["homeview"],
+          cache: true,
+          dir: "buttons/",
+          id: "weatherappButtons",
+          container: "button-wrapper",
+          classNames: "weatherapp-buttons",
+          children: `
+            <div class="inner_button_wrapper">
+            <button id="start-weather-signal" class="weatherapp-button round" data-route="documentation">Start</button>
+            <button id="pause-weather-signal" class="weatherapp-button  round" data-route="documentation">Pause</button>
+            <button id="reset-weather-signal" class="weatherapp-button  round" data-route="documentation">Reset</button>
+            <button id="remove-weather-signal" class="weatherapp-button  round" data-route="documentation">Remove</button>
+            </div>
+            <br />
+            `,
+          eventHandlers: "submit:preventDefault",
+        },
+      }, //this Scoop could have its own components, ie if a Scoop is a dashboard Scoop, you could have lots! A scoop can behave like a component when included in a view but it is a static component, in the sense that ë.updateComponent cannot be used with static html files.
       dataSchema: {
         resultTarget: "myweather",
         returnResult: true,

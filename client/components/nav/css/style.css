@@ -1,5 +1,5 @@
 #mainNav-container {
-    color: var(--color-vanilla-red);
+    color: var(--color-vanilla-dark);
     text-align: center;
     height: 50%;
     width: 90%;
@@ -47,7 +47,7 @@
 
 #mainNav ul li span {
     display: inline-block;
-    color: var(--color-vanilla-red);
+    color: var(--color-vanilla-dark);
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
@@ -59,6 +59,11 @@
 
 #mainNav ul li span:hover,
 #mainNav ul li span:active {
+    background-color: var(--color-vanilla-red);
+    color: white;
+}
+
+#mainNav ul li span.active {
     background-color: var(--color-vanilla-red);
     color: white;
 }

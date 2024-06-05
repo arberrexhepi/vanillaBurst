@@ -71,6 +71,12 @@
             passedFunction,
             updatedOriginBurst
           );
+          let signalBurst = await ë.storeBurst(vanillaPromise);
+          if (!vanillaPromise?.signalBurst) {
+            vanillaPromise["signalBurst"] = {};
+          }
+          vanillaPromise.signalBurst = signalBurst;
+          console.log(vanillaPromise.signalBurst);
           vanillaPromises[customFunctionName] = vanillaPromise;
 
           if (typeof ë[customFunctionName] === "function") {
@@ -91,8 +97,6 @@
               )
             );
           }
-
-          ë.storeBurst(vanillaPromise);
 
           if (count >= maxCount) {
             ë.logSpacer(

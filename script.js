@@ -1,12 +1,12 @@
 const mode = "live"; // "dev" or "live"
-const version = "0.9.0.3";
+const version = "0.9.0.6";
 // Define base URLs for different modes
 const baseUrls = {
   dev: "/",
   live: "/",
 };
 
-const systemLogs = false;
+const systemLogs = true;
 const localCacheMax = 5000; //5mb
 
 // Define and freeze the frozenVanilla utility

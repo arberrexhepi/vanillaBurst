@@ -1,4 +1,4 @@
-ë.frozenVanilla("gen", function (vanillaPromise) {
+ë.frozenVanilla("generate", function (vanillaPromise) {
   ë.logSpacer(vanillaPromise.this + " ran");
 
   let subDomClicks = 0;
@@ -23,7 +23,7 @@
       nodeConfigBuild();
     });
 
-  //move this to its own functionName, this gen view might get more complex
+  //move this to its own functionName, this generate view might get more complex
   function nodeConfigBuild() {
     const configCanvas = document.querySelector(".config-canvas");
     const nodes = configCanvas.querySelectorAll(".parentnode");

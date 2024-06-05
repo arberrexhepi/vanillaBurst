@@ -51,7 +51,7 @@ const config = ë.frozenVanilla(
       }
     }
 
-    ë.logSpacer("Schema built:", schema, "", true);
+    ë.logSpacer("Schema build successful", "", true);
     return schema;
   },
   false

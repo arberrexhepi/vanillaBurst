@@ -133,7 +133,15 @@ const vanillaApp = ë.frozenVanilla(
             baseUrl + "vanillaBurstScripts/singlePromise.js",
             baseUrl + "vanillaBurstScripts/originBurst.js",
             baseUrl + "vanillaBurstScripts/childFunction.js",
+            /////signals
+            baseUrl + "vanillaBurstScripts/signals/getSignal.js",
+            baseUrl + "vanillaBurstScripts/signals/resetSignal.js",
+            baseUrl + "vanillaBurstScripts/signals/simpleSignal.js",
+            baseUrl + "vanillaBurstScripts/signals/signalInterval.js",
+            baseUrl + "vanillaBurstScripts/signals/one.js",
+            baseUrl + "vanillaBurstScripts/signals/vanillaSignal.js",
             baseUrl + "vanillaBurstScripts/signals.js",
+            //////////
             baseUrl + "vanillaBurstScripts/render.js",
           ]),
           writable: false,

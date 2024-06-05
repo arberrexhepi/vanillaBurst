@@ -1,61 +1,62 @@
 ë.frozenVanilla("myweather", async function (vanillaPromise) {
   // Your function logic here
 
+  //getting some info to see what's available
   ë.logSpacer(vanillaPromise.this + "is ready and running", null, null, true);
 
-  let weatherInfo;
-  let counter = 0;
-  let city;
+  let weatherSB =
+    vanillaPromise.signalBurst[vanillaPromise.renderSchema.landing].myweather;
 
-  updateWeatherInfo(counter, city);
+  ///will show the signals available in signalStore to attach functions and affectors to
+  ë.logSpacer("This is the signalBurst: ", weatherSB, null, true);
+  /////////////
 
-  function updateWeatherInfo(counter, city) {
-    // Get a random city from the cities array
-    const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
-    let randomCity = cities[Math.floor(Math.random() * cities.length)];
+  ë.signalStore("weatherSignal_runner", {
+    weatherRefreshDisplay: async function (data) {
+      document.querySelector(".weather-timer").innerHTML = data.counter;
 
-    // Split the URL at '=' and replace the second part with the random city
-    let urlParts = vanillaPromise.passedFunction.dataSchema.url.split("=");
-    urlParts[1] = randomCity;
-    vanillaPromise.passedFunction.dataSchema.url = urlParts.join("=");
+      if (data.action === "remove" || data.action === "reset") {
+        if (data.action === "reset") {
+          document.getElementById("reset-weather-signal").disabled = true;
+        }
 
-    // Fetch the weather data and update the DOM
-    ë.serverRender(vanillaPromise.passedFunction.dataSchema).then(
-      (weatherInfo) => {
-        const parsedWeatherInfo = JSON.parse(weatherInfo);
-        runWeatherTopping(parsedWeatherInfo);
+        if (data.action === "remove") {
+          let weatherButtons = document.querySelectorAll(
+            `#weatherappButtons-${vanillaPromise.renderSchema.landing}_myweather .weatherapp-button`
+          );
+          weatherButtons.forEach((button) => (button.disabled = true));
+        }
       }
-    );
-  }
+    },
+    updateWeatherInfo: async function (data) {
+      ë.logSpacer("status at callback " + JSON.stringify(data.action));
 
-  // IT COULD BE ITS OWN SIGNAL if it there was no Display Counter, so i'll just leave this commented out for reference
-  // ë.registerInterval(
-  //   "serverRepeatableWeatherCall",
-  //   20,
-  //   60000,
-  //   (repeat = true),
-  //   updateWeatherInfo,
-  //   "clear",
-  //   null
-  // );
+      if (data.action === "remove") {
+        document.getElementById("start-weather-signal").ariaDisabled;
+        return { callBackStatus: false };
+      }
 
-  function weatherRefreshDisplay(counter) {
-    document.querySelector(".weather-timer").innerHTML = counter;
-    if (counter === 60) {
-      updateWeatherInfo(counter, city);
-    }
-  }
+      if (data.action !== "completed" && data.action !== "init") {
+        return { callBackStatus: false };
+      }
 
-  ë.registerInterval(
-    "repeatable-timer",
-    null,
-    60,
-    1000,
-    (repeat = true),
-    weatherRefreshDisplay,
-    "clear",
-    null
-  );
+      const url = vanillaPromise.passedFunction.dataSchema.url;
+      const cities = vanillaPromise.passedFunction.dataSchema.data.cities;
+      const randomCity = cities[Math.floor(Math.random() * cities.length)];
+      vanillaPromise.passedFunction.dataSchema.url = url.replace(
+        /=.*/,
+        `=${randomCity}`
+      );
+
+      ë.serverRender(vanillaPromise.passedFunction.dataSchema).then(
+        (weatherInfo) => {
+          runWeatherTopping(JSON.parse(weatherInfo));
+        }
+      );
+
+      return { callBackStatus: data.signalStatus };
+    },
+  });
 
   function runWeatherTopping(parsedWeatherInfo) {
     // Check if all necessary DOM elements exist
@@ -85,4 +86,6 @@
       setTimeout(() => runWeatherTopping(parsedWeatherInfo), 1000);
     }
   }
+
+  ///a function the callBack uses, if myweather was a component within a config ë.updateComponent could be used to update and cache to componentBurst (see footer.js), but what vanillaBurst doesn't do, vanilla JS does, hence vanillaBurst!
 });

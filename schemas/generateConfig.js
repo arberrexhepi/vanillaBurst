@@ -1,5 +1,5 @@
-ë.frozenVanilla("genConfig", function (sharedParts) {
-  let genConfig = {};
+ë.frozenVanilla("generateConfig", function (sharedParts) {
+  let generateConfig = {};
 
   let seo = {
     title: "Generate Configs",
@@ -22,14 +22,14 @@
   };
 
   let passedConfig = {
-    gen: {
+    generate: {
       role: "parent",
-      dir: "client/views/gen/",
-      functionFile: "gen",
+      dir: "client/views/generate/",
+      functionFile: "generate",
       render: "pause",
-      originBurst: "gen",
-      htmlPath: "client/views/gen/gen.html",
-      cssPath: "client/views/gen/gen.css",
+      originBurst: "generate",
+      htmlPath: "client/views/generate/generate.html",
+      cssPath: "client/views/generate/generate.css",
       container: "viewbox",
       ...{ seo: seo },
       components: {
@@ -37,7 +37,7 @@
           dir: "buttons/",
           id: "docbutton",
           container: "doc-button_wrapper",
-          className: "button round",
+          classNames: "button round",
           children: `
           <blockquote>
           <button class="headerbutton mydocbutton" data-route="documentation"> Documentation</button>
@@ -50,7 +50,7 @@
           parent: true,
           id: "parentnode",
           container: "config-canvas",
-          className: "parentnode genform card hover",
+          classNames: "parentnode genform card hover",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Landing Config</legend>
@@ -75,7 +75,7 @@
               <label for="container">Container:</label><small>(required if HTML PATH)</small>
               <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
   
-\              <fieldset class="componentTemplate">
+              <fieldset class="componentTemplate">
                 <div class="componentTemplate-container">
                   <legend>Component Configuration</legend>
                   <div class="subDOMFieldsContainer">
@@ -112,7 +112,7 @@
           parent: true,
           id: "functionnode",
           container: "config-canvas",
-          className: "genform card hover",
+          classNames: "genform card hover",
           children: `
           <form id="parentConfigForm">
           <legend class="form-title">Function Config</legend>
@@ -125,7 +125,7 @@
           parent: true,
           id: "configresult",
           container: "config-canvas",
-          className: "config-result-container",
+          classNames: "config-result-container",
           children: `<pre id="configlog" class="config-result">[vanillaBurst] Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
         },
       },
@@ -133,9 +133,9 @@
     ...sharedParts,
   };
 
-  genConfig = { ...vanillaConfig("gen", passedConfig) };
+  generateConfig = { ...vanillaConfig("generate", passedConfig) };
 
   ë.seo = seo;
 
-  return genConfig;
+  return generateConfig;
 });

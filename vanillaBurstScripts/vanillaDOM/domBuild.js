@@ -72,25 +72,22 @@
     }
 
     const functionFile = passedFunction.functionFile;
-    const htmlPath = ë.baseUrl + passedFunction.htmlPath;
+    let htmlPath;
+    if (passedFunction?.htmlPath) {
+      htmlPath = ë.baseUrl + passedFunction?.htmlPath;
+    }
     const cssPath = passedFunction.cssPath
       ? ë.baseUrl + passedFunction.cssPath
       : null;
     const container = passedFunction.container;
-    const classNames = passedFunction.classNames;
 
     let originBurst = vanillaPromise.originBurst;
 
     const targetElementPromise = new Promise((resolve, reject) => {
-      originBurst = JSON.parse(localStorage.getItem("originBurst")) || {};
-      let element = ë.createNewElement(container);
+      const classNames = passedFunction?.classNames;
+      let element = ë.createNewElement(container, classNames);
 
       ///within this function we could check for cache:true, false, dynamic or whatever else to resolve in this promise to be passed to htmlFileLoader()
-      if (!originBurst?.[originFunction]?.[functionFile]?.htmlResult) {
-        //handle potential future features
-      } else {
-        //handle potential future features
-      }
 
       element
         ? resolve(element)
@@ -100,7 +97,7 @@
     targetElementPromise
       .then((targetElement) => {
         ë.htmlFileLoader(
-          { htmlPath, cssPath, originFunction, functionFile },
+          { htmlPath, cssPath, originFunction, functionFile, passedFunction },
           (htmlContent) =>
             ë.updateContent(htmlContent, targetElement, false, functionFile)
         );
@@ -118,47 +115,8 @@
 
     ë.updateContent = (functionHTML, targetElement, cached, functionFile) => {
       if (functionHTML) {
-        // Parse the HTML string into a DOM structure
-        try {
-          let parser = new DOMParser();
-          let doc = parser.parseFromString(functionHTML, "text/html");
-
-          // If doc is not defined, create a new div and set its innerHTML to functionHTML
-          if (!doc) {
-            let div = document.createElement("div");
-            div.innerHTML = functionHTML;
-            doc = div;
-          }
-
-          // Add a nonce to img tags
-          let imgTags = doc.getElementsByTagName("img");
-          for (let img of imgTags) {
-            let nonceString = ë.nonce();
-            ë.nonceBack(nonceString);
-            img.setAttribute("nonce", nonceString);
-          }
-
-          // // Serialize the DOM structure back into a string
-          let serializer = new XMLSerializer();
-          let serializedHTML = serializer.serializeToString(doc);
-          functionHTML = serializedHTML;
-        } catch (error) {
-          console.error(
-            "An error occurred while parsing the HTML, adding nonces to img elements, and serializing the HTML:",
-            error
-          );
-        }
-        if (classNames) {
-          let classNameList = classNames.split(" ");
-          for (let className of classNameList) {
-            targetElement.classList.add(className);
-          }
-        }
-
-        // Set the innerHTML of the target element
         targetElement.innerHTML = functionHTML;
 
-        //alert("here is " + functionHTML);
         ë.updateVanillaPromise(
           vanillaPromise,
           targetElement,
@@ -173,15 +131,27 @@
   }
 );
 
-ë.frozenVanilla("createNewElement", async function (container) {
+ë.frozenVanilla("createNewElement", async function (container, classNames) {
   //alert(container);
   let targetElement = document.getElementById(container);
+
   if (!targetElement) {
     targetElement = document.createElement("div");
 
     targetElement.id = container;
     targetElement.setAttribute("nonce", ë.nonceBack());
-    document.body.appendChild(targetElement);
+
+    if (document.body.childNodes.length > 0) {
+      document.body.insertBefore(targetElement, document.body.firstChild);
+    } else {
+      document.body.appendChild(targetElement);
+    }
+  }
+  if (classNames) {
+    let classNameList = classNames.trim().replace(/\s+/g, " ").split(" ");
+    for (let className of classNameList) {
+      targetElement.classList.add(className);
+    }
   }
 
   return targetElement;

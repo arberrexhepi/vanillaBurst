@@ -7,7 +7,7 @@
 switch (ë.mode) {
   case "dev": {
     ë.frozenVanilla("domainUrl", "http://vanillaburstgame");
-    ë.frozenVanilla("vanillaStock", false);
+    ë.frozenVanilla("vanillaStock", true);
     break;
   }
   case "live": {
@@ -26,7 +26,7 @@ switch (ë.mode) {
     // "viewWithoutPackage", //see [PACKAGELESS VIEWS] below
     "homeview",
     "documentation",
-    "gen",
+    "generate",
   ],
   false
 );
@@ -52,21 +52,23 @@ switch (ë.mode) {
     homeview: ["appShells, toppings"], //[VIEW with package]
     myweather: false, //[SHARED PACKAGE FUNCTION]
     nav: false, //[SHARED PACKAGE FUNCTION]
+    myfooter: false,
     heroHeader: false, //[SHARED PACKAGE FUNCTION]
     documentation: ["appShells"], //[VIEW with package]
-    gen: ["appShells"], //[VIEW with package]
+    generate: ["appShells"], //[VIEW with package]
   })
 );
-ë.frozenVanilla("appShells", ["nav", "heroHeader"]);
+ë.frozenVanilla("appShells", ["nav", "heroHeader", "myfooter"]);
 ë.frozenVanilla("toppings", ["myweather"]); //this is particular package is a scoop but it is an internal scoop not installed as plugin, so it can be set as a package
 //'example':['uiPackage'], //['uiPackage'] means this function spreads configs from ë.uiPackage
 // Add additional levels as needed
 
 //scoops should be in scoops/scoopName/scoopName.js
 ë.frozenVanilla("vanillaScoops", {
-  //vanillaAnimation: ["homeview", "gen", "documentation"], OR set it as global as below
+  //vanillaAnimation: ["homeview", "generate", "documentation"], OR set it as global as below
   vanillaAnimation: true,
   vanillaImages: true,
+  linkBurst: true,
   gptScoop: ["homeview"],
 });
 

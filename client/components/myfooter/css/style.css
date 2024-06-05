@@ -1,0 +1,12 @@
+#myfooter-wrapper {
+    background-color: var(--color-vanilla-dark);
+    color: var(--color-vanilla-light);
+    padding-bottom: 15vh;
+    padding-top: 5vh;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#myfooter-wrapper ul li {
+    cursor: pointer;
+}

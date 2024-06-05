@@ -52,14 +52,19 @@
       }
     }
 
-    function createSanitizedElement(id, sanitizedChildren, className) {
+    function createSanitizedElement(id, sanitizedChildren, classNames) {
       let parser = new DOMParser();
       let doc = parser.parseFromString(sanitizedChildren, "text/html");
 
       let elementBuild = document.createElement("div");
       elementBuild.id = id;
       elementBuild.setAttribute("nonce", ë.nonceBack());
-      elementBuild.className = className;
+      if (classNames) {
+        let classNameList = classNames.trim().replace(/\s+/g, " ").split(" ");
+        for (let className of classNameList) {
+          elementBuild.classList.add(className);
+        }
+      }
       while (doc.body.firstChild) {
         elementBuild.appendChild(doc.body.firstChild);
       }
@@ -83,7 +88,7 @@
                 id,
                 dir,
                 namespace,
-                className,
+                classNames,
                 children,
                 container,
                 cache,
@@ -145,7 +150,7 @@
                 let elementBuild = createSanitizedElement(
                   id,
                   sanitizedChildren,
-                  className
+                  classNames
                 );
                 let elements = Array.from(
                   targetContainer.querySelectorAll("*")
