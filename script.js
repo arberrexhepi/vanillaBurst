@@ -6,7 +6,7 @@ const baseUrls = {
   live: "/",
 };
 
-const systemLogs = true;
+const systemLogs = false;
 const localCacheMax = 5000; //5mb
 
 // Define and freeze the frozenVanilla utility
