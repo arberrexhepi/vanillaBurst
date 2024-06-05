@@ -7,7 +7,7 @@
 switch (ë.mode) {
   case "dev": {
     ë.frozenVanilla("domainUrl", "http://vanillaburstgame");
-    ë.frozenVanilla("vanillaStock", true);
+    ë.frozenVanilla("vanillaStock", false);
     break;
   }
   case "live": {
