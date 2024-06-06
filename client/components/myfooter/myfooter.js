@@ -1,7 +1,7 @@
 ë.frozenVanilla("myfooter", async function (vanillaPromise) {
   // Your function logic here
 
-  console.log(vanillaPromise.this + "is ready and running");
+  ë.logSpacer(vanillaPromise.this + "is ready and running");
 
   let html = "";
   for (let key of Object.keys(vanillaPromise.schema)) {

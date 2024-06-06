@@ -79,7 +79,7 @@ try {
   } else {
     return this.signalStore.get(namespace)[functionName];
   }
-});
+}); //WIP
 
 ë.frozenVanilla("storeBurst", function (vanillaPromise, signalObject) {
   return new Promise((resolve, reject) => {
@@ -120,10 +120,14 @@ try {
         [vanillaPromise.this]: {
           verbose: vanillaPromise.passedFunction?.signal?.verbose || false,
           name: vanillaPromise.passedFunction?.signal?.name || null,
+          namespace: vanillaPromise.passedFunction?.signal?.namespace || null,
           signalStore:
             vanillaPromise.passedFunction?.signal?.signalStore || null,
           action: vanillaPromise.passedFunction?.signal?.action || null,
           onEvent: vanillaPromise.passedFunction?.signal?.onEvent,
+          count: vanillaPromise.passedFunction?.signal?.count || null,
+          time: vanillaPromise.passedFunction?.signal?.time || null,
+          repeat: vanillaPromise.passedFunction?.signal?.repeat || null,
           init: vanillaPromise.passedFunction?.signal?.init,
           intermittent: vanillaPromise.passedFunction?.signal?.intermittent,
           callBack: vanillaPromise.passedFunction?.signal?.callBack,

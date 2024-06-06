@@ -7,7 +7,9 @@
   }
 
   let signals = JSON.parse(localStorage.getItem(storeSignalName));
-  console.log(JSON.stringify(signals));
+  if (verbose) {
+    ë.logSpacer(JSON.stringify(signals));
+  }
   let targetsInterval = signals?.[signalName]
     ? signals?.[signalName]
     : undefined;

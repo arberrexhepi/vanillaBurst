@@ -98,22 +98,22 @@
             ]?.[customFunctionName] || null;
 
           if (thisSB && thisSB.name && thisSB.init) {
-            console.log(JSON.stringify(thisSB) + "  thisSB");
-
             if (!ë.signalStore.get(thisSB.name)) {
+              ë.logSpacer("Registering signal as runner: " + thisSB.name);
+
               ë.signalStore(thisSB.name, {
                 [thisSB.name + "_runner"]: function (thisVanillaPromise) {
                   ë.vanillaSignal({
                     vanillaPromise: thisVanillaPromise,
                     signalName: thisSB?.name,
-                    namespace: true, //this will only run in the namespaces that were set in the config myweatherConfig.js
+                    namespace: thisSB?.namespace ? thisSB?.namespace : null, //this will only run in the namespaces in the config myweatherConfig.js
                     action: thisSB?.action,
                     onEvent: thisSB?.onEvent,
                     vanillaDOM: thisSB?.vanillaDOM,
                     init: thisSB?.init ? thisSB.init : null, ///in
-                    count: 5,
-                    time: 1000,
-                    repeat: true,
+                    count: thisSB?.count ? thisSB.count : null,
+                    time: thisSB?.time ? thisSB.time : null,
+                    repeat: thisSB?.repeat ? thisSB.repeat : null,
                     intermittent: thisSB?.intermittent
                       ? thisSB.intermittent
                       : null,
@@ -166,6 +166,7 @@
       } else {
         ë.vanillaSignal({ signalName: "timeSignal", action: "go" });
       }
+      ë.logSpacer("Here is your landing Schema:", vanillaPromises);
 
       console.log(
         "%c🍦🎉 vanillaBurst COMPLETE 🎉🍦",

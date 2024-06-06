@@ -76,7 +76,6 @@
             vanillaPromise["signalBurst"] = {};
           }
           vanillaPromise.signalBurst = signalBurst;
-          console.log(vanillaPromise.signalBurst);
           vanillaPromises[customFunctionName] = vanillaPromise;
 
           if (typeof ë[customFunctionName] === "function") {

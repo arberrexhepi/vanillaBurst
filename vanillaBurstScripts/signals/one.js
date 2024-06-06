@@ -44,7 +44,7 @@
                 storedMode,
               } = affectSignal(signalObject);
 
-              // Later, when creating eventData...
+              // will have to get some of this data from attributes
               let eventData = {
                 type: event, // or any other event type you want
                 cache: cache ? cache : "no-cache",
@@ -53,19 +53,18 @@
                 currentTargetId: element.id,
                 attributes: element.attributes,
                 currentTargetClass: element.classList,
-                clientX: clientX,
-                clientY: clientY,
+                clientX: clientX, //fix missing data
+                clientY: clientY, //fix missing data
               };
 
-              alert(eventData.cache + "affectSignal");
-
-              console.log("Event Data:", eventData);
+              ë.logSpacer("Event Data:", eventData);
 
               ë.logSpacer(`signal: ${JSON.stringify(signal)} 
                           signalName: ${signalName} 
                           storeSignalname: ${storeSignalName}
                           action: ${action}
                           storedMode" ${storedMode}
+                          cached: ${eventData.cache}
                           `);
 
               let currentCase;
@@ -112,7 +111,7 @@
             });
             break;
           default:
-            console.log("Event not handled:", event);
+            ë.logSpacer("Event not handled:", event);
             return false;
         }
       }
