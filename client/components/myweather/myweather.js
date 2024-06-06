@@ -13,7 +13,10 @@
 
   ë.signalStore("weatherSignal_runner", {
     weatherRefreshDisplay: async function (data) {
-      document.querySelector(".weather-timer").innerHTML = data.counter;
+      let weatherTimer = document.querySelector(".weather-timer");
+      if (weatherTimer) {
+        weatherTimer.innerHTML = data.counter;
+      }
 
       if (data.action === "remove" || data.action === "reset") {
         if (data.action === "reset") {
@@ -25,6 +28,18 @@
             `#weatherappButtons-${vanillaPromise.renderSchema.landing}_myweather .weatherapp-button`
           );
           weatherButtons.forEach((button) => (button.disabled = true));
+
+          ë.updateComponent(
+            vanillaPromise,
+            {
+              clear: true,
+              position: 0,
+              tag: "div",
+              html: ["You have removed this signal for this session."],
+            },
+            "timerInfo",
+            "#timer-info-container"
+          );
         }
       }
     },

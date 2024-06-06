@@ -84,7 +84,7 @@
     );
 
     ë.logSpacer(
-      console.table({ Result: originBurst[landingKey][functionName] }),
+      { Result: originBurst[landingKey][functionName] },
       null,
       null,
       true

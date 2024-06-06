@@ -16,10 +16,14 @@
         verbose: false,
         clearable: true,
         name: "weatherSignal",
+        namespace: true,
         action: "pause",
         onEvent: ["#start-weather-signal", "click"],
         signalStore: "signalStore.weatherSignal",
         init: "updateWeatherInfo",
+        count: 60,
+        time: 1000,
+        repeat: true,
         intermittent: "weatherRefreshDisplay",
         callBack: "updateWeatherInfo",
         affectors: [
@@ -41,6 +45,25 @@
         ],
       },
       components: {
+        timerInfo: {
+          namespace: ["homeview"],
+          cache: true,
+          parent: false, // if this component doesn't have a parent component
+          id: "timerInfo",
+          container: "timer-wrapper",
+          classNames: "timer-info",
+          children: `
+            <div id="timer-info-container">
+              <p id="p1">This Scoop updates every minute.</p>
+              <p id="p2">It uses data from</p>
+              <p id="p3"><code>dataSchema</code></p>
+            </div>
+            <div id="weather-timer-container" class="weather-timer-container">
+              <div class="weather-timer" id="weather-timer">0</div>
+            </div>
+            </div>
+          `,
+        },
         weatherappButtons: {
           namespace: ["homeview"],
           cache: true,
