@@ -16,6 +16,7 @@
         linkTag.setAttribute("href", path);
         linkTag.setAttribute("data-css-path", path);
         linkTag.setAttribute("nonce", nonceString);
+        linkTag.setAttribute("type", "text/css");
         document.head.appendChild(linkTag);
       }
     }
