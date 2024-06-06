@@ -16,6 +16,7 @@
         footerlinks: {
           id: "footerlinks",
           container: "mainFooter",
+          dir: "myfooter/",
           classNames: "footerlinks",
           cache: true,
           children: `
