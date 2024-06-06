@@ -48,7 +48,7 @@
         timerInfo: {
           namespace: ["homeview"],
           cache: true,
-          parent: false, // if this component doesn't have a parent component
+          dir: "myweather/",
           id: "timerInfo",
           container: "timer-wrapper",
           classNames: "timer-info",
