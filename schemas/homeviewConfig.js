@@ -23,15 +23,18 @@
   let passedConfig = {
     homeview: {
       role: "parent",
-      dir: "client/views/homeview/",
-      functionFile: "homeview",
+      fetchDOM: true,
       render: "pause",
       originBurst: {},
-      htmlPath: "client/views/homeview/homeview.html",
-      cssPath: "client/views/homeview/homeview.css",
-      cssPack: [""],
       container: "viewbox",
-      components: {},
+      components: {
+        // fetchComponents: {
+        //   myweather$1: {
+        //     dir: "myweather",
+        //     data: [{}],
+        //   },
+        // },
+      },
       ...{ seo: seo },
     },
 

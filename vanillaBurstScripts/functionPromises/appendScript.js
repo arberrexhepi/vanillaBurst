@@ -13,6 +13,9 @@ function getNonce() {
 
       let baseCustomFunctionDirectory = baseUrl;
       let customFunctionDirectory = customFunction.dir;
+      if (customFunctionDirectory === "parent") {
+        customFunctionDirectory = `client/views/${renderSchema.landing}/functions/`;
+      }
       let customFunctionUrl =
         baseCustomFunctionDirectory +
         customFunctionDirectory +
@@ -56,12 +59,12 @@ function getNonce() {
         })
         .catch((error) => {
           ë.logSpacer(
-            console.error("Error loading script:", fetchUrl, error),
+            console.error("Error loading script:", customFunctionUrl, error),
             null,
             null,
             true
           );
-          reject(new Error(`Error loading script: ${fetchUrl}`));
+          reject(new Error(`Error loading script: ${customFunctionUrl}`));
         });
     });
   }

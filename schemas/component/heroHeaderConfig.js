@@ -1,12 +1,9 @@
 ë.frozenVanilla("heroHeaderConfig", function (burstTo) {
   let heroHeaderConfig = {
     heroHeader: {
-      dir: "client/views/shared/heroHeader/",
-      functionFile: "heroHeader",
+      role: "component",
       render: "pause",
-
-      htmlPath: "client/views/shared/heroHeader/heroHeader.html",
-      cssPath: "client/views/shared/heroHeader/heroHeader.css",
+      fetchDOM: true,
       container: "myHeroHeader",
       originBurst: {
         namespace: [burstTo],
@@ -14,7 +11,6 @@
       components: {
         documentationHeaderBlockquote: {
           namespace: ["homeview", "generate"],
-          parent: true,
           id: "blockquote-container",
           container: "blockquote-wrapper",
           classNames: "blockquote",
@@ -31,7 +27,6 @@
         },
         generateHeaderBlockquote: {
           namespace: ["documentation"],
-          parent: true,
           id: "blockquote-container",
           container: "blockquote-wrapper",
           classNames: "blockquote",

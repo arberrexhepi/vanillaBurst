@@ -6,7 +6,7 @@
   const burstRoute = searchParams.get("burst");
   const namespace = searchParams.get("name_space");
   const entry = searchParams.get("entry");
-  const appRoutes = ["homeview", "documentation", "gen"];
+  const appRoutes = ë.frozenVanilla.get("registeredRoutes");
 
   function routeCheck(routeCheckArray) {
     if (burstRoute) {

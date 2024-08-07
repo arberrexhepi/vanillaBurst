@@ -2,15 +2,14 @@
   ///this is as basic as a Shared package function aka Scoop can get!
   let navConfig = {
     nav: {
-      dir: "client/components/nav/",
-      functionFile: "nav",
+      role: "component",
       render: "pause",
-      htmlPath: "client/components/nav/nav.html",
-      cssPath: "client/components/nav/css/style.css",
+      fetchDOM: true,
       container: "mainNav",
       originBurst: {
         namespace: [burstTo, "homeview", "generate", "documentation"],
       },
+      components: {},
     },
   };
 
