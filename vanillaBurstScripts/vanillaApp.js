@@ -138,7 +138,7 @@ const vanillaApp = ë.frozenVanilla(
           value: Object.freeze([
             baseUrl + "vendors/jquery-3.7.1.min.js",
             baseUrl + "vendors/purify.min.js",
-            baseUrl + "vanillaBurstScripts/syste/configs/config.js",
+            baseUrl + "vanillaBurstScripts/system/configs/config.js",
             baseUrl +
               "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDOM.js",
             baseUrl +
