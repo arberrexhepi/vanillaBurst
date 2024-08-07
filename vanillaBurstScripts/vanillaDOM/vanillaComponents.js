@@ -141,7 +141,6 @@
                 elements.forEach((element) => {
                   if (element.id.includes(element.id.split("-")[0])) {
                     //element.remove();
-                    alert(element.id + targetContainer);
                     element.setAttribute("nonce", ë.nonceBack());
                   }
                 });

@@ -46,7 +46,6 @@ const config = ë.frozenVanilla(
                     let funcNameConfig = `${funcName}Config`;
                     if (typeof ë[funcNameConfig] === "function") {
                       let result = ë[funcNameConfig](part);
-                      alert(JSON.stringify(result[funcName].role));
 
                       let relPath;
                       let role = result[funcName]?.role
@@ -111,7 +110,6 @@ const config = ë.frozenVanilla(
                             fileId = subId;
                             componentId = subId;
                           }
-                          alert("loading file");
                           async function loadAndExecuteComponent(
                             ë,
                             dir,
@@ -201,7 +199,6 @@ const config = ë.frozenVanilla(
                               if (thispart?.[thisSubId]?.count) {
                                 thispart[thisSubId]["count"] = count;
                               }
-                              alert(JSON.stringify(thispart));
                               buildCountPart = {
                                 ...buildCountPart,
                                 ...thispart,
@@ -279,7 +276,6 @@ const vanillaConfig = ë.frozenVanilla(
     let cssPath;
     let dir = passedConfig[landing].dir || `client/views/${landing}/`;
     let functionFile = passedConfig[landing].functionFile || landing;
-    alert("yo" + JSON.stringify(passedConfig));
     let container;
     if (
       passedConfig?.[landing]?.fetchDOM &&
