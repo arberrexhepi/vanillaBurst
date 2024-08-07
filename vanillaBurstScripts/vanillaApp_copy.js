@@ -5,39 +5,31 @@ const vanillaApp = ë.frozenVanilla(
       ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
 
       // Load initial scripts and manage promise chains
-      const configScriptPath = "vanillaBurstScripts/system/configs/config.js";
+      const configScriptPath = "globals/config_test.js";
       const finalPromiseChain = [];
 
       ë.frozenVanilla("configScriptPath", configScriptPath, false);
 
       ë.frozenVanilla("loadInitialScripts", async function () {
-        try {
-          const configResponse = await fetch(baseUrl + "globals/config.json");
-          if (!configResponse.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          const config = await configResponse.json();
-
-          // Assuming configScriptPath is defined and refers to the script to load
-          await ë.loadScript(`${baseUrl}${configScriptPath}`);
-
-          // Process the config and return schemaParts
-          const schemaParts = await loadConfig(config);
-
-          ë.logSpacer(
-            `%cWelcome to ${ë.domainUrl} 🍦`,
-            null,
-            "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
-          );
-
-          return schemaParts;
-        } catch (error) {
-          console.error("Script loading error: ", error);
-        }
+        return Promise.all([
+          await ë.loadScript(`${baseUrl}${configScriptPath}`),
+        ])
+          .then(() => {
+            ë.logSpacer(
+              `%cWelcome to ${ë.domainUrl} 🍦`,
+              null,
+              "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
+            );
+            let yo = loadConfig();
+            alert(yo);
+            return ë.schemaParts;
+          })
+          .catch((error) => {
+            console.error("Script loading error: ", error);
+          });
       });
 
-      async function promiseSchemaParts(schemaParts) {
+      async function promiseSchemaParts() {
         ë.logSpacer(
           "%c[Building vanillaApp schema]",
           "",
@@ -46,9 +38,11 @@ const vanillaApp = ë.frozenVanilla(
         ë.logSpacer();
 
         // Log ë.schemaParts to verify its contents
-        ë.logSpacer("ë.schemaParts:", schemaParts);
+        ë.logSpacer("ë.schemaParts:", ë.schemaParts);
 
-        const parts = Object.keys(schemaParts);
+        console.log(ë.schemaParts);
+
+        const parts = Object.keys(ë.schemaParts);
         console.log(parts);
         // Log parts to verify the extracted keys
         ë.logSpacer("Extracted parts (keys):", parts);
@@ -138,7 +132,7 @@ const vanillaApp = ë.frozenVanilla(
           value: Object.freeze([
             baseUrl + "vendors/jquery-3.7.1.min.js",
             baseUrl + "vendors/purify.min.js",
-            baseUrl + "vanillaBurstScripts/syste/configs/config.js",
+            baseUrl + "globals/config_test.js",
             baseUrl +
               "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDOM.js",
             baseUrl +
@@ -174,7 +168,8 @@ const vanillaApp = ë.frozenVanilla(
       }
 
       // Start the promise chain
-      ë.loadInitialScripts()
+      window
+        .loadInitialScripts()
         .then((schemaParts) => {
           return promiseSchemaParts(schemaParts);
         })

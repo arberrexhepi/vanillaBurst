@@ -54,7 +54,7 @@
             <small class="form-description">Name Convention: viewnameConfig.js</small>
   
             <div class="fields">
-  \              <label for="viewName">Landing Name:</label><small>(required)</small>
+                <label for="viewName">Landing Name:</label><small>(required)</small>
                 <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
     
                 <label for="dir">Directory:</label>
