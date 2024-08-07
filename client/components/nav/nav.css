@@ -1,3 +1,9 @@
+.mainNav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 #mainNav-container {
     color: var(--color-vanilla-dark);
     text-align: center;
