@@ -1,5 +1,4 @@
 ë.frozenVanilla("myweatherComponent", function (data) {
-  alert("running compononent");
   let myweatherComponent = {
     myweather: {
       namespace: ["homeview", "generate"],
