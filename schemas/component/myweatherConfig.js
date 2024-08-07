@@ -1,11 +1,9 @@
 ë.frozenVanilla("myweatherConfig", function (burstTo) {
-  //this is featured as a vanillaScoop on the main landing page "homview"
+  //this is featured as a vanillaScoop on the main landing page "homeview"
   let myweatherConfig = {
     myweather: {
       role: "config",
       render: "pause",
-      // fetchDOM: true,
-      // container: "myweather-component",
       originBurst: {
         namespace: [burstTo], //auto assign namespace to where it was included as a package, or include your own
       },
@@ -47,7 +45,7 @@
             data: [{ id: 1 }],
           },
         },
-      }, //this Scoop could have its own components, ie if a Scoop is a dashboard Scoop, you could have lots! A scoop can behave like a component when included in a view but it is a static component, in the sense that ë.updateComponent cannot be used with static html files.
+      },
       dataSchema: {
         resultTarget: "myweather",
         returnResult: true,
