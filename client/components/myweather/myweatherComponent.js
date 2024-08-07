@@ -3,7 +3,7 @@
   let myweatherComponent = {
     myweather: {
       namespace: ["homeview", "generate"],
-      container: `myweather-component-component`,
+      container: `myweather-component`,
       classNames: "button round",
       children: `
            <div class="weather-app" id="weather-app">

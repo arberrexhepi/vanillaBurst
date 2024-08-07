@@ -33,7 +33,7 @@ switch (ë.mode) {
 ë.frozenVanilla(
   "schemaParts",
   Object.freeze({
-    homeview: ["appShells"],
+    homeview: ["appShells, homeviewToppings"],
     documentation: ["appShells"],
     generate: ["appShells"],
     "component/nav": [],
@@ -42,7 +42,7 @@ switch (ë.mode) {
     "component/heroHeader": [],
   })
 );
-ë.frozenVanilla("appShells", ["nav", "heroHeader", "myfooter", "myweather"]);
+ë.frozenVanilla("appShells", ["nav", "heroHeader", "myfooter"]);
 ë.frozenVanilla("homeviewToppings", ["myweather"]);
 
 ë.frozenVanilla("vanillaScoops", {

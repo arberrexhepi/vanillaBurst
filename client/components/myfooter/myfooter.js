@@ -4,7 +4,7 @@
   ë.logSpacer(vanillaPromise.this + "is ready and running");
 
   let html = "";
-  for (let key of Object.keys(vanillaPromise.schema)) {
+  for (let key of ë.frozenVanilla.get("registeredRoutes")) {
     html += `<li class="footer-link" data-route="${key}">${key.toUpperCase()}</li>`;
   }
 

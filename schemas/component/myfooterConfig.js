@@ -13,7 +13,7 @@
       components: {
         footerlinks: {
           id: "footerlinks",
-          container: "mainFooter",
+          container: "myfooter-wrapper",
           dir: "myfooter/",
           classNames: "footerlinks",
           cache: true,

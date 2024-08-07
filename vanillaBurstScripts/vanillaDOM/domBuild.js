@@ -187,8 +187,9 @@
 
       targetElement.id = container;
       targetElement.setAttribute("nonce", ë.nonceBack());
-      targetElement.classList.add(`${container}-component-wrapper`);
-      targetElement.innerHTML = `<div id="${container}Container" class="${container}-component"></div>`;
+      targetElement.classList.remove(`${container}`);
+      targetElement.classList.add(`${container}-wrapper`);
+      targetElement.innerHTML = `<div id="${container}Container" class="${container}"></div>`;
       targetElement.setAttribute("data-component", true);
 
       if (isNewElement === true) {
@@ -208,7 +209,7 @@
         }
       }
 
-      return targetElement.querySelector(`.${container}-component`);
+      return targetElement.querySelector(`.${container}`);
     } catch (error) {
       ë.vanillaMess(
         "[domBuild.js] Creating new element Error for function " +
