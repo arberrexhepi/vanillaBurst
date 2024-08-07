@@ -24,12 +24,10 @@
   let passedConfig = {
     documentation: {
       role: "parent",
-      dir: "client/views/documentation/",
-      functionFile: "documentation",
+      fetchDOM: true,
       render: "pause",
       originBurst: "documentation",
-      htmlPath: "client/views/documentation/documentation.html",
-      cssPath: "client/views/documentation/documentation.css",
+
       ...{ seo: seo },
       container: "viewbox",
     },

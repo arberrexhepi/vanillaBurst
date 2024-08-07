@@ -35,7 +35,7 @@
         } catch (error) {
           ë.logSpacer(
             console.warn(
-              "If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
+              "[domBuild.js] ë.loadDOM:If you were expecting DOM here, vanillaPromise was resolved by default and rendering will continue. This currently processes all renderSchema.customFunctions keys. Please make sure you were not expecting DOM rendered from " +
                 domFunction,
               null,
               null,
@@ -84,8 +84,8 @@
     let originBurst = vanillaPromise.originBurst;
 
     const targetElementPromise = new Promise((resolve, reject) => {
-      const classNames = passedFunction?.classNames;
-      let element = ë.createNewElement(container, classNames);
+      const classNames = passedFunction?.classNames || null;
+      let element = ë.createNewElement(container, classNames, passedFunction);
 
       ///within this function we could check for cache:true, false, dynamic or whatever else to resolve in this promise to be passed to htmlFileLoader()
 
@@ -94,13 +94,44 @@
         : reject(new Error("Unable to create or find target element"));
     });
 
-    targetElementPromise
-      .then((targetElement) => {
-        ë.htmlFileLoader(
-          { htmlPath, cssPath, originFunction, functionFile, passedFunction },
-          (htmlContent) =>
-            ë.updateContent(htmlContent, targetElement, false, functionFile)
-        );
+    await targetElementPromise
+      .then(async (targetElement) => {
+        try {
+          if (htmlPath) {
+            await ë.htmlFileLoader(
+              {
+                htmlPath,
+                cssPath,
+                originFunction,
+                functionFile,
+                passedFunction,
+              },
+              async (htmlContent) => {
+                console.log(targetElement);
+
+                await ë.updateContent(
+                  htmlContent,
+                  targetElement,
+                  false,
+                  functionFile
+                );
+              }
+            );
+          } else {
+            console.log("updatecontent no functionhtml");
+            console.log(targetElement);
+            resolve(vanillaPromise);
+          }
+        } catch (error) {
+          ë.logSpacer(
+            console.error(
+              "An error occurred while loading and updating HTML content:",
+              error
+            ),
+            null,
+            true
+          );
+        }
       })
       .catch((error) => {
         ë.logSpacer(
@@ -112,8 +143,12 @@
           true
         );
       });
-
-    ë.updateContent = (functionHTML, targetElement, cached, functionFile) => {
+  }
+);
+ë.frozenVanilla(
+  "updateContent",
+  function (functionHTML, targetElement, cached, functionFile) {
+    try {
       if (functionHTML) {
         targetElement.innerHTML = functionHTML;
 
@@ -126,36 +161,65 @@
           originFunction,
           resolve
         );
+      } else {
+        throw new Error("nohtml");
       }
-    };
+    } catch (error) {
+      ë.vanillaMess(
+        "[domBuild.js] ë.updateContent for function " + functionFile + ".js",
+        [functionHTML, targetElement],
+        "array"
+      );
+    }
   }
 );
+ë.frozenVanilla(
+  "createNewElement",
+  async function (container, classNames, passedFunction) {
+    try {
+      let targetElement = document.getElementById(container);
 
-ë.frozenVanilla("createNewElement", async function (container, classNames) {
-  //alert(container);
-  let targetElement = document.getElementById(container);
+      let isNewElement;
+      if (!targetElement) {
+        targetElement = document.createElement("div");
+        isNewElement = true;
+      }
 
-  if (!targetElement) {
-    targetElement = document.createElement("div");
+      targetElement.id = container;
+      targetElement.setAttribute("nonce", ë.nonceBack());
+      targetElement.classList.add(`${container}-component-wrapper`);
+      targetElement.innerHTML = `<div id="${container}Container" class="${container}-component"></div>`;
+      targetElement.setAttribute("data-component", true);
 
-    targetElement.id = container;
-    targetElement.setAttribute("nonce", ë.nonceBack());
+      if (isNewElement === true) {
+        if (document.body.childNodes.length > 0) {
+          document.body.insertBefore(targetElement, document.body.firstChild);
+        } else {
+          document.body.appendChild(targetElement);
+        }
+      } else {
+        targetElement.innerHTML = targetElement.innerHTML;
+      }
 
-    if (document.body.childNodes.length > 0) {
-      document.body.insertBefore(targetElement, document.body.firstChild);
-    } else {
-      document.body.appendChild(targetElement);
+      if (classNames) {
+        let classNameList = classNames.trim().replace(/\s+/g, " ").split(" ");
+        for (let className of classNameList) {
+          targetElement.classList.add(className);
+        }
+      }
+
+      return targetElement.querySelector(`.${container}-component`);
+    } catch (error) {
+      ë.vanillaMess(
+        "[domBuild.js] Creating new element Error for function " +
+          functionFile +
+          ".js",
+        [container, classNames],
+        "array"
+      );
     }
   }
-  if (classNames) {
-    let classNameList = classNames.trim().replace(/\s+/g, " ").split(" ");
-    for (let className of classNameList) {
-      targetElement.classList.add(className);
-    }
-  }
-
-  return targetElement;
-});
+);
 
 ë.frozenVanilla(
   "updateVanillaPromise",
@@ -169,35 +233,53 @@
     resolve
   ) {
     //TODO: reimplement signalUpdates here. See signalBurstDOM.js in directory ./vanillaDOM/processors
+    try {
+      function mergeOriginBursts(existingBurst, newBurst) {
+        return { ...existingBurst, ...newBurst };
+      }
 
-    function mergeOriginBursts(existingBurst, newBurst) {
-      return { ...existingBurst, ...newBurst };
-    }
-
-    let updatedOriginBurst = ë.storeBurstOrigin(
-      vanillaPromise,
-      safeHTML,
-      functionFile,
-      originFunction
-    );
-    vanillaPromise.originBurst = updatedOriginBurst;
-
-    let existingOriginBurst =
-      JSON.parse(localStorage.getItem("originBurst")) ||
-      vanillaPromise.originBurst;
-
-    let existingHTML =
-      existingOriginBurst?.[originFunction]?.[functionFile]?.htmlResult || "";
-
-    let sanitizedInitialHTML = safeHTML;
-    if (sanitizedInitialHTML !== existingHTML) {
-      let combinedOriginBurst = mergeOriginBursts(
-        existingOriginBurst,
-        vanillaPromise.originBurst
+      let updatedOriginBurst = ë.storeBurstOrigin(
+        vanillaPromise,
+        safeHTML,
+        functionFile,
+        originFunction
       );
-      localStorage.setItem("originBurst", JSON.stringify(combinedOriginBurst));
-    }
+      vanillaPromise.originBurst = updatedOriginBurst;
 
-    resolve(vanillaPromise);
+      let existingOriginBurst =
+        JSON.parse(localStorage.getItem("originBurst")) ||
+        vanillaPromise.originBurst;
+
+      let existingHTML =
+        existingOriginBurst?.[originFunction]?.[functionFile]?.htmlResult || "";
+
+      let sanitizedInitialHTML = safeHTML;
+      if (sanitizedInitialHTML !== existingHTML || existingHTML === "") {
+        let combinedOriginBurst = mergeOriginBursts(
+          existingOriginBurst,
+          vanillaPromise.originBurst
+        );
+        localStorage.setItem(
+          "originBurst",
+          JSON.stringify(combinedOriginBurst)
+        );
+      }
+      resolve(vanillaPromise);
+    } catch (error) {
+      ë.vanillaMess(
+        "[domBuild.js] ë.updateContent: an error occurred updating vanillaPromise " +
+          customFunctionName +
+          ".js",
+        [
+          vanillaPromise,
+          targetElement,
+          safeHTML,
+          functionFile,
+          cssPath,
+          originFunction,
+        ],
+        "array"
+      );
+    }
   }
 );

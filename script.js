@@ -1,5 +1,5 @@
 const mode = "live"; // "dev" or "live"
-const version = "0.9.0.6";
+const version = "0.0.04";
 // Define base URLs for different modes
 const baseUrls = {
   dev: "/",
@@ -7,7 +7,7 @@ const baseUrls = {
 };
 
 const systemLogs = false;
-const localCacheMax = 5000; //5mb
+const localCacheMax = 10000; //5mb
 
 // Define and freeze the frozenVanilla utility
 function defineFrozenVanilla() {
@@ -117,7 +117,6 @@ const baseUrl = baseUrls[mode] || baseUrls.dev;
 
   return nonceString;
 });
-
 ////////////// Start the application////////////
 const start = async (baseUrl) => {
   const nonceString = ë.nonceBack();
@@ -128,6 +127,7 @@ const start = async (baseUrl) => {
   ë.frozenVanilla("loadScript", function loadScript(url) {
     return new Promise((resolve, reject) => {
       const version = ë.version;
+      console.log("trying script " + url + version);
       const urlWithVersion = `${url}?version=${version}`;
 
       const existingScript = document.head.querySelector(

@@ -10,8 +10,10 @@ const vanillaApp = ë.frozenVanilla(
 
       ë.frozenVanilla("configScriptPath", configScriptPath, false);
 
-      ë.frozenVanilla("loadInitialScripts", function () {
-        return Promise.all([ë.loadScript(`${baseUrl}${configScriptPath}`)])
+      ë.frozenVanilla("loadInitialScripts", async function () {
+        return Promise.all([
+          await ë.loadScript(`${baseUrl}${configScriptPath}`),
+        ])
           .then(() => {
             ë.logSpacer(
               `%cWelcome to ${ë.domainUrl} 🍦`,
@@ -25,21 +27,28 @@ const vanillaApp = ë.frozenVanilla(
           });
       });
 
-      function promiseSchemaParts() {
+      async function promiseSchemaParts() {
         ë.logSpacer(
           "%c[Building vanillaApp schema]",
           "",
           "color: white; font-weight: bold; font-size:24px;"
         );
         ë.logSpacer();
+
+        // Log ë.schemaParts to verify its contents
+        ë.logSpacer("ë.schemaParts:", ë.schemaParts);
+
         const parts = Object.keys(ë.schemaParts);
+
+        // Log parts to verify the extracted keys
+        ë.logSpacer("Extracted parts (keys):", parts);
 
         ë.frozenVanilla("parts", parts, false);
         ë.logSpacer("Extracted parts (keys):", parts, null, true);
 
         const scriptPromises = parts.map((part) => {
-          const partConfigPath = `../schemas/${part}Config.js`;
-          const scriptUrl = `${baseUrl}${partConfigPath}`;
+          const partConfigPath = `/schemas/${part}Config.js`;
+          const scriptUrl = `${ë.domainUrl}/${baseUrl}${partConfigPath}`;
 
           ë.frozenVanilla("partConfigPath", partConfigPath, false);
           ë.frozenVanilla("scriptUrl", scriptUrl, false);
@@ -62,12 +71,13 @@ const vanillaApp = ë.frozenVanilla(
         );
 
         return Promise.all(scriptPromises)
-          .then(() => {
+          .then(async () => {
             ë.logSpacer("CONFIG PARTS PROMISED:", parts, null, true);
-            const schema = config();
-            if (typeof config === "function") {
-              ë.frozenVanilla("schema", schema);
-              return promiseRouteAndStateLoad(schema);
+            const schema = await config(parts);
+            ë.frozenVanilla("schema", schema);
+
+            if (config && typeof config === "function") {
+              return await promiseRouteAndStateLoad(schema);
             } else {
               console.error("ë.config is not a function.");
             }
@@ -91,9 +101,13 @@ const vanillaApp = ë.frozenVanilla(
       });
 
       async function promiseRouteAndStateLoad(schema) {
-        return window
+        await schema;
+        return ë
           .loadScript(`${baseUrl}${scriptPaths.vanillaBurstScriptPath}`)
-          .then(() => ë.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`))
+          .then(
+            async () =>
+              await ë.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`)
+          )
           .then(() => {
             ë.logSpacer(
               "State init Scripts vanillaBurst.js and routes.js loaded successfully."

@@ -24,12 +24,9 @@
   let passedConfig = {
     generate: {
       role: "parent",
-      dir: "client/views/generate/",
-      functionFile: "generate",
+      fetchDOM: true,
       render: "pause",
       originBurst: "generate",
-      htmlPath: "client/views/generate/generate.html",
-      cssPath: "client/views/generate/generate.css",
       container: "viewbox",
       ...{ seo: seo },
       components: {
@@ -39,10 +36,10 @@
           container: "doc-button_wrapper",
           classNames: "button round",
           children: `
-          <blockquote>
-          <button class="headerbutton mydocbutton" data-route="documentation"> Documentation</button>
-          </blockquote>
-            `,
+            <blockquote>
+            <button class="headerbutton mydocbutton" data-route="documentation"> Documentation</button>
+            </blockquote>
+              `,
           eventHandlers: "submit:preventDefault",
         },
 
@@ -52,59 +49,59 @@
           container: "config-canvas",
           classNames: "parentnode genform card hover",
           children: `
-          <form id="parentConfigForm">
-          <legend class="form-title">Landing Config</legend>
-          <small class="form-description">Name Convention: viewnameConfig.js</small>
-
-          <div class="fields">
-\              <label for="viewName">Landing Name:</label><small>(required)</small>
-              <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
+            <form id="parentConfigForm">
+            <legend class="form-title">Landing Config</legend>
+            <small class="form-description">Name Convention: viewnameConfig.js</small>
   
-              <label for="dir">Directory:</label>
-              <input type="text" id="dir" name="dir" placeholder="default: client/views/viewName, must end with / if set" value=""><br>
-  
-              <label for="render">Render:</label>
-              <input type="text" id="render" name="render" value="pause"><br>
-  
-              <label for="requireHtmlCss">Will this landing require HTML and CSS?</label><br/>
-              <select id="requireHtmlCss" name="requireHtmlCss">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select><br>
-  
-              <label for="container">Container:</label><small>(required if HTML PATH)</small>
-              <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
-  
-              <fieldset class="componentTemplate">
-                <div class="componentTemplate-container">
-                  <legend>Component Configuration</legend>
-                  <div class="subDOMFieldsContainer">
-                      <label for="componentName">Name:</label> <small>(required)</small>
-                      <input type="text" class="componentName" name="componentName" placeholder="Enter Component Name"><br>
-  
-                      <label for="componentDir">Directory:</label>
-                      <input type="text" class="componentDir" name="componentDir" placeholder="Enter Component Directory"><br>
-  
-                      <label for="componentId">ID:</label><small>(required)</small>
-                      <input type="text" class="componentId" name="componentId" required placeholder="Enter Component ID"><br>
-  
-                      <label for="componentContainer">Container:</label><small>(required)</small>
-                      <input type="text" class="componentContainer" name="componentContainer" required placeholder="Enter Component Container"><br>
-  
-                      <label for="componentClassName">Class Name:</label><small>(required)</small>
-                      <input type="text" class="componentClassName" name="componentClassName" required placeholder="Enter Component Class Name"><br>
-  
-                      <label for="componentChildren">HTML Content:</label>
-                      <textarea class="componentChildren" name="componentChildren" placeholder="Enter Component Children"></textarea><br>
-                  </div>
-                  </div>
-              </fieldset>
-  
-              <button id="subDOM" class="addSubDOM" name="subDOM">Add Dynamic Component</button><br><br>
-          </div>
-          <button id="create-config">Create Config</button>
-      </form>
-            `,
+            <div class="fields">
+  \              <label for="viewName">Landing Name:</label><small>(required)</small>
+                <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
+    
+                <label for="dir">Directory:</label>
+                <input type="text" id="dir" name="dir" placeholder="default: client/views/viewName, must end with / if set" value=""><br>
+    
+                <label for="render">Render:</label>
+                <input type="text" id="render" name="render" value="pause"><br>
+    
+                <label for="requireHtmlCss">Will this landing require HTML and CSS?</label><br/>
+                <select id="requireHtmlCss" name="requireHtmlCss">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select><br>
+    
+                <label for="container">Container:</label><small>(required if HTML PATH)</small>
+                <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
+    
+                <fieldset class="componentTemplate">
+                  <div class="componentTemplate-container">
+                    <legend>Component Configuration</legend>
+                    <div class="subDOMFieldsContainer">
+                        <label for="componentName">Name:</label> <small>(required)</small>
+                        <input type="text" class="componentName" name="componentName" placeholder="Enter Component Name"><br>
+    
+                        <label for="componentDir">Directory:</label>
+                        <input type="text" class="componentDir" name="componentDir" placeholder="Enter Component Directory"><br>
+    
+                        <label for="componentId">ID:</label><small>(required)</small>
+                        <input type="text" class="componentId" name="componentId" required placeholder="Enter Component ID"><br>
+    
+                        <label for="componentContainer">Container:</label><small>(required)</small>
+                        <input type="text" class="componentContainer" name="componentContainer" required placeholder="Enter Component Container"><br>
+    
+                        <label for="componentClassName">Class Name:</label><small>(required)</small>
+                        <input type="text" class="componentClassName" name="componentClassName" required placeholder="Enter Component Class Name"><br>
+    
+                        <label for="componentChildren">HTML Content:</label>
+                        <textarea class="componentChildren" name="componentChildren" placeholder="Enter Component Children"></textarea><br>
+                    </div>
+                    </div>
+                </fieldset>
+    
+                <button id="subDOM" class="addSubDOM" name="subDOM">Add Dynamic Component</button><br><br>
+            </div>
+            <button id="create-config">Create Config</button>
+        </form>
+              `,
           eventHandlers: "submit:preventDefault",
         },
 
@@ -114,11 +111,11 @@
           container: "config-canvas",
           classNames: "genform card hover",
           children: `
-          <form id="parentConfigForm">
-          <legend class="form-title">Function Config</legend>
-          <small class="form-description">Info: This prepares a config for a function. These can also serve as static components or include their own components.</small><br/>
-          <small class="help-card">Update Pending</small>
-          `,
+            <form id="parentConfigForm">
+            <legend class="form-title">Function Config</legend>
+            <small class="form-description">Info: This prepares a config for a function. These can also serve as static components or include their own components.</small><br/>
+            <small class="help-card">Update Pending</small>
+            `,
         },
         canvasresult: {
           // cache: false,

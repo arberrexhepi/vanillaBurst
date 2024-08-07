@@ -1,3 +1,9 @@
 .vscode/
 /env/
 vanillaBurstScripts/00. backup copies/
+*_test
+*_copy
+*_test
+*_copy
+*_test/
+*_copy/

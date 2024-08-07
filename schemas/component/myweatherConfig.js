@@ -2,16 +2,13 @@
   //this is featured as a vanillaScoop on the main landing page "homview"
   let myweatherConfig = {
     myweather: {
-      dir: "client/components/myweather/",
-      functionFile: "myweather",
+      role: "config",
       render: "pause",
+      // fetchDOM: true,
+      // container: "myweather-component",
       originBurst: {
         namespace: [burstTo], //auto assign namespace to where it was included as a package, or include your own
       },
-      htmlPath: "client/components/myweather/myweather.html",
-      cssPath: "client/components/myweather/css/style.css",
-      container: "weather-wrapper",
-      classNames: "weather-wrapper scoop card",
       signal: {
         verbose: false,
         clearable: true,
@@ -45,42 +42,10 @@
         ],
       },
       components: {
-        timerInfo: {
-          namespace: ["homeview"],
-          cache: true,
-          dir: "myweather/",
-          id: "timerInfo",
-          container: "timer-wrapper",
-          classNames: "timer-info",
-          children: `
-            <div id="timer-info-container">
-              <p id="p1">This Scoop updates every minute.</p>
-              <p id="p2">It uses data from</p>
-              <p id="p3"><code>dataSchema</code></p>
-            </div>
-            <div id="weather-timer-container" class="weather-timer-container">
-              <div class="weather-timer" id="weather-timer">0</div>
-            </div>
-            </div>
-          `,
-        },
-        weatherappButtons: {
-          namespace: ["homeview"],
-          cache: true,
-          dir: "buttons/",
-          id: "weatherappButtons",
-          container: "button-wrapper",
-          classNames: "weatherapp-buttons",
-          children: `
-            <div class="inner_button_wrapper">
-            <button id="start-weather-signal" class="weatherapp-button round" data-route="documentation">Start</button>
-            <button id="pause-weather-signal" class="weatherapp-button  round" data-route="documentation">Pause</button>
-            <button id="reset-weather-signal" class="weatherapp-button  round" data-route="documentation">Reset</button>
-            <button id="remove-weather-signal" class="weatherapp-button  round" data-route="documentation">Remove</button>
-            </div>
-            <br />
-            `,
-          eventHandlers: "submit:preventDefault",
+        fetchComponents: {
+          myweather: {
+            data: [{ id: 1 }],
+          },
         },
       }, //this Scoop could have its own components, ie if a Scoop is a dashboard Scoop, you could have lots! A scoop can behave like a component when included in a view but it is a static component, in the sense that ë.updateComponent cannot be used with static html files.
       dataSchema: {

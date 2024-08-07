@@ -53,7 +53,11 @@
           headers["Content-Type"] =
             "application/x-www-form-urlencoded; charset=UTF-8";
           if (typeof requestData === "object") {
-            requestData = new URLSearchParams(requestData).toString();
+            if (requestMethod === "GET") {
+              requestData = new URLSearchParams(requestData).toString();
+            } else {
+              requestData = JSON.stringify(requestData);
+            }
           }
         }
 

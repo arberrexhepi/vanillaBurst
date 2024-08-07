@@ -104,3 +104,32 @@
   opacity: 0.5;
   display: none;
 }
+
+
+.action-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.action-container p {
+  line-height: 1.6;
+  color: var(--color-vanilla-dark);
+  font-size: calc(var(--base-font-size) * var(--p-large-scale));
+}
+
+#myHeroHeader blockquote {
+  color: var(--color-vanilla-pink);
+  min-height: 30vh;
+  max-width: 600px;
+  width: 60vw;
+  min-width: 300px;
+  margin: auto;
+  width: 80%;
+  padding: 0;
+  align-items: center;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
