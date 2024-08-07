@@ -1,14 +1,25 @@
 ë.frozenVanilla("heroHeaderConfig", function (burstTo) {
   let heroHeaderConfig = {
     heroHeader: {
-      role: "component",
+      role: "config",
       render: "pause",
-      fetchDOM: true,
-      container: "myHeroHeader",
       originBurst: {
         namespace: [burstTo],
       },
       components: {
+        heroHeader: {
+          namespace: ë.frozenVanilla.get("registeredRoutes"),
+          id: "heroHeader",
+          container: "heroHeader-component",
+          children: `
+          <div id="heroHeaderContainer">
+          <div id="hero-logo">
+              <div id="header-symbol" data-img-src="symbol.png" data-img-alt="vanillaBurst symbol logo"></div>
+              <div id="header-wordmark" data-img-src="wordmark.png" data-img-alt="vanillaBurst wordmark logo"></div>
+          </div>
+          <div class="blockquote-wrapper"></div>
+        </div>`,
+        },
         documentationHeaderBlockquote: {
           namespace: ["homeview", "generate"],
           id: "blockquote-container",

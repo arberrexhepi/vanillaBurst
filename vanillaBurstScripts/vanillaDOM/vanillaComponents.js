@@ -23,10 +23,10 @@
       return result;
     }
     function buildCssPath(path, dir, id, renderSchema, functionFile) {
-      if (dir && dir !== null) {
-        return `${path}client/components/parts/${dir}/${dir}-style.css`;
+      if (dir && dir !== "") {
+        return `${path}client/components/${dir}/${dir.split("/")[0]}.css`;
       } else {
-        return `${path}${renderSchema.customFunctions[functionFile].dir}${functionFile}.css`;
+        return `${path}client/components/${functionFile}/${functionFile}.css`;
       }
     }
 
@@ -74,10 +74,10 @@
 
               let {
                 dir = undefined,
-                namespace = functionFile,
+                namespace = null,
                 classNames = id,
                 children = "",
-                container = `${renderSchema.customFunctions[functionFile].container}-component`,
+                container = `${renderSchema.customFunctions[functionFile].container}Container`,
                 count = 1,
                 cache,
               } = flattenedvanillaElement[key][1][id];
@@ -98,8 +98,8 @@
               let baseId = id;
               id = `${baseId}-${renderSchema.landing}_${functionFile}`;
 
-              let viewContainerSelector = `.${renderSchema.customFunctions[functionFile].container}-component-wrapper`;
-              let targetContainerSelector = `.${renderSchema.customFunctions[functionFile].container}-component-wrapper .${container}`;
+              let viewContainerSelector = `.${renderSchema.customFunctions[functionFile].container}-wrapper`;
+              let targetContainerSelector = `.${container}`;
               console.log("view container tag: " + viewContainerSelector);
               let viewContainer = document.querySelector(viewContainerSelector);
 

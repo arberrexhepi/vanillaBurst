@@ -27,14 +27,7 @@
       render: "pause",
       originBurst: {},
       container: "viewbox",
-      components: {
-        // fetchComponents: {
-        //   myweather$1: {
-        //     dir: "myweather",
-        //     data: [{}],
-        //   },
-        // },
-      },
+      components: {},
       ...{ seo: seo },
     },
 

@@ -112,7 +112,7 @@ body {
     align-items: center;
 }
 
-#myHeroHeader {
+#heroHeader-component {
     grid-row: 2;
     position: relative;
     min-width: 100vw;

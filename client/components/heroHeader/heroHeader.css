@@ -1,4 +1,4 @@
-#myHeroHeader {
+#heroHeader-component {
   text-align: center;
   /* background-color: var(--color-vanilla-light); */
   min-height: 70vh;
@@ -11,7 +11,7 @@
   max-width: 100vw;
 }
 
-#myHeroHeaderContainer {
+#heroHeader-componentContainer {
   margin: auto;
   z-index: 1;
   justify-content: center;
@@ -20,7 +20,7 @@
   flex-direction: column;
 }
 
-#myHeroHeader #hero-logo {
+#heroHeader-component #hero-logo {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -47,27 +47,27 @@
   width: 20vh;
 }
 
-#myHeroHeader h1 {
+#heroHeader-component h1 {
   color: var(--color-vanilla-dark);
 }
 
-#myHeroHeader blockquote-wrapper {
+#heroHeader-component blockquote-wrapper {
   display: flex;
   min-height: 70%;
 }
 
-#myHeroHeader h1 {
+#heroHeader-component h1 {
   color: #ff6347;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
-#myHeroHeader h2 {
+#heroHeader-component h2 {
   color: var(--color-vanilla-red) !important;
   text-align: center;
 }
 
-#myHeroHeader p {
+#heroHeader-component p {
   font-size: calc(var(--base-font-size) * var(--p-large-scale));
   color: var(--color-vanilla-dark);
 }
@@ -118,7 +118,7 @@
   font-size: calc(var(--base-font-size) * var(--p-large-scale));
 }
 
-#myHeroHeader blockquote {
+#heroHeader-component blockquote {
   color: var(--color-vanilla-pink);
   min-height: 30vh;
   max-width: 600px;
