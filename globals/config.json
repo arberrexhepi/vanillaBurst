@@ -1,5 +1,6 @@
 {
   "defaultAppRoute": "homeview",
+
   "vanillaStock": true,
   "registeredRoutes": ["homeview", "documentation", "generate"],
   "baseUrlIcons": "globals/brandAssets/assets/icons/",
@@ -24,40 +25,52 @@
     "linkBurst": true,
     "gptScoop": ["homeview"]
   },
-  "vendors": ["helloworld.js"],
+  "vendors": false,
   "vanillaMessCaller": ["updateComponent"],
   "trustedSources": {
     "img-src": [
       "http://vanillaburstgame",
-
+      "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://cdn.weatherapi.com"
     ],
     "media-src": [
       "http://vanillaburstgame",
-
+      "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
-    "style-src": ["http://vanillaburstgame"],
+    "style-src": ["http://vanillaburstgame", "https://vanillaburst.com"],
     "object-src": ["'none'"],
     "font-src": [
       "http://vanillaburstgame",
-
+      "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
     "connect-src": [
       "http://vanillaburstgame",
-
+      "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://weatherapi-com.p.rapidapi.com",
       "https://jsonplaceholder.typicode.com"
     ],
-    "manifest-src": ["http://vanillaburstgame", "https://arber.design"],
-    "worker-src": ["http://vanillaburstgame", "https://arber.design"],
-    "child-src": ["http://vanillaburstgame", "https://arber.design"]
+    "manifest-src": [
+      "http://vanillaburstgame",
+      "https://vanillaburst.com",
+      "https://arber.design"
+    ],
+    "worker-src": [
+      "http://vanillaburstgame",
+      "https://vanillaburst.com",
+      "https://arber.design"
+    ],
+    "child-src": [
+      "http://vanillaburstgame",
+      "https://vanillaburst.com",
+      "https://arber.design"
+    ]
   }
 }
