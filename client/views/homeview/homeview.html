@@ -4,15 +4,15 @@
         <div class="list-wrapper">
             <ul>
                 <li class="card">
+                    <h2>Dynamic Load Balancing</h2>
+                    <p>The runtime intelligently serves <code>vanillaApp</code> by loading scripts and resources based
+                        on state-driven routes, minimizing large resource requests and optimizing performance.</p>
+                </li>
+                <li class="card">
                     <h2>Guaranteed Renders</h2>
                     <p>Ensures all necessary files and resources are prepped and available for seamless functionality.
                         Your configurations are dynamically managed through <code>vanillaPromise</code>, providing a
                         reliable execution environment.</p>
-                </li>
-                <li class="card">
-                    <h2>Dynamic Load Balancing</h2>
-                    <p>The runtime intelligently serves <code>vanillaApp</code> by loading scripts and resources based
-                        on state-driven routes, minimizing large resource requests and optimizing performance.</p>
                 </li>
                 <li class="card">
                     <h2>Extensible and Developer-Centric</h2>
@@ -47,71 +47,52 @@
         <h2>What else can vanillaBurst do?</h2>
         <ul class="extended-features">
             <li class="card">
-                <h2>Real-Time Configurations</h2>
-                <p>Update and modify application behavior on the fly with real-time configurations. Adjust routes,
-                    components, and signals dynamically based on the URL path or user actions, enabling rapid iteration
-                    and immediate feedback without redeployment.</p>
+                <h2>The Documentation <em>is</em> the App</h2>
+                <p>Ever struggled with documentation-to-application synchronization? <br>
+                    vanillaBurst's configuration-driven architecture your documentation config is your application
+                    code.<br>
+                    This approach reduces ambiguity and minimizes miscommunication, keeping
+                    all team members aligned for seamless collaboration.</p>
             </li>
-
             <li class="card">
-                <h2>Granular Control Over Components</h2>
-                <p>Leverage the power of modular design with fine-grained control over individual components. Configure
-                    and manage reusable functions, shared utilities, and route-specific logic through the
-                    <code>schemaParts</code> and <code>packages</code> settings, ensuring consistency and scalability
-                    across the application.
+                <h2>Re-config vs Re-deploy</h2>
+                <p>Ever needed to deactivate a route or a component and had to redeploy? <br>
+                    Enabling a rapid deploy cycle with immediate feedback, is a core vanillaBurst
+                    functionality. <br>
+                    You can effortlessly update your deployed application by simply changing your
+                <pre>config.json</pre>
                 </p>
             </li>
 
             <li class="card">
-                <h2>Optimized Resource Management</h2>
-                <p>Efficiently manage resources and assets with built-in URL management for images, styles, and scripts.
-                    Utilize <code>baseUrlIcons</code>, <code>baseUrlImages</code>, and <code>baseUrlStyles</code> to
-                    ensure fast loading and reduce redundancy, improving overall application performance and user
-                    experience.</p>
+                <h2>Granular Control</h2>
+                <p>Stop hunting for import statements through hundreds of files! <br>
+                    Configure and manage route-specific and reusable functions or packages, shared utilities, vendor
+                    imports, vanillaScoop plugins in your
+                <pre>config.json</pre>
+                </p>
             </li>
-
-            <li class="card">
-                <h2>Seamless Plugin Integration</h2>
-                <p>Extend the core functionality effortlessly by integrating third-party plugins and custom tools
-                    through <code>vanillaScoops</code>. Enhance your application's capabilities without disrupting
-                    existing code, providing flexibility and customization tailored to your specific needs.</p>
-            </li>
-            <li class="card">
-                <h2>Self-Documenting Source of Truth</h2>
-                <p>The configuration-driven architecture acts as living documentation, providing a single source of
-                    truth that aligns directly with the application's runtime behavior. This approach reduces
-                    ambiguity, minimizes miscommunication, and ensures all team members—developers, project
-                    managers, and stakeholders—are always on the same page, fostering seamless collaboration across
-                    disciplines.</p>
-            </li>
-            <li class="card">
-                <h2>Config-Driven Security Management</h2>
-                <p>Maintain robust security standards with centralized Content Security Policy (CSP) controls directly
-                    in the configuration. Dynamically manage trusted sources and prevent unauthorized content from
-                    loading, ensuring compliance and reducing vulnerabilities across all environments.</p>
-            </li>
-
-            <li class="card">
-                <h2>Context-Aware Component Loading</h2>
-                <p>Use <code>schemaParts</code> to intelligently load components and features based on the current route
-                    and application state. Tailor the user experience by dynamically including or excluding components,
-                    improving performance and responsiveness.</p>
-            </li>
-
             <li class="card">
                 <h2>Flexible Package Management</h2>
                 <p>Define and manage reusable packages with the <code>packages</code> configuration. Organize and group
                     components, utilities, and services for consistent deployment across routes, enhancing modularity
                     and promoting code reuse.</p>
             </li>
+            <li class="card">
+                <h2>Context-Aware Script Loading</h2>
+                <p>Use <code>schemaParts</code> to strategically load components and features based on routes. Tailor
+                    the user experience by dynamically including or excluding components, improving performance and
+                    responsiveness.</p>
+            </li>
 
             <li class="card">
-                <h2>Adaptive Environment Configuration</h2>
-                <p>Seamlessly switch between development and production environments with environment-based
-                    configurations. Control domains, asset paths, and application behavior dynamically using the
-                    <code>mode</code> flag, simplifying deployment and testing workflows.
+                <h2>Integrate or Build</h2>
+                <p>Does vanillaBurst lack a feature your project requires? <br>
+                    vanillaBurst has a growing list of system functions for to build your own vanillaScoops, such as:
+                <pre>ë.reRoll, ë.serverRender, <br>ë.frozenVanilla, ë.vanillaGo </pre> and many more helper functions.
                 </p>
             </li>
+
         </ul>
     </section>
 </article>
