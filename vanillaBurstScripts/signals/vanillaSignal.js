@@ -21,12 +21,16 @@
     count,
     time,
     repeat = false,
-    intermittent = null,
+    intermittent = false,
     callBack = false,
     clearable = null,
     affectors = onEvent,
     verbose = false,
   } = signal;
+
+  let initName = init;
+  let intermittentName = intermittent;
+  let callBackName = callBack;
 
   let signalStatus;
   let eventData;
@@ -57,20 +61,26 @@
       type: "_signal",
     };
     let remove;
-    let eventResult = await ë.one(onEvent[0], onEvent[1], signalObject, true);
+    let eventResult;
+    if (affectors && affectors !== null) {
+      eventResult = await ë.many(
+        affectors,
+        { signalName: "weatherSignal", type: "_signal" },
+        true
+      );
+    } else {
+      eventResult = await ë.one(onEvent[0], onEvent[1], signalObject, true);
+    }
     affectAction = eventResult[0];
     eventData = eventResult[1];
   }
 
-  if (affectors && affectors !== null) {
-    ë.many(affectors, { signalName: "weatherSignal", type: "_signal" }, true);
-  }
-
-  if (onEvent !== "pause" || onEvent !== "reset" || onEvent !== "remove") {
+  if (onEvent !== "pause" || onEvent !== "remove") {
     signalStatus = true;
   } else {
     signalStatus = false;
   }
+
   if (action === "reset") {
     action = initAction;
   }
@@ -90,18 +100,19 @@
     repeat = true;
   }
   if (verbose && verbose === true) {
-    ë.vanillaMess("intermittent check", intermittent, "function");
+    ë.vanillaMess("signal", "intermittent check", intermittent, "function");
   }
   if (action && action !== "remove") {
     ë.signalInterval({
       vanillaPromise,
       signalName: signalName,
       namespace,
-      action: affectAction || action,
+      action: affectAction,
       initAction: action,
       eventData: eventData || null,
-      init: (action, eventData) => {
-        if (action === "go") {
+      initName: initName,
+      init: async (action, eventData) => {
+        if (action === "go" || action === "reset") {
           signalStatus = true;
         } else {
           signalStatus = false;
@@ -131,15 +142,26 @@
       time: time,
       repeat: repeat,
       reCall,
+      intermittentName: intermittentName,
       intermittent: async (intermittentPack) => {
         let data = intermittentPack;
         loggerFunction(
           data,
           signalName + "receiving intermittent: " + intermittent
         );
+
         //return false;
         return new Promise(async (resolve, reject) => {
           let intermittentReturn;
+
+          let currentSignalData = localStorage.getItem(signalName + "_signal");
+          let currentRunningAction;
+          if (currentSignalData) {
+            currentRunningAction =
+              JSON.parse(currentSignalData)[signalName].action;
+            data.action = currentRunningAction;
+          }
+
           if (
             intermittent &&
             intermittent !== null &&
@@ -151,6 +173,7 @@
               [intermittent](data);
           } else {
             ë.vanillaMess(
+              "signal",
               `[vanillaSignal, signalName: ${signalName}] Missing Intermittent: ${intermittent}`,
               ë.signalStore.get(`${signalName}_runner`)[intermittent],
               "array"
@@ -158,11 +181,18 @@
             return;
           }
 
+          if (intermittentReturn?.action !== currentRunningAction) {
+            data = intermittentReturn;
+          }
           data.action = intermittentReturn?.action
             ? intermittentReturn.action
             : data.action;
 
-          data.data = intermittentReturn;
+          data.data = intermittentReturn.data;
+
+          // if (data.action === "remove") {
+          //   // data.action = "removed";
+          // }
 
           data.signalStatus = intermittentReturn?.signalStatus
             ? intermittentReturn.signalStatus
@@ -178,12 +208,14 @@
           })
           .catch((error) => {
             ë.vanillaMess(
+              "signal",
               `[vanillaSignal, signalName: ${signalName}] Failed Intermittent: ${intermittent}`,
               error,
               "array"
             );
           });
       },
+      callBackName: callBackName,
       callBack: async (callBackData) => {
         loggerFunction(callBackData, signalName + "callBack: " + callBack);
 
@@ -194,64 +226,14 @@
             "function"
         ) {
           ë.vanillaMess(
+            "signal",
             `[vanillaSignal, signalName: ${signalName}] Missing callBack: ${callBack}`,
             ë.signalStore.get(`${signalName}_runner`)[callBack],
             "array"
           );
           return;
         }
-        switch (callBackData.action) {
-          case "init":
-            return action;
-            break;
-          case "go":
-            return action;
-            break;
-          case "pause":
-            return action;
-            break;
-          case "reset":
-            await ë.signalStore
-              .get(`${signalName}_runner`)
-              [callBack](callBackData);
-            //await ë.resetSignal(signalName, "_signal", "reset");
-            if (callBackData.eventData) {
-              signalAffectDOM(
-                vanillaDOM,
-                vanillaPromise,
-                callBackData.eventData
-              );
-            }
-
-            // if (
-            //   reCall &&
-            //   reCall !== null &&
-            //   callBackData.eventData.targetId === reCall.caller
-            // ) {
-            //   reCall.reCallFunction(vanillaPromise);
-            // }
-            //ë.myweather(vanillaPromise);
-
-            break;
-          case "remove":
-            await ë.signalStore
-              .get(`${signalName}_runner`)
-              [intermittent](callBackData);
-            await ë.resetSignal(signalName, "_signal", "remove");
-            if (callBackData.eventData) {
-              signalAffectDOM(vanillaDOM, vanillaPromise);
-            }
-
-            return false;
-            break;
-          case "completed":
-            await ë.signalStore
-              .get(`${signalName}_runner`)
-              [callBack](callBackData);
-            if (callBackData.eventData) {
-              signalAffectDOM(vanillaDOM, vanillaPromise);
-            }
-        }
+        return callBackData.action;
       },
       clearable: clearable,
       verbose: verbose ? verbose : false,
@@ -302,16 +284,20 @@
         );
       } else {
         ë.vanillaMess(
+          "signal",
           `[vanillaSignal, signalName: ${signalName}] signalAffectDOM: Element for selector ${selector}`,
           [`selector: ${selector}`, `element: ${element}`],
-          array
+          array,
+          "signal"
         );
       }
     } catch {
       ë.vanillaMess(
+        "signal",
         `[vanillaSignal, signalName: ${signalName}] signalAffectDOM: Error !`,
         [vanillaDOM, vanillaPromise, eventData],
-        array
+        null,
+        "signal"
       );
     }
   }

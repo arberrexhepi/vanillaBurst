@@ -29,8 +29,23 @@
     const nodes = configCanvas.querySelectorAll(".parentnode");
     const viewName = $("#viewName").val();
     const dir = $("#dir").val();
-    const htmlPath = $("#htmlPath").val();
-    const container = $("#container").val();
+    let staticDOM = $("#requireHtmlCss").val();
+    if (staticDOM) {
+      if (staticDOM === "yes") {
+        staticDOM = true;
+      } else {
+        staticDOM = undefined;
+      }
+    }
+
+    let container = $("#container").val();
+    let role = "parent";
+    if (staticDOM && staticDOM === true) {
+      container = container ? container : `${viewName}-container`;
+    } else {
+      container = undefined;
+    }
+
     const validations = [
       {
         condition: !viewName || viewName.trim() === "",
@@ -79,16 +94,15 @@
           children: componentChildren,
         };
       });
-
       let genConfig = {
         [viewName]: {
-          role: "parent",
-          dir: dir || `client/views/${viewName}/`,
-          functionFile: viewName,
+          role: role,
           render: render,
           originBurst: {},
+          fetchDOM: staticDOM,
           container: container,
-          components: components,
+          components:
+            Object.entries(components).length > 0 ? components : undefined,
         },
       };
 
@@ -106,22 +120,28 @@
             html: ["[processConfig] Error: viewName is empty"],
           },
           "canvasresult",
-          "#configlog"
+          "#configlog.config-result"
         );
         return;
       }
 
       let jsFunctionStringBuild = `ë.frozenVanilla("${viewName}", function(vanillaPromise) {\n\n`;
-      jsFunctionStringBuild += `    // Your function logic here\n\n`;
+      jsFunctionStringBuild += `// Your function logic here\n\n`;
       jsFunctionStringBuild += `    console.log(vanillaPromise.this + "is ready and running")\n\n`;
       jsFunctionStringBuild += `});\n\n`;
 
+      let directory;
+      switch (role) {
+        case "parent":
+          directory = `client/views/${viewName}/`;
+      }
       let jsFileHTML =
-        `//Create a js file named ${viewName}.js in directory path: ${dir}<br/><br/>` +
+        `//STEP 2: 
+//Create a js file named ${viewName}.js in directory path: ${directory}<br/><br/>` +
         jsFunctionStringBuild;
 
       let htmlResults = {
-        position: 1,
+        // position: 1,
         //insert: "after",
         clear: true,
         tag: "pre",
@@ -148,6 +168,7 @@
           {
             clear: false,
             tag: "pre",
+
             html: [
               `[vanillaBurst]Success: Generated ${viewName}Config.js and ${viewName}.js code. \n` +
                 `[verbose = true]\n` +
@@ -158,7 +179,7 @@
             ],
           },
           "canvasresult",
-          "#configlog.config-result"
+          ".config-code"
         );
       }
 
@@ -190,19 +211,21 @@
         const functionName = Object.keys(config)[0];
         const passedConfig = config[functionName];
         const viewName = functionName.toLowerCase();
-        const passedConfigString = stringifyObject(passedConfig);
+        const passedConfigString = stringifyObject(passedConfig, 2);
 
+        // Function string with tabs
         let functionString = `
-        //Create a new js file named ${viewName}Config.js in the schemas folder with the following code:<br/><br/>
+//STEP 1: 
+//Create a new js file named ${viewName}Config.js in the schemas folder with the following code:
 
 ë.frozenVanilla("${functionName}Config", function(sharedParts) {
 
-  let ${viewName}Config = {};
-  let passedConfig = ${passedConfigString};
+let ${viewName}Config = {};
+let passedConfig = ${passedConfigString};
 
-  ${viewName}Config = { ...vanillaConfig("${functionName}", passedConfig) };
+${viewName}Config = { ...vanillaConfig("${functionName}", passedConfig) };
 
-  return ${viewName}Config;
+return ${viewName}Config;
 });
 
 `;

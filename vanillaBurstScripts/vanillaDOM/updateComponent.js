@@ -40,11 +40,23 @@
     let verboseCache = true;
     ///////////////////////////////////
     let storedComponentId =
-      `${vanillaPromise?.passedFunction?.components?.[componentKey]?.id}-${vanillaPromise?.renderSchema?.landing}_${vanillaPromise?.this}` ||
+      `${vanillaPromise?.passedFunction?.components?.[componentKey].id}-${vanillaPromise?.renderSchema?.landing}_${vanillaPromise?.this}` ||
       undefined;
 
+    ë.vanillaMess(
+      "updateComponent",
+      "logging htmlData",
+      storedComponentId,
+      "check"
+    );
+
     ////////////////////////////////////
-    const getTarget = treatRoot(target, componentPrep, vanillaPromise);
+    const getTarget = treatRoot(
+      target,
+      storedComponentId,
+      componentPrep,
+      vanillaPromise
+    );
 
     const rootObject =
       getTarget && typeof getTarget === "object"
@@ -63,7 +75,12 @@
 
     /////// target functions /////////////////////////////////
 
-    function treatRoot(target, componentPrep, vanillaPromise) {
+    function treatRoot(
+      target,
+      storedComponentId,
+      componentPrep,
+      vanillaPromise
+    ) {
       try {
         let component;
         let html;
@@ -120,8 +137,11 @@
                 ? componentPrep.tag
                 : undefined,
             selector: target,
-            position: componentPrep.position,
-            clear: componentPrep.clear,
+            position: componentPrep?.position ? componentPrep?.position : 0,
+            classNames: componentPrep?.classNames
+              ? componentPrep?.classNames
+              : "",
+            clear: componentPrep?.clear ? componentPrep.clear : true,
             htmlDataType: htmlDataType,
             html: html,
             callBack:
@@ -261,36 +281,101 @@
       });
 
     function treatSimple(htmlData, parentElement) {
-      //assuming clear=true, position 0
-      let element = document.getElementById(htmlData.selector).cloneNode();
-      document.getElementById(htmlData.selector).remove();
-      //let element = document.createElement(htmlData.tag || "div");
-      element.innerHTML = content;
-      parentElement.appendChild(element);
+      // Assuming clear=true, position 0
+      const targetElement = document.querySelector(htmlData.selector);
+      if (!targetElement) {
+        console.error(`Element with selector ${htmlData.selector} not found.`);
+        return;
+      }
+      if (htmlData.clear) {
+        targetElement.innerHTML = ""; // Clear the content of the target element
+      }
+      ë.vanillaMess(
+        "updateComponent",
+        "logging htmlData at clear",
+        htmlData,
+        "check"
+      );
+
+      // Assuming content is an array of strings
+      const content = htmlData.html.join(""); // Combine array into a single string if needed
+      targetElement.innerHTML = content;
     }
 
     function treatSpawn(htmlData, parentElement) {
-      let index = htmlData.position || 0;
+      // Identify the target element within the parentElement
+      const targetElement = parentElement.querySelector(htmlData.selector);
 
+      // Use ë.vanillaMess to check and log the target element
+      ë.vanillaMess(
+        "updateComponent",
+        "Checking target element",
+        [htmlData.selector, targetElement],
+        "check"
+      );
+
+      if (!targetElement) {
+        // Log an error using ë.vanillaMess
+        ë.vanillaMess(
+          "updateComponent",
+          `Element with selector ${htmlData.selector} not found within the parentElement.`,
+          [htmlData.selector],
+          "check"
+        );
+        return;
+      }
+
+      // Determine the ID and class for the selector
       let selectorID = null;
-      let selectorClass = null;
+      let selectorClass = [];
 
       if (htmlData.selector.startsWith("#")) {
         selectorID = htmlData.selector.split("#")[1].split(".")[0];
-        selectorClass = htmlData.selector.split(".").slice(1);
+
+        selectorClass = selectorID;
       } else if (htmlData.selector.startsWith(".")) {
-        selectorClass = htmlData.selector.split(".")[1];
+        selectorClass = htmlData.selector.split(".").slice(1);
       }
 
+      // Use ë.vanillaMess to check and log the selector details
+      ë.vanillaMess(
+        "updateComponent",
+        "Selector details",
+        [selectorID, selectorClass],
+        "check"
+      );
+
       let tag = htmlData.tag || "div";
+      let classNames = htmlData.classNames || "";
 
       // Wrap each HTML string with the specified tag
+
+      // if(tag){
+      //   content = ``
+      // }
       let wrappedHtml = htmlData.html
-        .map(
-          (content) =>
-            `<${tag} id=${selectorID} class=${selectorClass}>${content}</${tag}>`
-        )
+        .map((content, index) => {
+          if (tag) {
+            if (classNames) {
+              return `<${tag} class="${classNames}">${content}</${tag}>`;
+            } else {
+              console.error(
+                "It is recommended to add a classNames property to a component spawn"
+              );
+              // return;
+            }
+          }
+          return content;
+        })
         .join("");
+
+      // Use ë.vanillaMess to check the wrapped HTML content
+      ë.vanillaMess(
+        "updateComponent",
+        "Wrapped HTML content",
+        [wrappedHtml],
+        "check"
+      );
 
       // Create a new DOMParser
       let parser = new DOMParser();
@@ -298,48 +383,34 @@
       // Parse the wrapped HTML strings into a DocumentFragment
       let fragment = parser.parseFromString(wrappedHtml, "text/html").body;
 
-      // If clear is true, remove children from index to the end
-      // Convert the children of parentElement to an array
-      let childrenArray = Array.from(parentElement.children);
+      // Use ë.vanillaMess to check the parsed fragment
+      ë.vanillaMess("updateComponent", "Parsed fragment", [fragment], "check");
 
-      if (index === -1) {
-        index = childrenArray.length;
-      } else if (!index) {
-        index = childrenArray.findIndex(
-          (child) =>
-            child.tagName.toLowerCase() === (htmlData.tag || "div") &&
-            (child.classList.contains(selectorClass) || child.id === selectorID)
-        );
-        // If an element was found, remove it
-        if (index !== -1) {
-          childrenArray.splice(index, 1);
-        }
-      } else {
-        let firstTagIndex = childrenArray.findIndex(
-          (child) =>
-            child.tagName.toLowerCase() === (htmlData.tag || "div") &&
-            (child.classList.contains(selectorClass) || child.id === selectorID)
-        );
-
-        // If a tag was found, offset index by its position
-        if (firstTagIndex !== -1) {
-          index += firstTagIndex;
-        }
-      }
-
-      // If clear is true, remove children from index to the end
+      // If clear is true, remove children of the targetElement
       if (htmlData.clear === true || htmlData.clear === undefined) {
-        childrenArray = childrenArray.slice(0, index);
+        targetElement.innerHTML = ""; // Clear only the specific target element
+
+        // Log the clearing action
+        ë.vanillaMess(
+          "updateComponent",
+          "Cleared content of the target element",
+          [htmlData.selector, targetElement],
+          "check"
+        );
       }
 
-      // Insert the new HTML at the specified index
-      childrenArray.splice(index, 0, ...Array.from(fragment.children));
+      // Append the new content inside the target element as separate siblings
+      while (fragment.firstChild) {
+        targetElement.appendChild(fragment.firstChild);
+      }
 
-      // Combine the outerHTML of all children
-      let combinedHtml = childrenArray.map((child) => child.outerHTML).join("");
-
-      // Set the innerHTML of parentElement to the combined HTML
-      parentElement.innerHTML = combinedHtml;
+      // Use ë.vanillaMess to check the final state of the target element after content insertion
+      ë.vanillaMess(
+        "updateComponent",
+        "Final state after content insertion",
+        [targetElement.outerHTML, targetElement],
+        "check"
+      );
     }
 
     ////build//////////////////////////////////////////////

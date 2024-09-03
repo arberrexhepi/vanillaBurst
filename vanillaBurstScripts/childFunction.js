@@ -119,8 +119,8 @@
      * @param {String} customFunctionName - The name of the custom function to process.
      * @returns {Promise<Object>} A promise that resolves with the updated originBurst state.
      */
-    function processFunction(passedFunction, customFunctionName) {
-      return new Promise((resolve) => {
+    async function processFunction(passedFunction, customFunctionName) {
+      return new Promise(async (resolve) => {
         ë.logSpacer(
           {
             Status: "STARTING rollCall for customFunction",
@@ -140,22 +140,51 @@
               originBurst
             );
 
-          let serverResult;
-          if (passedFunction.dataSchema?.data?.auto === true) {
-            serverResult = ë.serverRender(
-              passedFunction.dataSchema,
-              "serverBurst"
+          let serverResult = {};
+          let promises = [];
+
+          if (Array.isArray(passedFunction.dataSchema)) {
+            let indexResult;
+            for (const schema of passedFunction.dataSchema) {
+              if (schema?.auto === true) {
+                promises.push(
+                  ë
+                    .serverRender(schema, "serverBurst", true, indexResult)
+                    .then((result) => {
+                      indexResult = result;
+                      return result;
+                    })
+                );
+              }
+            }
+          } else if (passedFunction.dataSchema?.auto === true) {
+            promises.push(
+              ë
+                .serverRender(passedFunction.dataSchema, "serverBurst")
+                .then((result) => {
+                  return result;
+                })
             );
           }
 
-          originBurst = ë.setOriginBurst(
-            renderSchema,
-            customFunctionName,
-            passedFunction,
-            originBurst,
-            serverResult
-          );
-          resolve(originBurst);
+          Promise.all(promises).then((results) => {
+            console.log("complete serverResult: " + JSON.stringify(results));
+
+            // Merge all objects from the results array into serverResult
+            results.forEach((result) => {
+              Object.assign(serverResult, result);
+            });
+
+            originBurst = ë.setOriginBurst(
+              renderSchema,
+              customFunctionName,
+              passedFunction,
+              originBurst,
+              serverResult
+            );
+
+            resolve(originBurst);
+          });
         }
       }).catch((error) => {
         throw new Error("something went wrong: " + error);

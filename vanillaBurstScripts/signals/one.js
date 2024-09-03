@@ -57,55 +57,69 @@
                 clientY: clientY, //fix missing data
               };
 
+              let currentSignalData =
+                localStorage.getItem(storeSignalName) || {};
+
+              if (currentSignalData) {
+                if (typeof currentSignalData !== "object") {
+                  currentSignalData = JSON.parse(currentSignalData)[signalName];
+                }
+              } else {
+                currentSignalData["action"] = "go";
+              }
               ë.logSpacer("Event Data:", eventData);
 
               ë.logSpacer(`signal: ${JSON.stringify(signal)} 
                           signalName: ${signalName} 
                           storeSignalname: ${storeSignalName}
                           action: ${action}
-                          storedMode" ${storedMode}
+                          storedMode: ${storedMode}
                           cached: ${eventData.cache}
                           `);
 
               let currentCase;
 
               if (action === "go") {
-                action = "pause";
-                signalStatus = false;
-                currentCase = action + "expecting pause";
-              } else if (action === "pause") {
                 action = "go";
                 signalStatus = true;
+                if (
+                  signal?.[signalName]?.counter &&
+                  signal?.[signalName]?.counter !== 0
+                ) {
+                  signal[signalName].counter = signal[signalName].counter - 1;
+                }
+                currentCase = action;
+              } else if (action === "pause") {
+                action = "pause";
+                signalStatus = false;
                 currentCase = action;
               } else if (action === "reset") {
-                await ë.resetSignal(signalName, type, "reset", eventData);
                 action = "reset";
-                signalStatus = false;
+                signalStatus = true;
                 currentCase = action;
               } else if (action === "remove") {
-                await ë.resetSignal(signalName, type, "remove", eventData);
+                await ë.resetSignal(signalName, type, "removed", eventData);
                 action = "remove";
-                signalStatus = false;
+                signalStatus = true;
                 currentCase = action;
               } else {
                 action = "go";
-                currentCase = action + "forced go";
+                currentCase = action;
               }
 
               if (signal?.[signalName]?.action && eventData) {
-                signal[signalName].action = action;
+                signal[signalName].action = currentCase;
                 signal[signalName].status = signalStatus;
 
                 signal[signalName].eventData = eventData;
 
-                if (action !== "reset" || action !== "remove") {
-                  localStorage.setItem(storeSignalName, JSON.stringify(signal));
-                }
+                localStorage.setItem(storeSignalName, JSON.stringify(signal));
+
                 //  throw new Error("yoo");
-                eventResult = [action, eventData];
+                eventResult = [currentCase, eventData];
                 resolve(eventResult);
               } else {
-                eventResult = [action, eventData];
+                eventResult = [currentCase || "go", eventData];
                 resolve(eventResult);
               }
             });
@@ -139,10 +153,19 @@
   }
 });
 
-ë.many = function (actions, options, useCapture) {
-  if (actions) {
-    actions.forEach(([selector, eventType, action, cache]) => {
-      this.one(selector, eventType, { ...options, action, cache }, useCapture);
-    });
-  }
-};
+ë.frozenVanilla("many", async function (actions, options, useCapture) {
+  return new Promise(async (resolve, reject) => {
+    if (actions) {
+      actions.forEach(async ([selector, eventType, action, cache]) => {
+        let theReturn = await this.one(
+          selector,
+          eventType,
+          { ...options, action, cache },
+          useCapture
+        );
+        //alert(JSON.stringify(theReturn));
+        resolve(theReturn);
+      });
+    }
+  });
+});

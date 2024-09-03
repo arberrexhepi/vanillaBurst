@@ -28,153 +28,176 @@ if (totalCacheKB > localCacheMax * 0.9) {
 /////////////////
 
 //as in "a vanillaMessage..!"
-ë.frozenVanilla("vanillaMess", function (vanillaMessage, data, typeCheck) {
-  if (ë.vanillaStock !== true) {
-    new Error().stack;
-    return;
-  }
-  let vanillaTableMess = {
-    myMessage: vanillaMessage,
-    expectingType: typeCheck,
-    message: "",
-    data: data,
-    stack: null,
-  };
+ë.frozenVanilla(
+  "vanillaMess",
+  function (scoopTag, vanillaMessage, data, typeCheck) {
+    if (ë.vanillaStock !== true) {
+      new Error().stack;
+      return "";
+    }
 
-  if (
-    (data && data !== null) ||
-    (data && data !== null && typeCheck && typeCheck !== null)
-  ) {
-    try {
-      if (typeCheck === "check") {
-        if (data instanceof Text) {
-          vanillaTableMess.message += "Instance of Text";
-        }
-        vanillaTableMess.message +=
-          "The data has returned:" + JSON.stringify(data);
-        vanillaTableMess.message += "Data type: " + typeof data;
-        vanillaTableMess.stack = new Error().stack;
+    if (
+      (ë.vanillaMessCaller && ë.vanillaMessCaller !== null) ||
+      ë.vanillaMessCaller !== undefined
+    ) {
+      if (
+        ë.vanillaMessCaller &&
+        ë.vanillaMessCaller !== null &&
+        !ë.vanillaMessCaller.includes(scoopTag)
+      ) {
+        // If scoop is defined but not included in vanillaMessCaller, return nothing
+
+        return;
       }
-      if (typeCheck === "array" || typeCheck === "array") {
-        if (Array.isArray(data)) {
-          vanillaTableMess.message += "Data is array: " + data;
-          vanillaTableMess.data = JSON.stringify(data);
-        } else {
-          vanillaTableMess.message += "Data is not an array: ";
+    }
+
+    let vanillaTableMess = {
+      myMessage: `[vanillaScoop: ${scoopTag}]: ${vanillaMessage}`,
+      expectingType: typeCheck,
+      message: "",
+      data: data,
+      stack: null,
+    };
+
+    if (
+      (data && data !== null) ||
+      (data && data !== null && typeCheck && typeCheck !== null)
+    ) {
+      try {
+        if (typeCheck === "check") {
+          if (data instanceof Text) {
+            vanillaTableMess.message += "Instance of Text";
+          }
+          vanillaTableMess.message +=
+            "The data has returned:" + JSON.stringify(data);
+          vanillaTableMess.message += "Data type: " + typeof data;
           vanillaTableMess.stack = new Error().stack;
         }
-      }
-
-      if (typeCheck === "object" || typeCheck === "array") {
-        if (typeof data === "object" && data !== null && !Array.isArray(data)) {
-          if (data instanceof Node) {
-            vanillaTableMess.message += "Data is a DOM node";
-          } else if (data instanceof Function) {
-            vanillaTableMess.message += "Data is a function";
-          } else if (data instanceof Date) {
-            vanillaTableMess.message += "Data is a date";
-          } else if (data instanceof RegExp) {
-            vanillaTableMess.message += "Data is a regular expression";
-          } else if (data instanceof Text) {
-            vanillaTableMess.message += "Instance of Text";
+        if (typeCheck === "array" || typeCheck === "array") {
+          if (Array.isArray(data)) {
+            vanillaTableMess.message += "Data is array: " + data;
+            vanillaTableMess.data = JSON.stringify(data);
           } else {
-            vanillaTableMess.message += "Data is an object";
+            vanillaTableMess.message += "Data is not an array: ";
+            vanillaTableMess.stack = new Error().stack;
           }
-          vanillaTableMess.data = data;
-        } else {
-          vanillaTableMess.message += "Data is not an object: ";
-          vanillaTableMess.data = data;
         }
-      }
 
-      if (typeCheck === "string" || typeCheck === "array") {
-        if (typeof data === "string") {
-          vanillaTableMess.message += "String is a string";
-        } else {
-          vanillaTableMess.message += "Data is not a string: ";
+        if (typeCheck === "object" || typeCheck === "array") {
+          if (
+            typeof data === "object" &&
+            data !== null &&
+            !Array.isArray(data)
+          ) {
+            if (data instanceof Node) {
+              vanillaTableMess.message += "Data is a DOM node";
+            } else if (data instanceof Function) {
+              vanillaTableMess.message += "Data is a function";
+            } else if (data instanceof Date) {
+              vanillaTableMess.message += "Data is a date";
+            } else if (data instanceof RegExp) {
+              vanillaTableMess.message += "Data is a regular expression";
+            } else if (data instanceof Text) {
+              vanillaTableMess.message += "Instance of Text";
+            } else {
+              vanillaTableMess.message += "Data is an object";
+            }
+            vanillaTableMess.data = data;
+          } else {
+            vanillaTableMess.message += "Data is not an object: ";
+            vanillaTableMess.data = data;
+          }
         }
-      }
 
-      if (typeCheck === "number" || typeCheck === "array") {
-        if (typeof data === "number" || data === 0) {
-          vanillaTableMess.message += "Number is Number: " + data;
-        } else {
-          vanillaTableMess.message += "Data is not a number: ";
+        if (typeCheck === "string" || typeCheck === "array") {
+          if (typeof data === "string") {
+            vanillaTableMess.message += "String is a string";
+          } else {
+            vanillaTableMess.message += "Data is not a string: ";
+          }
         }
-      }
 
-      if (typeCheck === "boolean" || typeCheck === "array") {
-        if (typeof data === "boolean") {
-          vanillaTableMess.message += "Boolean: " + true;
-          vanillaTableMess.data = data;
-        } else {
-          vanillaTableMess.message += "Boolean: " + false;
+        if (typeCheck === "number" || typeCheck === "array") {
+          if (typeof data === "number" || data === 0) {
+            vanillaTableMess.message += "Number is Number: " + data;
+          } else {
+            vanillaTableMess.message += "Data is not a number: ";
+          }
         }
-      }
 
-      if (typeCheck === "function" || typeCheck === "array") {
-        if (typeof data === "function") {
-          vanillaTableMess.message += "Function is Function: " + data.name;
-        } else {
-          vanillaTableMess.message += "Data is not a function ";
+        if (typeCheck === "boolean" || typeCheck === "array") {
+          if (typeof data === "boolean") {
+            vanillaTableMess.message += "Boolean: " + true;
+            vanillaTableMess.data = data;
+          } else {
+            vanillaTableMess.message += "Boolean: " + false;
+          }
         }
-      }
 
-      if (typeCheck === "undefined" || typeCheck === "array") {
-        if (typeof data === "undefined") {
-          vanillaTableMess.message += "Data is indeed undefined";
-        } else {
-          vanillaTableMess.message +=
-            "Data is not undefined, hope that's what you wanted to hear! ";
+        if (typeCheck === "function" || typeCheck === "array") {
+          if (typeof data === "function") {
+            vanillaTableMess.message += "Function is Function: " + data.name;
+          } else {
+            vanillaTableMess.message += "Data is not a function ";
+          }
         }
-      }
 
-      if (typeCheck === "null" || typeCheck === "array") {
-        if (data === null) {
-          vanillaTableMess.message += "Data is null";
-        } else {
-          vanillaTableMess.message += "Data is not null";
+        if (typeCheck === "undefined" || typeCheck === "array") {
+          if (typeof data === "undefined") {
+            vanillaTableMess.message += "Data is indeed undefined";
+          } else {
+            vanillaTableMess.message +=
+              "Data is not undefined, hope that's what you wanted to hear! ";
+          }
         }
-      }
 
-      if (typeCheck === "symbol" || typeCheck === "array") {
-        if (typeof data === "symbol") {
-          return true;
-        } else {
-          vanillaTableMess.message += "Data is not a symbol";
+        if (typeCheck === "null" || typeCheck === "array") {
+          if (data === null) {
+            vanillaTableMess.message += "Data is null";
+          } else {
+            vanillaTableMess.message += "Data is not null";
+          }
         }
-      }
 
-      if (typeCheck === "bigint" || typeCheck === "array") {
-        if (typeof data === "bigint") {
-          vanillaTableMess.message += "Data is a bigint";
-        } else {
-          vanillaTableMess.message += "Data is not a bigint";
+        if (typeCheck === "symbol" || typeCheck === "array") {
+          if (typeof data === "symbol") {
+            return true;
+          } else {
+            vanillaTableMess.message += "Data is not a symbol";
+          }
         }
+
+        if (typeCheck === "bigint" || typeCheck === "array") {
+          if (typeof data === "bigint") {
+            vanillaTableMess.message += "Data is a bigint";
+          } else {
+            vanillaTableMess.message += "Data is not a bigint";
+          }
+        }
+      } catch (error) {
+        runError(
+          vanillaTableMess ||
+            "[vanillaMess] Something went wrong with the checks",
+          error
+        );
+        vanillaTableMess["error"] = error;
+        //throw new Error(vanillaTableMess);
       }
-    } catch (error) {
+    } else {
       runError(
-        vanillaTableMess ||
-          "[vanillaMess] Something went wrong with the checks",
-        error
+        ((vanillaTableMess.message = "Data is either undefined, null, or 0"),
+        new Error(vanillaTableMess)),
+        data
       );
-      vanillaTableMess["error"] = error;
-      //throw new Error(vanillaTableMess);
     }
-  } else {
-    runError(
-      ((vanillaTableMess.message = "Data is either undefined, null, or 0"),
-      new Error(vanillaTableMess)),
-      data
-    );
-  }
-  function runError(vanillaTableMess, data) {
-    return vanillaTableMess;
-  }
+    function runError(vanillaTableMess, data) {
+      return vanillaTableMess;
+    }
 
-  while (true) {
-    vanillaMessage.stack = new Error().stack;
-    console.table(vanillaTableMess);
-    return console.warn("Scoop Message (see table above)");
+    while (true) {
+      vanillaMessage.stack = new Error().stack;
+      console.table(vanillaTableMess);
+      return console.warn("Scoop Message (see table above)");
+    }
   }
-});
+);

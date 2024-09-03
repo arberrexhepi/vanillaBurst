@@ -1,12 +1,12 @@
 ë.frozenVanilla("vanillaAnimation", async function (animationConfigs) {
   let index = 0;
-  let scoopTag = "[Scoop][vanillaAnimation]";
+  let scoopTag = "vanillaAnimation";
   try {
     index++;
 
     runVanillaAnimation(animationConfigs);
   } catch (error) {
-    ë.vanillaMess("[vendorScoop] vanillaAnimation: ", error, "check");
+    ë.vanillaMess(scoopTag, "Animation Config failed", error, "check");
   }
 
   function runVanillaAnimation(animationConfigs) {
@@ -15,7 +15,7 @@
     if (typeof animationConfigs === "object" && animationConfigs !== null) {
       animationConfigs = Object.values(animationConfigs);
     } else {
-      ë.vanillaMess("[vendorScoop] vanillaAnimation: ", error, "check");
+      ë.vanillaMess(scoopTag, scoopTag, error, "check");
 
       throw new Error(error);
     }
@@ -30,22 +30,26 @@
           typeof animationConfig.duration !== "number"
         ) {
           ë.vanillaMess(
-            scoopTag + ": Target Check:",
+            scoopTag,
+            ": Target Check:",
             animationConfig.target,
             "string"
           );
           ë.vanillaMess(
-            scoopTag + ": Speed Check:",
+            scoopTag,
+            ": Speed Check:",
             animationConfig.speed,
             "number"
           );
           ë.vanillaMess(
-            scoopTag + ": Effects Check:",
+            scoopTag,
+            ": Effects Check:",
             animationConfig.effects,
             "array"
           );
           ë.vanillaMess(
-            scoopTag + ": Duration Check:",
+            scoopTag,
+            ": Duration Check:",
             animationConfig.duration,
             "number"
           );
@@ -70,7 +74,7 @@
 
       if (!selector) {
         console.error("Invalid selector:", animationConfig.target);
-        ë.vanillaMess(scoopTag + ": Invalid Selector", false, "false");
+        ë.vanillaMess(scoopTag, ": Invalid Selector", false, "false");
         return;
       }
 
@@ -81,7 +85,7 @@
         animationTarget = document.getElementsByClassName(selector)[0];
       } else {
         console.error("Unknown selector type:", selectorType);
-        ë.vanillaMess("");
+        ë.vanillaMess(scoopTag, "");
         return;
       }
 
@@ -284,7 +288,8 @@
               results.push(result);
               lastEffect = effect + "-" + animationTarget;
               ë.vanillaMess(
-                scoopTag + " Effect check: " + effect,
+                scoopTag,
+                " Effect check: " + effect,
                 effect,
                 "string"
               );
@@ -296,7 +301,8 @@
           }
         } else {
           ë.vanillaMess(
-            scoopTag + " Effect not found: " + effect,
+            scoopTag,
+            " Effect not found: " + effect,
             effect,
             "string"
           );
@@ -390,7 +396,7 @@
       ${zoomKeyframes}
     }
   `;
-              ë.vanillaMess("at append stylezoom", true, "boolean");
+              ë.vanillaMess(scoopTag, "at append stylezoom", true, "boolean");
               document.head.appendChild(styleZoom);
             }
             return processZoom(
@@ -566,7 +572,7 @@
     }
 
     function setPositionVariables(animationConfig, animationTarget, chain) {
-      ë.vanillaMess("checking position", true, "boolean");
+      ë.vanillaMess(scoopTag, scoopTag, "checking position", true, "boolean");
       let root = document.documentElement;
 
       // Calculate the positionStart and positionFinish values based on the offset

@@ -1,57 +1,42 @@
 ë.frozenVanilla("signalInterval", async function (signalObject) {
   let {
     vanillaPromise,
-    signalName = false, // can use this to access signalStore to rerun ... possibly might need to
+    signalName = false,
     namespace = false,
     action = "pause",
     initAction = "pause",
     vanillaDOM = null,
     signalAffectDOM = null,
     eventData = null,
+    initName = null,
     init = null,
     count,
     time,
     repeat = false,
+    intermittentName = null,
     intermittent = null,
+    callBackName = null,
     callBack = false,
     clearable = null,
     verbose = false,
   } = signalObject;
-  if (signalName === false) {
-    return;
-  }
+  if (!signalName) return;
 
-  action = action ? action : "go";
   let initPass;
   if (init) {
     initPass = await init(action, eventData);
   }
 
   let signals = JSON.parse(localStorage.getItem(signalName + "_signal")) || {};
-  let counter = signals?.[signalName]?.counter
-    ? signals[signalName].counter
-    : initPass.counter;
-  count = count ? count : 999;
-
-  action = initPass.action || action;
+  let counter = signals?.[signalName]?.counter || initPass.counter;
+  count = count || 999;
+  action = action || initPass.action;
 
   if (!signals[signalName + "_signal"]?.id) {
-    //.
-    //.
-    ///set signal Interval
     let signalId = setInterval(async () => {
       signals = JSON.parse(localStorage.getItem(signalName + "_signal")) || {};
-      let signalStatus = true;
-      if (verbose && verbose === true) {
-        console.log(signals[signalName], signalName);
-      }
 
-      if (signals?.[signalName]) {
-        if (signals[signalName]?.action === "pause") {
-          signals[signalName].counter = counter;
-          localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
-        }
-      }
+      if (verbose) console.log(signals[signalName], signalName);
 
       if (
         vanillaPromise?.passedFunction?.originBurst?.namespace.includes(
@@ -64,144 +49,154 @@
           signals[signalName].timeElapsed =
             Date.now() - signals[signalName].startTime;
         }
-        if (
-          signals?.[signalName]?.action === "reset" ||
-          signals?.[signalName]?.action === "remove"
-        ) {
-          signals[signalName].counter = 0;
-          localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
-          intermittentPass = await intermittent(signals[signalName]);
 
-          await callBack(intermittentPass);
-          signalAffectDOM(vanillaDOM, vanillaPromise, intermittentPass);
-
-          if (signals?.[signalName]?.action === "remove") {
-            localStorage.removeItem(signalName + "_signal");
-            clearInterval(signals[signalName]?.id);
-
-            return false;
-          }
-          clearInterval(signals[signalName]?.id);
-          localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
-        } else {
-          if (!signals?.[signalName]?.action) {
-            return;
-          }
-          signals[signalName].action = action;
-        }
-
-        localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
-
-        let data;
-        let CallBackResult;
+        let data, CallBackResult;
         if (typeof callBack === "function") {
           if (typeof intermittent === "function") {
             intermittentPass = await intermittent(signals[signalName]);
           }
-          let checkAction = ë.getSignal(signalName, "_signal");
-          if (checkAction !== false) {
-            action = checkAction.signal[signalName].action;
-          }
-          data = intermittentPass;
 
-          let CallBackResult = false;
+          data = intermittentPass;
           CallBackResult = await callBack(data);
 
-          data.action = CallBackResult?.action
-            ? CallBackResult.action
-            : data.action;
+          data.action = CallBackResult?.action || data.action;
+          data.signalStatus = CallBackResult?.signalStatus || data.signalStatus;
 
-          data.signalStatus = CallBackResult?.signalStatus
-            ? CallBackResult.signalStatus
-            : data.signalStatus;
           if (data?.data) {
-            data.data = CallBackResult?.data ? CallBackResult.data : data.data;
-          } else if (CallBackResult?.data) {
-            data.data = CallBackResult?.data ? CallBackResult.data : data.data;
+            data.data = CallBackResult?.data || data.data;
           }
         }
 
+        // Handle state changes explicitly
         switch (data.action) {
           case "go":
-            signals[signalName].counter = counter;
+            if (typeof count === "number" && counter > count) {
+              data.action = "completed";
+              data.counter = 0;
+              data.data = await callBack(data);
+
+              // Prepare for "completed" state
+              await ë.signalStore
+                .get(`${signalName}_runner`)
+                [callBackName](data);
+
+              if (data.data.eventData) {
+                signalAffectDOM(vanillaDOM, vanillaPromise);
+              }
+
+              counter = 0; // Reset counter to 0
+              signals[signalName].action = "completed"; // Set action to completed
+              signals[signalName].signalStatus = false;
+
+              if (repeat !== false) {
+                signals[signalName].action = "go"; // If repeating, stay in "go" state
+                return "go";
+              }
+            } else {
+              signals[signalName].action = "go";
+              signals[signalName].signalStatus = true;
+            }
+
+            signals[signalName].counter = counter; // Continue incrementing counter
+            signals[signalName].timeElapsed =
+              Date.now() - signals[signalName].startTime;
+            counter++;
+            break;
+
+          case "pause":
+            signals[signalName].action = "pause"; // Keep it paused
+            signals[signalName].signalStatus = false;
+            signals[signalName].startTime = Date.now();
+            counter = signals[signalName].counter;
+            return;
+
+          case "reset":
+            counter = 0;
+            signals[signalName].counter = 0; // Start incrementing from 0
             signals[signalName].signalStatus = true;
             signals[signalName].timeElapsed =
               Date.now() - signals[signalName].startTime;
-            if (typeof count === "number" && counter >= count) {
-              data.action = "completed";
-              data.counter = 0;
+            signals[signalName].action = "go";
+            break;
 
-              await callBack(data);
-              counter = 0;
+          case "remove":
+            alert("removing");
+
+            await ë.resetSignal(signalName, "_signal", "remove");
+            let signalRemovalCheck = await ë.resetSignal(
+              signalName,
+              "_signal",
+              "remove"
+            );
+
+            signalAffectDOM(
+              vanillaDOM,
+              vanillaPromise,
+              (eventData = data?.data?.eventData ? data?.data?.eventData : null)
+            );
+
+            await ë.signalStore
+              .get(`${signalName}_runner`)
+              [intermittentName](data);
+
+          // return;
+          case "removed":
+            if (data?.data?.eventData) {
+              signalAffectDOM(vanillaDOM, vanillaPromise, data.data.eventData);
             }
 
-            counter++;
-            signalStatus = true;
+            await ë.signalStore
+              .get(`${signalName}_runner`)
+              [intermittentName](data);
 
-            break;
-          case "pause":
-            signals[signalName].signalStatus = false;
-            signals[signalName].startTime = Date.now();
-            signalStatus = false;
-            ///TODO: call intermittent and callback ?!!?!?
-            return false;
-            break;
-          case "reset":
-            break;
+            return;
+
           case "completed":
+            // Handle the logic when the action is "completed"
+            data.counter = count; // Reset counter
+            signals[signalName].signalStatus = false; // Mark as not active
+            await callBack(data); // Execute any callbacks for completed state
+
+            // Optionally handle DOM updates if needed
+            if (data.data.eventData) {
+              signalAffectDOM(vanillaDOM, vanillaPromise, data.data.eventData);
+            }
+
+            // Reset the action if repeat is enabled
+            if (repeat !== false) {
+              signals[signalName].action = "go";
+              signals[signalName].counter = 0; // Reset counter for the next iteration
+            } else {
+              signals[signalName].action = "completed"; // Maintain completed state if no repeat
+            }
+            break;
         }
 
-        ///////if max count is reached
-
-        if (verbose && verbose === true) {
-          ë.vanillaMess(
-            "[signalInterval]: ",
-            [signalName, intermittentPass, CallBackResult],
-            "checking"
-          );
-        }
+        // Always update localStorage after making changes
         localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
       }
     }, time);
 
-    ///Build localstorage for signal observing
-
-    if (!signals?.[signalName]) {
-      signals[signalName] = {
-        action: action,
-        initAction: initAction,
-        id: signalId,
-        clearable: clearable,
-        count: count,
-        counter: counter,
-        repeatOnCount: count,
-        repeat: repeat,
-        time: time,
-        startTime: Date.now(),
-        timeElapsed: 0,
-        signalStatus: true,
-        eventData: eventData,
-      };
-    } else {
-      ///////TESTING CLEAR
-      if (
-        signals?.[signalName]?.id &&
-        signals?.[signalName]?.clear &&
-        signals?.[signalName]?.clear === true
-      ) {
-        signals[signalName].counter = 0;
-        signals[signalName].startTime = Date.now();
-        signals[signalName].timeElapsed = 0;
-        clearInterval(signals?.[signalName]?.id);
-      }
-
-      //////TESTING CLEAR END
-    }
-
-    localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
-  } else {
-    //   if (clearable && typeof clearable === "function") {
-    //     clear();
-    //   }
+    initializeSignal(signals, signalName, signalId, {
+      action,
+      initAction,
+      clearable,
+      count,
+      counter,
+      repeat,
+      time,
+      eventData,
+    });
   }
 });
+
+function initializeSignal(signals, signalName, signalId, params) {
+  signals[signalName] = {
+    ...params,
+    id: signalId,
+    startTime: Date.now(),
+    timeElapsed: 0,
+    signalStatus: true,
+  };
+  localStorage.setItem(signalName + "_signal", JSON.stringify(signals));
+}

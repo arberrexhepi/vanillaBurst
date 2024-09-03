@@ -1,8 +1,10 @@
 const vanillaApp = ë.frozenVanilla(
   "vanillaApp",
-  function vanillaApp(baseUrl) {
+  function vanillaApp() {
     ë.onload = function () {
       ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
+      const fullPath = ë.domainUrl + ë.baseUrl;
+      console.log("fullpath" + fullPath);
 
       // Load initial scripts and manage promise chains
       const configScriptPath = "vanillaBurstScripts/system/configs/config.js";
@@ -12,18 +14,18 @@ const vanillaApp = ë.frozenVanilla(
 
       ë.frozenVanilla("loadInitialScripts", async function () {
         try {
-          const configResponse = await fetch(baseUrl + "globals/config.json");
+          const configResponse = await fetch(fullPath + "globals/config.json");
           if (!configResponse.ok) {
             throw new Error("Network response was not ok");
           }
 
           const config = await configResponse.json();
-
+          setVanillaBurstScripts(fullPath);
           // Assuming configScriptPath is defined and refers to the script to load
-          await ë.loadScript(`${baseUrl}${configScriptPath}`);
+          await ë.loadScript(`${fullPath}${configScriptPath}`);
 
           // Process the config and return schemaParts
-          const schemaParts = await loadConfig(config);
+          const schemaParts = await ë.loadConfig(config);
 
           ë.logSpacer(
             `%cWelcome to ${ë.domainUrl} 🍦`,
@@ -57,12 +59,12 @@ const vanillaApp = ë.frozenVanilla(
         ë.logSpacer("Extracted parts (keys):", parts, null, true);
 
         const scriptPromises = parts.map((part) => {
-          const partConfigPath = `/schemas/${part}Config.js`;
-          const scriptUrl = `${ë.domainUrl}/${baseUrl}${partConfigPath}`;
+          const partConfigPath = `schemas/${part}Config.js`;
+          const scriptUrl = `${fullPath}${partConfigPath}`;
+          alert(scriptUrl);
 
           ë.frozenVanilla("partConfigPath", partConfigPath, false);
           ë.frozenVanilla("scriptUrl", scriptUrl, false);
-
           return ë.loadScript(scriptUrl).catch((error) => {
             console.error(
               `Error loading [view]Config for part: ${part}`,
@@ -71,11 +73,11 @@ const vanillaApp = ë.frozenVanilla(
           });
         });
 
-        const schemaScriptPath = "vanillaBurstScripts/schema.js";
+        const schemaScriptPath = `${fullPath}vanillaBurstScripts/schema.js`;
         ë.frozenVanilla("schemaScriptPath", schemaScriptPath, false);
 
         scriptPromises.push(
-          ë.loadScript(`${baseUrl}${schemaScriptPath}`).catch((error) => {
+          ë.loadScript(schemaScriptPath).catch((error) => {
             console.error("Error loading schema.js script", error);
           })
         );
@@ -84,7 +86,7 @@ const vanillaApp = ë.frozenVanilla(
           .then(async () => {
             ë.logSpacer("CONFIG PARTS PROMISED:", parts, null, true);
             const schema = await config(parts);
-            ë.frozenVanilla("schema", schema);
+            ë.frozenVanilla("schema", schema, false);
 
             if (config && typeof config === "function") {
               return await promiseRouteAndStateLoad(schema);
@@ -113,10 +115,10 @@ const vanillaApp = ë.frozenVanilla(
       async function promiseRouteAndStateLoad(schema) {
         await schema;
         return ë
-          .loadScript(`${baseUrl}${scriptPaths.vanillaBurstScriptPath}`)
+          .loadScript(`${fullPath}${scriptPaths.vanillaBurstScriptPath}`)
           .then(
             async () =>
-              await ë.loadScript(`${baseUrl}${scriptPaths.routesScriptPath}`)
+              await ë.loadScript(`${fullPath}${scriptPaths.routesScriptPath}`)
           )
           .then(() => {
             ë.logSpacer(
@@ -133,46 +135,62 @@ const vanillaApp = ë.frozenVanilla(
       }
 
       // Freeze an array of scripts into vanillaBurstScripts
-      if (ë.vanillaBurstScripts === undefined) {
-        Object.defineProperty(window, "vanillaBurstScripts", {
-          value: Object.freeze([
-            baseUrl + "vendors/jquery-3.7.1.min.js",
-            baseUrl + "vendors/purify.min.js",
-            baseUrl + "vanillaBurstScripts/system/configs/config.js",
-            baseUrl +
-              "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDOM.js",
-            baseUrl +
-              "vanillaBurstScripts/vanillaDOM/processors/signalBurstDOM.js",
-            baseUrl +
-              "vanillaBurstScripts/vanillaDOM/processors/cssFileLoader.js",
-            baseUrl +
-              "vanillaBurstScripts/vanillaDOM/processors/htmlFileLoader.js",
-            baseUrl + "vanillaBurstScripts/vanillaDOM/updateComponent.js",
-            baseUrl + "vanillaBurstScripts/vanillaDOM/vanillaComponents.js",
-            baseUrl + "vanillaBurstScripts/vanillaDOM/domBuild.js",
-            baseUrl + "vanillaBurstScripts/vanillaDOM/domPromises.js",
-            baseUrl + "vanillaBurstScripts/serverRender.js",
-            baseUrl + "vanillaBurstScripts/functionPromises/vanillaPromise.js",
-            baseUrl + "vanillaBurstScripts/functionPromises/appendScript.js",
-            baseUrl + "vanillaBurstScripts/singlePromise.js",
-            baseUrl + "vanillaBurstScripts/originBurst.js",
-            baseUrl + "vanillaBurstScripts/childFunction.js",
-            /////signals
-            baseUrl + "vanillaBurstScripts/signals/getSignal.js",
-            baseUrl + "vanillaBurstScripts/signals/resetSignal.js",
-            baseUrl + "vanillaBurstScripts/signals/simpleSignal.js",
-            baseUrl + "vanillaBurstScripts/signals/signalInterval.js",
-            baseUrl + "vanillaBurstScripts/signals/one.js",
-            baseUrl + "vanillaBurstScripts/signals/vanillaSignal.js",
-            baseUrl + "vanillaBurstScripts/signals.js",
-            //////////
-            baseUrl + "vanillaBurstScripts/render.js",
-          ]),
-          writable: false,
-          configurable: false,
-        });
-      }
+      function setVanillaBurstScripts(fullPath) {
+        if (ë.vanillaBurstScripts === undefined) {
+          Object.defineProperty(window, "vanillaBurstScripts", {
+            value: () => {
+              ë.logSpacer(
+                "Added vendors to renderSchema scripts:",
+                ë.frozenVanilla.get("vendorConfig")
+              );
 
+              const vendorConfig = ë.frozenVanilla.get("vendorConfig");
+              const vendorArray = Array.isArray(vendorConfig)
+                ? vendorConfig.map((vendor) => `${fullPath}vendors/${vendor}`)
+                : [];
+
+              return Object.freeze([
+                ...vendorArray,
+                fullPath + "vendors/purify.min.js",
+                fullPath +
+                  "vanillaBurstScripts/vanillaDOM/processors/sanitizeVanillaDOM.js",
+                fullPath +
+                  "vanillaBurstScripts/vanillaDOM/processors/signalBurstDOM.js",
+                fullPath +
+                  "vanillaBurstScripts/vanillaDOM/processors/cssFileLoader.js",
+                fullPath +
+                  "vanillaBurstScripts/vanillaDOM/processors/htmlFileLoader.js",
+                fullPath + "vanillaBurstScripts/vanillaDOM/updateComponent.js",
+                fullPath +
+                  "vanillaBurstScripts/vanillaDOM/vanillaComponents.js",
+                fullPath + "vanillaBurstScripts/vanillaDOM/domBuild.js",
+                fullPath + "vanillaBurstScripts/vanillaDOM/domPromises.js",
+                fullPath + "vanillaBurstScripts/serverRender.js",
+                fullPath +
+                  "vanillaBurstScripts/functionPromises/vanillaPromise.js",
+                fullPath +
+                  "vanillaBurstScripts/functionPromises/appendScript.js",
+                fullPath + "vanillaBurstScripts/singlePromise.js",
+                fullPath + "vanillaBurstScripts/originBurst.js",
+                fullPath + "vanillaBurstScripts/childFunction.js",
+                /////signals
+                fullPath + "vanillaBurstScripts/signals/getSignal.js",
+                fullPath + "vanillaBurstScripts/signals/resetSignal.js",
+                fullPath + "vanillaBurstScripts/signals/simpleSignal.js",
+                fullPath + "vanillaBurstScripts/signals/signalInterval.js",
+                fullPath + "vanillaBurstScripts/signals/one.js",
+                fullPath + "vanillaBurstScripts/signals/vanillaSignal.js",
+                fullPath + "vanillaBurstScripts/signals.js",
+                //////////
+                fullPath + "vanillaBurstScripts/render.js",
+              ]);
+            },
+            writable: false,
+            configurable: false,
+          });
+        }
+      }
+      setVanillaBurstScripts(fullPath);
       // Start the promise chain
       ë.loadInitialScripts()
         .then((schemaParts) => {
@@ -186,4 +204,4 @@ const vanillaApp = ë.frozenVanilla(
   false
 );
 
-vanillaApp(baseUrl);
+vanillaApp();
