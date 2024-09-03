@@ -3,7 +3,7 @@
 const mode = "live";
 const versions = { dev: "0.0.07", live: "0.0.07" };
 
-// Define base URLs for different modes
+// Define base URLs for different mode
 const domainUrls = {
   dev: "http://vanillaburstgame",
   live: "https://vanillaburst.com",
