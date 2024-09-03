@@ -61,7 +61,6 @@ const vanillaApp = ë.frozenVanilla(
         const scriptPromises = parts.map((part) => {
           const partConfigPath = `schemas/${part}Config.js`;
           const scriptUrl = `${fullPath}${partConfigPath}`;
-          alert(scriptUrl);
 
           ë.frozenVanilla("partConfigPath", partConfigPath, false);
           ë.frozenVanilla("scriptUrl", scriptUrl, false);
