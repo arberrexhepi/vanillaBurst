@@ -1,9 +1,8 @@
-ë.frozenVanilla("homeviewConfig", function (sharedParts) {
-  let homeviewConfig = {};
+ë.frozenVanilla("homeviewConfig", function () {
   let seo = {
     title: "vanilla JS Framework",
     description:
-      "Meet vanillaBurst! Simplify your JS webApp projects, manage functions, DOM, and server interactions with ease.",
+      "Meet vanillaBurst! An easy-to-use JavaScript framework, designed to bridge the gap between business logic and technical implementation",
     keywords: [
       "vanillaBurst",
       "JavaScript",
@@ -20,23 +19,19 @@
     siteName: "vanillaBurst",
   };
 
-  let passedConfig = {
+  let homeviewConfig = {
     homeview: {
       role: "parent",
       fetchDOM: true,
       render: "pause",
       originBurst: {},
       container: "viewbox",
-      components: {},
       ...{ seo: seo },
+      components: {},
     },
 
-    ...sharedParts,
+    //...sharedParts,
   };
 
-  homeviewConfig = { ...vanillaConfig("homeview", passedConfig) };
-
-  ë.seo = seo;
-
-  return homeviewConfig;
+  return (homeviewConfig = { ...vanillaConfig("homeview", homeviewConfig) });
 });

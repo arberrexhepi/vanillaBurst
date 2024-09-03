@@ -16,17 +16,11 @@
         onEvent: ["#start-weather-signal", "click"],
         signalStore: "signalStore.weatherSignal",
         init: "updateWeatherInfo",
-        count: 60,
+        count: 10,
         time: 1000,
         repeat: true,
         intermittent: "weatherRefreshDisplay",
         callBack: "updateWeatherInfo",
-        affectors: [
-          "start-weather-signal",
-          "pause-weather-signal",
-          "reset-weather-signal",
-          "remove-weather-signal",
-        ],
         vanillaDOM: {
           component: "weatherappButtons",
           container: ".inner_button_wrapper",

@@ -1,4 +1,5 @@
 //test from here TO DO
+//WIP not implemented
 ë.frozenVanilla(
   "signalBurst",
   async function (signalObject, signalFunction, signalResult) {

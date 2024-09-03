@@ -13,6 +13,7 @@
     {
       clear: true,
       tag: "ul",
+      classNames: "dynamic-links",
       html: [html],
     },
     "footerlinks",

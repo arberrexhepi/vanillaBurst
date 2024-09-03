@@ -2,11 +2,11 @@ const config = ë.frozenVanilla(
   "config",
   async function () {
     let schema = {};
-
-    const partPromises = Object.keys(ë.schemaParts).map((part) => {
+    let schemaParts = ë.frozenVanilla.get("schemaParts");
+    const partPromises = Object.keys(schemaParts).map((part) => {
       return new Promise(async (resolve, reject) => {
-        if (ë.schemaParts.hasOwnProperty(part)) {
-          let packageNames = ë.schemaParts[part];
+        if (schemaParts.hasOwnProperty(part)) {
+          let packageNames = schemaParts[part];
           if (
             packageNames === false ||
             packageNames === true ||
@@ -17,7 +17,10 @@ const config = ë.frozenVanilla(
           }
 
           let partConfig = ë[`${part}Config`] ? ë[`${part}Config`]() : {};
-          let customFunctions = partConfig.customFunctions || {};
+
+          let customFunctions = partConfig.customFunctions
+            ? partConfig.customFunctions
+            : {};
 
           function flattenVanillaElement(subComponents, result = []) {
             for (let component in subComponents) {
@@ -117,7 +120,7 @@ const config = ë.frozenVanilla(
                             componentId
                           ) {
                             await ë.loadScript(
-                              `${ë.baseUrl}client/components/${dir}/${fileId}Component.js`
+                              `${ë.fullPath}client/components/${dir}/${fileId}Component.js`
                             );
                             console.log("trying component " + componentId);
 
@@ -184,6 +187,10 @@ const config = ë.frozenVanilla(
                               // Ensure thispart[thisSubId] is defined
                               if (!thispart[thisSubId]) {
                                 thispart[thisSubId] = fileId;
+                              }
+
+                              if (!thispart?.[thisSubId]?.id) {
+                                thispart[thisSubId]["id"] = item.id;
                               }
 
                               if (!thispart?.[thisSubId]?.container) {
@@ -276,6 +283,7 @@ const vanillaConfig = ë.frozenVanilla(
     let cssPath;
     let dir = passedConfig[landing].dir || `client/views/${landing}/`;
     let functionFile = passedConfig[landing].functionFile || landing;
+    let seo = passedConfig[landing].seo;
     let container;
     if (
       passedConfig?.[landing]?.fetchDOM &&
@@ -298,6 +306,7 @@ const vanillaConfig = ë.frozenVanilla(
       container: container,
     };
 
+    ë.seo = seo;
     passedConfig[landing] = {
       ...prependconfig,
       ...passedConfig[landing],
@@ -328,29 +337,30 @@ const vanillaConfig = ë.frozenVanilla(
 
     let buildConfig = {};
     //ë.passedConfig = passedConfig;
+    ë.logSpacer("checking" + ë.vanillaBurstScripts());
     buildConfig[landing] = {
       landing: landing,
       scripts: [
-        ...ë.vanillaBurstScripts,
+        ...ë.vanillaBurstScripts(),
         ...Object.entries(ë.vanillaScoops)
           .filter(
             ([key, namespaces]) =>
               namespaces === true ||
               (Array.isArray(namespaces) && namespaces.includes(landing))
           )
-          .map(([key]) => `${baseUrl}scoops/${key}/${key}.js`),
+          .map(([key]) => `${ë.fullPath}scoops/${key}/${key}.js`),
       ], // Array of required script paths
-      preloader: ë.baseUrl + "preloader.js", // Assuming this path is correct
+      preloader: ë.fullPath + "preloader.js", // Assuming this path is correct
       customFunctions: {
         //this is what the passedConfig is building out, which comes from schemas/ folder let's say homeConfig.js
         // example: {
-        //   dir: "client/views/journey/",
+        //   dir: "client/views/example/",
         //   functionFile: "example",
         //   render: "pause",
         //   originBurst: {
-        //     somevalue: "",
-        //     someobj: {},
-        //     somearray:[]
+        //     somevalue: "", //optional custom value
+        //     someobj: {}, //optional custom object
+        //     somearray:[] // optional custom array
         //   },
 
         ...passedConfig,
@@ -371,15 +381,15 @@ const vanillaConfig = ë.frozenVanilla(
     // Continue freezing other properties as needed...
 
     return buildConfig[landing];
-    //(JSON.stringify(buildConfig[landing]));
   },
   false
 );
 
+// [HELPER FUNCTION] buildRollCall
+//custom call, depending on reload requirements, or refresh, helper function
 ë.frozenVanilla(
   "buildRollCall",
   async function buildRollCall(rollCall, renderSchema, runFunction) {
-    //custom call, depending on reload requirements, or refresh, helper function
     if (runFunction === "functionBurst") {
       //runFunction = ''
       runRoll = "rollBurst";

@@ -1,53 +1,46 @@
 ë.frozenVanilla("myweather", async function (vanillaPromise) {
-  // ë.logSpacer(`${vanillaPromise.this} is ready and running`, null, null, true);
+  // Log the status of the function initialization
+  ë.logSpacer(`${vanillaPromise.this} is ready and running`, null, null, true);
 
-  //CONTROLLING THE SIGNALS DYNAMICALLY
-  //  const weatherSB =vanillaPromise.signalBurst[vanillaPromise.renderSchema.landing].myweather;
+  const weatherSB =
+    vanillaPromise.signalBurst[vanillaPromise.renderSchema.landing].myweather;
 
-  // weatherSB.time = 1000;
+  // Log the signalBurst for debugging
+  ë.logSpacer("This is the signalBurst: ", weatherSB, null, true);
 
-  // Store the weather signal runner in the signalStore
-  ë.signalStore("weatherSignal_runner", {
+  // Define the weatherSignal_runner object
+  const weatherSignalRunner = {
     weatherRefreshDisplay: async function (data) {
-      let returnData = await handleWeatherRefreshDisplay(data, vanillaPromise);
-      return returnData;
+      handleWeatherRefreshDisplay(data, vanillaPromise);
     },
     updateWeatherInfo: async function (data) {
       return await handleUpdateWeatherInfo(data, vanillaPromise);
     },
-  });
+  };
+
+  // Store the weather signal runner in the signalStore
+  ë.signalStore("weatherSignal_runner", weatherSignalRunner);
 
   // Function to handle weather refresh display
-  async function handleWeatherRefreshDisplay(data, vanillaPromise) {
+  function handleWeatherRefreshDisplay(data, vanillaPromise) {
     const weatherTimer = document.querySelector(".weather-timer");
 
-    if (data.action === "go" || data.action === "reset") {
-      if (weatherTimer) {
-        ë.updateComponent(
-          vanillaPromise,
-          { html: [data.counter] },
-          "myweather",
-          ".weather-timer"
-        );
-      }
-    }
-
-    if (data.action === "remove") {
-      handleActionResetOrRemove(data, "Removing Signal");
-    }
-    //OPTIONAL: additionally do something on removed confirmed signal state
-    if (data.action === "removed") {
-      handleActionResetOrRemove(
-        data,
-        "You have removed this signal for this session."
+    if (weatherTimer) {
+      ë.updateComponent(
+        vanillaPromise,
+        { html: [data.counter] },
+        "myweather",
+        ".weather-timer"
       );
     }
 
-    return data;
+    if (data.action === "remove" || data.action === "reset") {
+      handleActionResetOrRemove(data);
+    }
   }
 
   // Function to handle reset or remove actions
-  function handleActionResetOrRemove(data, uiMessage) {
+  function handleActionResetOrRemove(data) {
     if (data.action === "reset") {
       document.getElementById("reset-weather-signal").disabled = true;
     }
@@ -60,15 +53,9 @@
 
       ë.updateComponent(
         vanillaPromise,
-        { html: [uiMessage] },
+        { html: ["You have removed this signal for this session."] },
         "myweather",
         ".timer-info-container"
-      );
-      ë.updateComponent(
-        vanillaPromise,
-        { html: ["0"] },
-        "myweather",
-        ".weather-timer"
       );
     }
   }
@@ -78,7 +65,7 @@
     ë.logSpacer(`status at callback ${JSON.stringify(data.action)}`);
 
     if (data.action !== "completed" && data.action !== "init") {
-      return { callBackStatus: true };
+      return { callBackStatus: false };
     }
 
     const weatherInfo = await fetchWeatherInfo(vanillaPromise);
@@ -94,9 +81,7 @@
     dataSchema.url = replaceCityInUrl(dataSchema.url, randomCity);
 
     const weatherInfo = await ë.serverRender(dataSchema);
-    console.log(JSON.stringify(weatherInfo.myweatherResult));
-
-    return weatherInfo.myweatherResult.value;
+    return JSON.parse(weatherInfo);
   }
 
   // Function to select a random city

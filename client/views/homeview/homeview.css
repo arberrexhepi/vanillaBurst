@@ -1,2 +1,12 @@
+ul.extended-features {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    grid-gap: 2vh;
+    grid-row-gap: 10vh;
+}
 
-
+.extended-features li {
+    width: 30%;
+}

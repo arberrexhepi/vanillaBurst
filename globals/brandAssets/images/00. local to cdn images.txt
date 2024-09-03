@@ -2,3 +2,5 @@ By setting the baseUrlImages variable in globals/config.js
 you can use locally stored assets or external hosted.
 This can be a beneficial approach, just don't forget to git ignore, 
 in the case of the vanillaBurst App, they're included for git forks and git clones.
+
+See vanillaImages Scoop implementation

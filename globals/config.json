@@ -1,11 +1,6 @@
 {
   "defaultAppRoute": "homeview",
-  "mode": "live",
-  "domainUrl": {
-    "dev": "http://vanillaburstgame",
-    "live": "https://vanillaburstgame.onrender.com"
-  },
-  "vanillaStock": false,
+  "vanillaStock": true,
   "registeredRoutes": ["homeview", "documentation", "generate"],
   "baseUrlIcons": "globals/brandAssets/assets/icons/",
   "baseUrlImages": "https://storage.googleapis.com/arberinc_public/vanillaBurst/brandAssets/images/",
@@ -29,53 +24,40 @@
     "linkBurst": true,
     "gptScoop": ["homeview"]
   },
+  "vendors": ["helloworld.js"],
+  "vanillaMessCaller": ["updateComponent"],
   "trustedSources": {
     "img-src": [
       "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
+
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://cdn.weatherapi.com"
     ],
     "media-src": [
       "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
+
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
-    "style-src": [
-      "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com"
-    ],
+    "style-src": ["http://vanillaburstgame"],
     "object-src": ["'none'"],
     "font-src": [
       "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
+
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
     "connect-src": [
       "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
+
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://weatherapi-com.p.rapidapi.com",
       "https://jsonplaceholder.typicode.com"
     ],
-    "manifest-src": [
-      "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
-      "https://arber.design"
-    ],
-    "worker-src": [
-      "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
-      "https://arber.design"
-    ],
-    "child-src": [
-      "http://vanillaburstgame",
-      "https://vanillaburstgame.onrender.com",
-      "https://arber.design"
-    ]
+    "manifest-src": ["http://vanillaburstgame", "https://arber.design"],
+    "worker-src": ["http://vanillaburstgame", "https://arber.design"],
+    "child-src": ["http://vanillaburstgame", "https://arber.design"]
   }
 }

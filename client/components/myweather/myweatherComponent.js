@@ -23,7 +23,7 @@
           </div>
       </div>
       <div class="timer-wrapper">
-      <div id="timer-info-container">
+      <div id="timer-info-container" class="timer-info-container">
                   <p id="p1">This Scoop updates every minute.</p>
                   <p id="p2">It uses data from</p>
                   <p id="p3"><code>dataSchema</code></p>

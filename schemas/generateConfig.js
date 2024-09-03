@@ -1,6 +1,4 @@
-ë.frozenVanilla("generateConfig", function (sharedParts) {
-  let generateConfig = {};
-
+ë.frozenVanilla("generateConfig", function () {
   let seo = {
     title: "Generate Configs",
     description:
@@ -21,7 +19,7 @@
     siteName: "vanillaBurst",
   };
 
-  let passedConfig = {
+  let generateConfig = {
     generate: {
       role: "parent",
       fetchDOM: true,
@@ -57,9 +55,6 @@
                 <label for="viewName">Landing Name:</label><small>(required)</small>
                 <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>
     
-                <label for="dir">Directory:</label>
-                <input type="text" id="dir" name="dir" placeholder="default: client/views/viewName, must end with / if set" value=""><br>
-    
                 <label for="render">Render:</label>
                 <input type="text" id="render" name="render" value="pause"><br>
     
@@ -70,7 +65,7 @@
                 </select><br>
     
                 <label for="container">Container:</label><small>(required if HTML PATH)</small>
-                <input type="text" id="container" name="container" required placeholder="Enter Container Name"><br>
+                <input type="text" id="container" name="container" placeholder="Enter Container Name"><br>
     
                 <fieldset class="componentTemplate">
                   <div class="componentTemplate-container">
@@ -120,19 +115,15 @@
         canvasresult: {
           // cache: false,
           parent: true,
-          id: "configresult",
+          id: "canvasresult",
           container: "config-canvas",
-          classNames: "config-result-container",
-          children: `<pre id="configlog" class="config-result">[vanillaBurst] Component: 'canvasresult'. Generate a config to see the resulting code </pre>`,
+          classNames: "canvasresult-container",
+          children: `<pre id="configlog" class="config-result">[vanillaBurst] Component: 'canvasresult'. Generate a config to see the resulting code </pre>
+          <pre class="config-code"></pre>`,
         },
       },
     },
-    ...sharedParts,
   };
 
-  generateConfig = { ...vanillaConfig("generate", passedConfig) };
-
-  ë.seo = seo;
-
-  return generateConfig;
+  return (generateConfig = { ...vanillaConfig("generate", generateConfig) });
 });

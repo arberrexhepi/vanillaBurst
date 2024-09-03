@@ -17,8 +17,20 @@
     return false;
   } else {
     if (verbose === true) {
-      ë.vanillaMess("signalId:", signals[signalName].id, "number");
-      ë.vanillaMess("signalName:", signals[signalName], "string");
+      ë.vanillaMess(
+        "signal",
+        "signalId:",
+        signals[signalName].id,
+        "number",
+        "signal"
+      );
+      ë.vanillaMess(
+        "signal",
+        "signalName:",
+        signals[signalName],
+        "string",
+        "signal"
+      );
     }
     return { signal: signals, storeSignalName: storeSignalName };
   }

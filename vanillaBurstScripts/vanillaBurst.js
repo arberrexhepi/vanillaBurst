@@ -26,7 +26,7 @@ let historyCount = 0;
 
     function stateScripts(stateTag) {
       const { scripts: scriptUrls, preloader: preloaderUrl } =
-        ë.schema[stateTag];
+        ë.frozenVanilla.get("schema")[stateTag];
       const nonceString2 = ë.nonceBack();
 
       function loadScriptAndRunFunction() {
@@ -96,8 +96,9 @@ let historyCount = 0;
 
       function stateParams(loadParams, tagParam) {
         const resource =
-          ë.schema?.[tagParam]?.customFunctions?.[tagParam]?.dataSchema;
-        const resourceParent = ë.schema[tagParam];
+          ë.frozenVanilla.get("schema")?.[tagParam]?.customFunctions?.[tagParam]
+            ?.dataSchema;
+        const resourceParent = ë.frozenVanilla.get("schema")[tagParam];
 
         if (
           resource &&
@@ -137,7 +138,7 @@ let historyCount = 0;
         return {
           stateTagName: stateTag,
           stateTagPath: stateTagPath,
-          stateTagScripts: ë.schema[stateTag].scripts,
+          stateTagScripts: ë.frozenVanilla.get("schema")[stateTag].scripts,
           stateTagLoadParams: loadParams,
           stateTagParams: renderSchema,
           stateCount: historyCount,

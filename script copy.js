@@ -1,13 +1,6 @@
-// set app mode variables "dev" or "live"
-
-const mode = "live";
-const versions = { dev: "0.0.07", live: "0.0.07" };
-
+const mode = "dev"; // "dev" or "live"
+const version = "0.0.06";
 // Define base URLs for different modes
-const domainUrls = {
-  dev: "http://vanillaburstgame",
-  live: "https://vanillaburst.com",
-};
 const baseUrls = {
   dev: "/",
   live: "/",
@@ -71,6 +64,8 @@ const isFrozen = (prop, type) =>
   Object.isFrozen(window[prop]) &&
   typeof window[prop] === type;
 
+const domainUrl = `${window.location.origin}/`;
+
 // Freeze the isFrozen checker
 window.frozenVanilla("isFrozen", isFrozen);
 
@@ -81,19 +76,10 @@ const ë = window;
 ////////////IDENTIFIER SET/////////////////
 
 /////////// Set base URL based on mode/////
-//const domainUrl = `${window.location.origin}/`;
-
-const domainUrl = domainUrls[mode] || domainUrls.dev;
-
 const baseUrl = baseUrls[mode] || baseUrls.dev;
-const version = versions[mode] || versions.dev;
-
-ë.frozenVanilla("domainUrl", domainUrl);
-
 ë.frozenVanilla("mode", mode);
 ë.frozenVanilla("baseUrl", baseUrl);
 ë.frozenVanilla("version", version);
-ë.frozenVanilla("fullPath", ë.domainUrl + ë.baseUrl);
 
 // Set renderComplete flag
 ë.renderComplete = "false";
@@ -132,18 +118,17 @@ const version = versions[mode] || versions.dev;
   return nonceString;
 });
 ////////////// Start the application////////////
-const start = async () => {
-  const fullPath = ë.fullPath;
-
-  if (typeof fullPath !== "string") {
-    throw new Error("Invalid fullPath");
+const start = async (baseUrl) => {
+  const nonceString = ë.nonceBack();
+  if (typeof baseUrl !== "string") {
+    throw new Error("Invalid baseUrl");
   }
 
   ë.frozenVanilla("loadScript", function loadScript(url) {
     return new Promise((resolve, reject) => {
       const version = ë.version;
+      console.log("trying script " + url + version);
       const urlWithVersion = `${url}?version=${version}`;
-      console.log("trying script " + urlWithVersion);
 
       const existingScript = document.head.querySelector(
         `script[src="${urlWithVersion}"]`
@@ -168,15 +153,15 @@ const start = async () => {
 
   try {
     await ë.loadScript(
-      `${fullPath}vanillaBurstScripts/system/security/setTrustedSources.js`
+      `${baseUrl}vanillaBurstScripts/system/security/setTrustedSources.js`
     );
     await ë.loadScript(
-      `${fullPath}vanillaBurstScripts/system/logs/vanillaMess.js`
+      `${baseUrl}vanillaBurstScripts/system/logs/vanillaMess.js`
     );
 
-    await ë.loadScript(`${fullPath}vanillaBurstScripts/system/web/setSeo.js`);
+    await ë.loadScript(`${baseUrl}vanillaBurstScripts/system/web/setSeo.js`);
 
-    await ë.loadScript(`${fullPath}vanillaBurstScripts/vanillaApp.js`);
+    await ë.loadScript(`${baseUrl}vanillaBurstScripts/vanillaApp.js`);
 
     if (typeof ë.frozenVanilla !== "function") {
       throw new Error("ë.frozenVanilla is not a function");
@@ -220,4 +205,4 @@ const start = async () => {
 });
 
 //////// Trigger the start function/////////////
-start(fullPath).catch((error) => console.error(error));
+start(baseUrl).catch((error) => console.error(error));

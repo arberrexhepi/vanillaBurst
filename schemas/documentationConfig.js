@@ -1,6 +1,4 @@
-ë.frozenVanilla("documentationConfig", function (sharedParts) {
-  let documentationConfig = {};
-
+ë.frozenVanilla("documentationConfig", function () {
   let seo = {
     title: "vanillaBurst Documentation",
     description:
@@ -21,22 +19,18 @@
     siteName: "vanillaBurst",
   };
 
-  let passedConfig = {
+  let documentationConfig = {
     documentation: {
       role: "parent",
       fetchDOM: true,
       render: "pause",
       originBurst: "documentation",
-
-      ...{ seo: seo },
       container: "viewbox",
+      ...{ seo: seo },
     },
-    ...sharedParts,
   };
 
-  documentationConfig = { ...vanillaConfig("documentation", passedConfig) };
-
-  ë.seo = seo;
-
-  return documentationConfig;
+  return (documentationConfig = {
+    ...vanillaConfig("documentation", documentationConfig),
+  });
 });

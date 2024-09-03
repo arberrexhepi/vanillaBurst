@@ -1,8 +1,10 @@
 ë.frozenVanilla("vanillaImages", function (runImages, asset) {
   if (runImages === true) {
+    let scoopTag = "vanillaImages";
     //vanillaScoop: vanillaCSS
     ë.vanillaMess(
-      "[Scoop][vanillaCSS] Checking for plugin",
+      scoopTag,
+      "vanillaImages Checking for plugin",
       ë.vanillaImages,
       "function"
     );
