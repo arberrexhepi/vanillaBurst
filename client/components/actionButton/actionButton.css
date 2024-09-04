@@ -53,6 +53,7 @@ button:hover {
 .inner_button_wrapper {
     display: flex;
     grid-gap: 1vh;
+    justify-content: center;
 }
 
 .weatherapp-button {

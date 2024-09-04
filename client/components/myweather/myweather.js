@@ -26,7 +26,7 @@
         ë.updateComponent(
           vanillaPromise,
           { html: [data.counter] },
-          "myweather",
+          "myweather1",
           ".weather-timer"
         );
       }
@@ -61,13 +61,13 @@
       ë.updateComponent(
         vanillaPromise,
         { html: [uiMessage] },
-        "myweather",
+        "myweather1",
         ".timer-info-container"
       );
       ë.updateComponent(
         vanillaPromise,
         { html: ["0"] },
-        "myweather",
+        "myweather1",
         ".weather-timer"
       );
     }
@@ -124,7 +124,7 @@
       ë.updateComponent(
         vanillaPromise,
         { clear: false, html: [htmlContent] },
-        "myweather",
+        "myweather1",
         selector
       );
     }
