@@ -177,7 +177,7 @@
 
       ë.logSpacer({ Result: originBurst[landingKey][functionName] });
       resolve(originBurst);
-      return;
+      //return;
     });
   }
 );

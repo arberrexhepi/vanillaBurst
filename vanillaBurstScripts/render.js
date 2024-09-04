@@ -126,8 +126,46 @@
             }
           }
           try {
-            ë[customFunctionName](vanillaPromises[customFunctionName]);
-            ë.storeBurst(vanillaPromises[customFunctionName]);
+            // Access the componentList array
+            let componentList =
+              vanillaPromises[customFunctionName].componentList;
+
+            // Remove duplicates by converting to a Set and then back to an array
+            vanillaPromises[customFunctionName].componentList = [
+              ...new Set(componentList),
+            ];
+            //alert(vanillaPromises[customFunctionName].componentList);
+            // Part 1: Load all component JS files
+            const loadScriptsPromises = vanillaPromises[
+              customFunctionName
+            ].componentList.map((componentJS) => {
+              return loadScript(
+                `${ë.fullPath}client/components/${componentJS}/${componentJS}.js`
+              );
+            });
+
+            Promise.all(loadScriptsPromises)
+              .then(() => {
+                // Part 2: After loading all scripts, call each component function
+                const callComponentFunctions = vanillaPromises[
+                  customFunctionName
+                ].componentList.map(async (componentJS) => {
+                  // alert(componentJS);
+                  await ë[componentJS](vanillaPromises[customFunctionName]); // Return the promise from each component function call
+                });
+                return Promise.all(callComponentFunctions);
+              })
+              .then(() => {
+                // Part 3: After all component functions are called, run the custom function and storeBurst
+                ë[customFunctionName](vanillaPromises[customFunctionName]);
+                ë.storeBurst(vanillaPromises[customFunctionName]);
+              })
+              .catch((error) => {
+                console.error(
+                  "An error occurred during the promise chain execution:",
+                  error
+                );
+              });
           } catch {
             ë.vanillaMess(
               `[${customFunctionName}.js]`,

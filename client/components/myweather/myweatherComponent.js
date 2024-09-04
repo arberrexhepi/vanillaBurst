@@ -1,14 +1,14 @@
-ë.frozenVanilla("myweatherComponent", function (data) {
+ë.frozenVanilla("myweatherComponent", async function (data) {
   let myweatherComponent = {
-    myweather: {
+    [`${data.id}`]: {
       namespace: ["homeview", "generate"],
       container: `myweather-component`,
       classNames: "button round",
       children: `
            <div class="weather-app" id="weather-app">
       <div id="weather-location" class="weather-location">
-          <h2 class="city-name" id="city-name">Geneva</h2>
-          <p class="country-name" id="country-name">Switzerland</p>
+          <h2 class="city-name" id="city-name">Prishtina</h2>
+          <p class="country-name" id="country-name">Kosova</p>
       </div>
       <div id="weather-current" class="weather-current">
           <div id="weather-icon" class="weather-icon-temp">

@@ -27,6 +27,50 @@
       originBurst: "documentation",
       container: "viewbox",
       ...{ seo: seo },
+      components: {
+        fetchComponents: {
+          mynav: {
+            data: [
+              {
+                id: "mainNav",
+                namespace: "documentation",
+                container: "navigation-container",
+                text: "Generate Configs",
+                route: "generate",
+              },
+            ],
+          },
+          heroHeader: {
+            data: [
+              {
+                id: "heroHeader-component",
+                namespace: "documentation",
+                container: "heroHeader-component",
+              },
+            ],
+          },
+          actionButton: {
+            data: [
+              {
+                id: "docbutton",
+                namespace: "documentation",
+                container: "header-button",
+                text: "Generate Configs",
+                classNames: "headerbutton mygenbutton",
+                route: "generate",
+              },
+              {
+                id: "body-actionButton-component",
+                namespace: "documentation",
+                container: "body-button",
+                classNames: "headerbutton mygenbutton",
+                text: "Generate Configs",
+                route: "generate",
+              },
+            ],
+          },
+        },
+      },
     },
   };
 

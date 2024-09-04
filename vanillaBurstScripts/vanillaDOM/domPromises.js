@@ -4,7 +4,7 @@
     return new Promise(async (resolve, reject) => {
       let config = renderSchema.customFunctions[customFunctionName];
       let safeHTML;
-
+      //alert("trying" + config?.container);
       if (config?.container) {
         return new Promise((resolve, reject) => {
           vanillaPromise = loadDOM(
@@ -14,9 +14,14 @@
             renderSchema,
             vanillaPromise
           );
+          // alert("right away?");
+
           resolve(vanillaPromise);
+          return;
         })
           .then((vanillaPromise) => {
+            // alert("at domPromises THEN after loadDOM " + vanillaPromise);
+
             let observeDOM = async (id, vanillaPromise) => {
               let observerOptions = {
                 childList: true,
@@ -47,8 +52,6 @@
 
                       if (domCheck) {
                         observer.disconnect();
-
-                        return vanillaPromise;
                       }
                     }
                   }
@@ -56,10 +59,9 @@
 
                 let targetNode = document.body;
                 let observer = new MutationObserver(observerCallback);
-                let vanillaPromise = observer.observe(
-                  targetNode,
-                  observerOptions
-                );
+                let test = observer.observe(targetNode, observerOptions);
+                //alert("at domPromises afer observer " + vanillaPromise);
+
                 resolve(vanillaPromise);
               }).catch((error) => {
                 console.error(error);

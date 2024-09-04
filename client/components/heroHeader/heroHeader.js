@@ -1,5 +1,6 @@
 ë.frozenVanilla("heroHeader", function (vanillaPromise) {
   ë.linkBurst("button.headerbutton");
+  console.log("hero header running");
 
   /////vendorScoop vanillaAnimation js is in: scoops/vanillaAnimation, for now styles are not programmatic, so just root folder and inlineHTML style tag declaration, DEFINITELY a WIP but it was a great way to implement vanillaScoops installation logic and ë.vanillaMess type checker and logger
 

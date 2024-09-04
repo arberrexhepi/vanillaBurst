@@ -8,16 +8,15 @@
   "baseUrlStyles": "globals/brandAssets/css/styles/",
   "schemaParts": {
     "homeview": ["appShells", "homeviewToppings"],
-    "documentation": ["appShells"],
-    "generate": ["appShells"],
-    "component/nav": [],
-    "component/myweather": false,
-    "component/myfooter": [],
-    "component/heroHeader": []
+    "documentation": ["appShells", "button"],
+    "generate": ["appShells", "buttons"],
+    "component/myweather": [],
+    "component/myfooter": []
   },
   "packages": {
-    "appShells": ["nav", "heroHeader", "myfooter"],
-    "homeviewToppings": ["myweather"]
+    "appShells": ["navigation", "heroHeader", "myfooter"],
+    "homeviewToppings": ["mynav", "myweather", "actionButton"],
+    "buttons": ["actionButton"]
   },
   "vanillaScoops": {
     "vanillaAnimation": true,
@@ -25,7 +24,7 @@
     "linkBurst": true,
     "gptScoop": ["homeview"]
   },
-  "vendors": false,
+  "vendors": ["jquery-3.7.1.min.js"],
   "vanillaMessCaller": ["updateComponent"],
   "trustedSources": {
     "img-src": [

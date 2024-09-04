@@ -35,9 +35,7 @@
       },
       components: {
         fetchComponents: {
-          myweather: {
-            data: [{ id: 1 }],
-          },
+          myweather: { data: [{ id: "1" }] },
         },
       },
       dataSchema: {

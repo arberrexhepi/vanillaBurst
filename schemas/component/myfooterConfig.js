@@ -2,17 +2,22 @@
   ///this is as basic as a Shared package function aka Scoop can get!
   let myfooterConfig = {
     myfooter: {
-      role: "component",
+      role: "config",
       render: "pause",
       fetchDOM: true,
-      container: "myfooter-wrapper",
+      // functionFile: "myfooter",
+      // cssPath: "client/components/myfooter/myfooter.css",
+      // htmlPath: "client/components/myfooter/myfooter.html",
+      container: "mainFooter",
       classNames: "footer",
       originBurst: {
-        namespace: null,
+        namespace: ["homeview"],
       },
       components: {
         footerlinks: {
           id: "footerlinks",
+          count: "1",
+          componentName: "myfooter",
           container: "myfooter-wrapper",
           dir: "myfooter/",
           classNames: "footerlinks",
