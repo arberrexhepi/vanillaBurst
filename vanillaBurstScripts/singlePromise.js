@@ -25,7 +25,7 @@
             serverResult,
             originBurst
           );
-
+          //alert("over at singlePromise" + vanillaPromise);
           try {
             let prepDOM = await ë.domPromises(
               renderSchema,

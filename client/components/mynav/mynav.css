@@ -1,7 +1,26 @@
+#mainNav {
+    grid-row: 1;
+    padding: 0;
+    width: 100vw;
+    min-width: 100vw;
+    height: 15vh;
+    margin: auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .mainNav {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+.navigation-component {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 #mainNav-container {

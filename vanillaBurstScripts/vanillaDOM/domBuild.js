@@ -10,6 +10,8 @@
     vanillaPromise,
     initView
   ) {
+    //alert("yo");
+    // alert("at loadDOM " + domFunction);
     return new Promise(async (resolve, reject) => {
       if (renderSchema?.customFunctions?.[domFunction]?.cache === false) {
         ë.logSpacer(
@@ -30,6 +32,7 @@
             vanillaPromise,
             resolve
           );
+          //alert("at loadDOM beforer resulve " + JSON.stringify(vanillaPromise));
 
           resolve(vanillaPromise);
         } catch (error) {
@@ -64,7 +67,7 @@
     // Determine the function to use
     const passedFunction =
       renderSchema.customFunctions?.[domFunction] ?? domConfig[domFunction];
-
+    //alert(JSON.stringify(passedFunction));
     if (!passedFunction?.functionFile) {
       // TODO: Consider adding a check for passedFunction.functionFile.container here once the rendering techniques are finalized
 
@@ -176,6 +179,7 @@
 ë.frozenVanilla(
   "createNewElement",
   async function (container, classNames, passedFunction) {
+    //alert("createNewElement " + JSON.stringify(passedFunction));
     try {
       let targetElement = document.getElementById(container);
 

@@ -27,7 +27,50 @@
       originBurst: {},
       container: "viewbox",
       ...{ seo: seo },
-      components: {},
+      components: {
+        fetchComponents: {
+          mynav: {
+            data: [
+              {
+                id: "mainNav",
+                namespace: "homeview",
+                container: "navigation-container",
+                text: "Jump to Docs",
+                route: "documentation",
+              },
+            ],
+          },
+          heroHeader: {
+            data: [
+              {
+                id: "heroHeader-component",
+                namespace: "homeview",
+                container: "heroHeader-component",
+              },
+            ],
+          },
+          actionButton: {
+            data: [
+              {
+                id: "docbutton",
+                namespace: "homeview",
+                container: "header-button",
+                text: "View Documentation",
+                classNames: "headerbutton mydocbutton",
+                route: "documentation",
+              },
+              {
+                id: "body-actionButton-component",
+                namespace: "homeview",
+                container: "body-button",
+                classNames: "headerbutton mydocbutton",
+                text: "Jump to Docs",
+                route: "documentation",
+              },
+            ],
+          },
+        },
+      },
     },
 
     //...sharedParts,

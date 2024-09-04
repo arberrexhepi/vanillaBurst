@@ -4,7 +4,7 @@ const config = ë.frozenVanilla(
     let schema = {};
     let schemaParts = ë.frozenVanilla.get("schemaParts");
     // Log the original schemaParts object
-    //alert(JSON.stringify(schemaParts));
+    alert(JSON.stringify(schemaParts));
 
     // Check if any key contains a "/"
     if (Object.keys(schemaParts).some((key) => key.includes("/"))) {
@@ -18,7 +18,7 @@ const config = ë.frozenVanilla(
     }
 
     // Log the modified schemaParts object
-    //alert(JSON.stringify(schemaParts));
+    alert(JSON.stringify(schemaParts));
 
     const partPromises = Object.keys(schemaParts).map((part) => {
       return new Promise(async (resolve, reject) => {
@@ -34,8 +34,8 @@ const config = ë.frozenVanilla(
           }
 
           let partConfig = ë[`${part}Config`] ? ë[`${part}Config`]() : {};
-          //alert(part);
-          //alert(JSON.stringify(partConfig));
+          alert(part);
+          alert(JSON.stringify(partConfig));
 
           let customFunctions = partConfig.customFunctions
             ? partConfig.customFunctions
@@ -79,54 +79,7 @@ const config = ë.frozenVanilla(
                           };
                           funcName = partConfig.landing;
                         } else {
-                          // alert("else");
                           result = await ë[funcNameConfig](part);
-                          // alert(JSON.stringify(result));
-                        }
-                        let role = result[funcName]?.role
-                          ? result[funcName].role
-                          : undefined;
-                        if (result[funcName]?.role) {
-                          if (role === "shared") {
-                            relPath = `client/shared/${funcName}/`;
-                          } else if (role === "parent") {
-                            relPath = "client/views/";
-                          } else if (role === "function") {
-                            relPath = "parent"; // regular functions go in parent dir client/view/${renderSchema.landing}/functions
-                          } else if (
-                            role === "component" ||
-                            role === "config"
-                          ) {
-                            relPath = `client/components/${funcName}/`;
-                          }
-                        }
-
-                        if (!result?.[funcName]?.dir) {
-                          result[funcName]["dir"] = "";
-                        }
-                        result[funcName].dir = result[funcName].dir
-                          ? result[funcName].dir
-                          : `${relPath}`;
-
-                        dir = result[funcName].dir;
-                        result[funcName].functionFile =
-                          result[funcName].functionFile || funcName;
-
-                        if (
-                          result[funcName]?.fetchDOM &&
-                          result[funcName]?.fetchDOM === true
-                        ) {
-                          // alert("fetchDOM" + funcName);
-                          result[funcName].functionFile =
-                            result[funcName].functionFile || funcName;
-                          result[funcName].htmlPath =
-                            result[funcName].htmlPath ||
-                            `${relPath}${funcName}.html`;
-                          result[funcName].cssPath =
-                            result[funcName].cssPath ||
-                            `${relPath}${funcName}.css`;
-                          result[funcName].container =
-                            result[funcName].container || funcName;
                         }
 
                         let subComponents =
@@ -327,7 +280,7 @@ const vanillaConfig = ë.frozenVanilla(
       passedConfig?.[landing]?.fetchDOM &&
       passedConfig?.[landing]?.fetchDOM === true
     ) {
-      //alert(JSON.stringify(passedConfig?.[landing]) + "is requesting DOM");
+      alert(JSON.stringify(passedConfig?.[landing]) + "is requesting DOM");
       htmlPath = passedConfig?.[landing]?.htmlPath
         ? passedConfig[landing].htmlPath
         : `client/views/${landing}/${landing}.html`;

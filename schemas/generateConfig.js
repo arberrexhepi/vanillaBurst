@@ -28,17 +28,47 @@
       container: "viewbox",
       ...{ seo: seo },
       components: {
-        myButtonName: {
-          dir: "buttons/",
-          id: "docbutton",
-          container: "doc-button_wrapper",
-          classNames: "button round",
-          children: `
-            <blockquote>
-            <button class="headerbutton mydocbutton" data-route="documentation"> Documentation</button>
-            </blockquote>
-              `,
-          eventHandlers: "submit:preventDefault",
+        fetchComponents: {
+          mynav: {
+            data: [
+              {
+                id: "mainNav",
+                namespace: "generate",
+                container: "navigation-container",
+                text: "Generate Configs",
+                route: "generate",
+              },
+            ],
+          },
+          heroHeader: {
+            data: [
+              {
+                id: "heroHeader-component",
+                namespace: "generate",
+                container: "heroHeader-component",
+              },
+            ],
+          },
+          actionButton: {
+            data: [
+              {
+                id: "docbutton",
+                namespace: "generate",
+                container: "header-button",
+                text: "View Documentation",
+                classNames: "headerbutton mydocbutton",
+                route: "documentation",
+              },
+              {
+                id: "body-actionButton-component",
+                namespace: "generate",
+                container: "body-button",
+                classNames: "headerbutton mydocbutton",
+                text: "View Documentation",
+                route: "documentation",
+              },
+            ],
+          },
         },
 
         parentnode: {
@@ -50,7 +80,6 @@
             <form id="parentConfigForm">
             <legend class="form-title">Landing Config</legend>
             <small class="form-description">Name Convention: viewnameConfig.js</small>
-  
             <div class="fields">
                 <label for="viewName">Landing Name:</label><small>(required)</small>
                 <input type="text" id="viewName" placeholder="Enter view name, ie: home, products, etc" name="viewName" required><br>

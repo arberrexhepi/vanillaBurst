@@ -43,7 +43,6 @@
       const maxCount = rollCall.length;
       let count = 0;
       let vanillaPromises = {};
-
       for (const element of rollCall) {
         //ë.logSpacer();
         ë.logSpacer(
@@ -71,6 +70,7 @@
             passedFunction,
             updatedOriginBurst
           );
+          //alert("at childFunction" + vanillaPromise);
           let signalBurst = await ë.storeBurst(vanillaPromise);
           if (!vanillaPromise?.signalBurst) {
             vanillaPromise["signalBurst"] = {};

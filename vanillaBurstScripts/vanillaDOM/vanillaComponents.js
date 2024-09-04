@@ -63,6 +63,10 @@
 
     try {
       new Promise(async (resolve, reject) => {
+        //alert(JSON.stringify(vanillaPromise));
+        if (!vanillaPromise?.componentList) {
+          vanillaPromise["componentList"] = [];
+        }
         if (functionFile !== undefined) {
           let componentHTML;
           let components =
@@ -74,8 +78,11 @@
 
               let {
                 dir = undefined,
+                path = null,
+                componentName = id,
                 namespace = null,
                 classNames = id,
+                parent = false,
                 children = "",
                 container = `${renderSchema.customFunctions[functionFile].container}Container`,
                 count = 1,
@@ -86,15 +93,9 @@
                 resolve(vanillaPromise);
               }
 
-              let path = ë.domainUrl + ë.baseUrl;
-              cssPath = buildCssPath(path, dir, id, renderSchema, functionFile);
-              let htmlPath = buildHtmlPath(
-                path,
-                dir,
-                id,
-                renderSchema,
-                functionFile
-              );
+              //let path = ë.domainUrl + ë.baseUrl;
+              let cssPath = path + componentName + ".css";
+              let jsPath = path + componentName + ".js";
               let baseId = id;
               id = `${baseId}-${renderSchema.landing}_${functionFile}`;
 
@@ -135,9 +136,12 @@
                   children,
                   functionFile
                 );
-                let elements = Array.from(
-                  targetContainer.querySelectorAll("*")
-                );
+                let elements;
+                try {
+                  elements = Array.from(targetContainer.querySelectorAll("*"));
+                } catch {
+                  throw new Error("targetContainer: " + targetContainer);
+                }
                 elements.forEach((element) => {
                   if (element.id.includes(element.id.split("-")[0])) {
                     //element.remove();
@@ -164,6 +168,9 @@
                   componentHTML = await ë.sanitizeVanillaDOM(
                     elementBuild.innerHTML
                   );
+
+                  ë.cssFileLoader(cssPath);
+
                   let existingOriginBurst =
                     JSON.parse(localStorage.getItem("originBurst")) || {};
                   existingOriginBurst.componentBurst =
@@ -190,12 +197,14 @@
                     "originBurst",
                     JSON.stringify(originBurst)
                   );
+                  if (!parent && parent !== true) {
+                    vanillaPromise.componentList.push(componentName);
+                  }
                 }
               }
-
-              ë.cssFileLoader(cssPath);
             }
             if (componentHTML) {
+              // alert(vanillaPromise.componentList);
               resolve(vanillaPromise);
             } else {
               resolve(vanillaPromise);
