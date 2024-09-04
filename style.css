@@ -105,6 +105,7 @@ body {
     grid-row: 1;
     position: relative;
     min-width: 100vw;
+    min-height: 70vh;
     width: 100vw;
     padding: 0;
     margin: auto;
@@ -122,6 +123,7 @@ body {
     flex-grow: 1;
     margin: auto;
     height: auto;
+    min-height: 100vh;
     position: relative;
     justify-self: center;
 }
@@ -352,6 +354,7 @@ section {
 article {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     grid-gap: 15vh;
     padding-top: 10vh;
     padding-bottom: 10vh;

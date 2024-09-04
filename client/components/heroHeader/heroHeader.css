@@ -25,6 +25,7 @@
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: center;
+  min-height: 200px;
 }
 
 /* dynamically set images, div img pair */
@@ -35,6 +36,7 @@
 
 #header-symbol-img {
   width: 10vh;
+  min-width: 100px;
 }
 
 /* dynamically set images, div img pair */

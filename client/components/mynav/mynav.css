@@ -61,6 +61,7 @@
 .nav-image {
     height: 5vh;
     max-height: 5vh;
+    max-height: 55px;
 }
 
 @media (max-width: 768px) {
