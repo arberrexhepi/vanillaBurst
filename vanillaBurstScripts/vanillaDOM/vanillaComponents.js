@@ -64,9 +64,9 @@
     try {
       new Promise(async (resolve, reject) => {
         //alert(JSON.stringify(vanillaPromise));
-        if (!vanillaPromise?.componentList) {
-          vanillaPromise["componentList"] = [];
-        }
+        // if (!vanillaPromise?.componentList) {
+        //   vanillaPromise["componentList"] = [];
+        // }
         if (functionFile !== undefined) {
           let componentHTML;
           let components =
@@ -80,6 +80,7 @@
                 dir = undefined,
                 path = null,
                 componentName = id,
+                refresh = false,
                 namespace = null,
                 classNames = id,
                 parent = false,
@@ -97,6 +98,7 @@
               let cssPath = path + componentName + ".css";
               let jsPath = path + componentName + ".js";
               let baseId = id;
+
               id = `${baseId}-${renderSchema.landing}_${functionFile}`;
 
               let viewContainerSelector = `.${renderSchema.customFunctions[functionFile].container}-wrapper`;
@@ -157,7 +159,6 @@
                     sanitizedChildren,
                     classNames
                   );
-
                   if (
                     !targetContainer.hasChildNodes() ||
                     !targetContainer.querySelector(`#${container}-component`)
@@ -165,11 +166,37 @@
                     targetContainer.setAttribute("nonce", ë.nonceBack());
                     targetContainer.append(elementBuild);
                   }
+
+                  // MOVE TO MAIN VANILLABURST REPO (LOCAL AND GIT)
+                  if (refresh === true) {
+                    // Update the content of the specific elements within the container
+                    const existingElement = targetContainer.querySelector(
+                      `#${container}-component`
+                    );
+                    if (existingElement) {
+                      alert("exists");
+                      // Replace the entire element to update both content and attributes
+                      targetContainer.replaceChild(
+                        elementBuild,
+                        existingElement
+                      );
+                    } else {
+                      //alert(children);
+                      targetContainer.innerHTML = ""; // Clear existing content
+                      targetContainer.append(elementBuild);
+                    }
+                    // Re-apply the nonce attribute after updating the content
+                    targetContainer.setAttribute("nonce", ë.nonceBack());
+                  }
+                  //MOVE  ABOVE TO MAIN VANILLABURST REPO (LOCAL AND GIT)
+
                   componentHTML = await ë.sanitizeVanillaDOM(
                     elementBuild.innerHTML
                   );
-
-                  ë.cssFileLoader(cssPath);
+                  //alert(path + " at " + functionFile);
+                  if (path !== null) {
+                    ë.cssFileLoader(cssPath);
+                  }
 
                   let existingOriginBurst =
                     JSON.parse(localStorage.getItem("originBurst")) || {};
@@ -197,7 +224,18 @@
                     "originBurst",
                     JSON.stringify(originBurst)
                   );
+
                   if (!parent && parent !== true) {
+                    if (!vanillaPromise) {
+                      vanillaPromise = {};
+                    }
+
+                    // Ensure componentList is defined
+                    if (!vanillaPromise?.componentList) {
+                      vanillaPromise.componentList = [];
+                    }
+
+                    // Push the componentName to the componentList
                     vanillaPromise.componentList.push(componentName);
                   }
                 }

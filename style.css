@@ -1,5 +1,6 @@
 /*app spefcific css, not yet a system but in the plans */
 
+
 :root {
     --base-font-size: 1.2rem;
     --h1-scale: 2.2;
@@ -39,6 +40,11 @@
     --box-shadows: 0px 10px 40px 0px rgba(0, 0, 0, 0.05);
 
 }
+
+@view-transition {
+    navigation: auto;
+}
+
 
 
 @media (max-width: 389px) {
@@ -86,7 +92,7 @@ body {
 
 
 body {
-    display: none;
+    display: grid;
     grid-template-rows: auto;
     grid-gap: 3vh;
     min-height: 100vh;

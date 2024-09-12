@@ -34,12 +34,17 @@ const config = ë.frozenVanilla(
           }
 
           let partConfig = ë[`${part}Config`] ? ë[`${part}Config`]() : {};
-          //alert(part);
-          //alert(JSON.stringify(partConfig));
 
           let customFunctions = partConfig.customFunctions
             ? partConfig.customFunctions
             : {};
+
+          let seo = customFunctions[part].seo;
+          if (!ë.seo) {
+            ë.seo = {};
+          }
+
+          ë.seo[part] = { ...ë.seo[part], ...seo };
 
           function flattenVanillaElement(subComponents, result = []) {
             for (let component in subComponents) {
@@ -200,10 +205,18 @@ const config = ë.frozenVanilla(
                                   ) {
                                     thispart[componentKey] = {};
                                   }
+                                  // alert(
+                                  //   componentKey +
+                                  //     `${ë.fullPath}client/components/${dir}/`
+                                  // );
 
                                   thispart[componentKey] = {
+                                    ...thispart[componentKey],
                                     id: item.id,
                                     componentName: fileId,
+                                    refresh: item.refresh //ADD THIS LOCAL AND GIT VANILLABURST DIR
+                                      ? item.refresh
+                                      : false,
                                     path: `${ë.fullPath}client/components/${dir}/`,
                                     container:
                                       thispart[componentKey].container ||
@@ -345,7 +358,7 @@ const vanillaConfig = ë.frozenVanilla(
       container: container,
     };
 
-    ë.seo = seo;
+    //ë.seo = seo;
     passedConfig[landing] = {
       ...prependconfig,
       ...passedConfig[landing],

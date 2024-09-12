@@ -126,7 +126,122 @@
             }
           }
           try {
+            // Encapsulate the key pair generation and storage within a closure
+            // const KeyManager = (function () {
+            //   const keys = {};
+
+            //   return {
+            //     async generateKeyPair(name) {
+            //       const keyPair = await window.crypto.subtle.generateKey(
+            //         {
+            //           name: "RSA-OAEP",
+            //           modulusLength: 2048,
+            //           publicExponent: new Uint8Array([1, 0, 1]),
+            //           hash: { name: "SHA-256" },
+            //         },
+            //         true,
+            //         ["encrypt", "decrypt"]
+            //       );
+            //       keys[name] = keyPair.privateKey;
+            //       return keyPair.publicKey;
+            //     },
+            //     getPrivateKey(name) {
+            //       if (!keys[name]) {
+            //         throw new Error("Private key not found");
+            //       }
+            //       return keys[name];
+            //     },
+            //   };
+            // })();
+
+            // // Export the public key to a format that can be used
+            // async function exportPublicKey(key) {
+            //   const exported = await window.crypto.subtle.exportKey(
+            //     "spki",
+            //     key
+            //   );
+            //   const exportedAsString = String.fromCharCode.apply(
+            //     null,
+            //     new Uint8Array(exported)
+            //   );
+            //   const exportedAsBase64 = window.btoa(exportedAsString);
+            //   return `-----BEGIN PUBLIC KEY-----\n${exportedAsBase64}\n-----END PUBLIC KEY-----`;
+            // }
+
+            // // Verify that the public key corresponds to the stored private key
+            // ë.frozenVanilla(
+            //   "verifyKeyPair",
+            //   async function verifyKeyPair(publicKey, name) {
+            //     const privateKey = KeyManager.getPrivateKey(name);
+            //     const message = new TextEncoder().encode("test message");
+            //     const encryptedMessage = await window.crypto.subtle.encrypt(
+            //       {
+            //         name: "RSA-OAEP",
+            //       },
+            //       publicKey,
+            //       message
+            //     );
+            //     const decryptedMessage = await window.crypto.subtle.decrypt(
+            //       {
+            //         name: "RSA-OAEP",
+            //       },
+            //       privateKey,
+            //       encryptedMessage
+            //     );
+            //     return (
+            //       new TextDecoder().decode(decryptedMessage) === "test message"
+            //     );
+            //   }
+            // );
+
+            // // Generate a random number using the Web Crypto API
+            // function generateRandomNumber() {
+            //   const array = new Uint32Array(1);
+            //   window.crypto.getRandomValues(array);
+            //   return array[0];
+            // }
+
+            // // Define the accessKey function
+            // ë.frozenVanilla("accessKey", function (property, value) {
+            //   // Example implementation
+            //   if (property === "key") {
+            //     // Process the key value
+            //     console.log("Processing key:", value);
+            //     // Perform some operation with the key
+            //     // For example, storing it in an internal object
+            //     this.internalStorage = this.internalStorage || {};
+            //     this.internalStorage[property] = value;
+            //   }
+            // });
+
+            // // Example usage
+            // (async () => {
+            //   let randomKey = generateRandomNumber();
+            //   ë.accessKey("key", randomKey);
+
+            //   const keyName = customFunctionName;
+            //   const publicKey = await KeyManager.generateKeyPair(keyName);
+            //   const exportedPublicKey = await exportPublicKey(publicKey);
+
+            //   console.log("Random Key:", randomKey);
+            //   console.log("Public Key:", exportedPublicKey);
+
+            //   // const isVerified = await verifyKeyPair(publicKey, keyName);
+            //   // console.log("Key Pair Verified:", isVerified);
+
+            //   // const isVerified = await ë.verifyKeyPair(
+            //   //   publicKey,
+            //   //   customFunctionName
+            //   // );
+            // })
             // Access the componentList array
+            // if (!vanillaPromises?.[customFunctionName]?.publicKey) {
+            //   vanillaPromises[customFunctionName]["publicKey"] = publicKey;
+            //   alert(vanillaPromises[customFunctionName].publicKey);
+            // }
+
+            // vanillaPromises[customFunctionName]["publicKey"] = publicKey;
+
             let componentList =
               vanillaPromises[customFunctionName].componentList;
 
@@ -138,31 +253,48 @@
             // Part 1: Load all component JS files
             const loadScriptsPromises = vanillaPromises[
               customFunctionName
-            ].componentList.map((componentJS) => {
+            ].componentList.map(async (componentJS) => {
               return loadScript(
                 `${ë.fullPath}client/components/${componentJS}/${componentJS}.js`
               );
             });
-
+            let runningComponent;
             Promise.all(loadScriptsPromises)
               .then(() => {
+                ë.logSpacer("The component list: " + componentList);
                 // Part 2: After loading all scripts, call each component function
                 const callComponentFunctions = vanillaPromises[
                   customFunctionName
                 ].componentList.map(async (componentJS) => {
-                  // alert(componentJS);
-                  await ë[componentJS](vanillaPromises[customFunctionName]); // Return the promise from each component function call
+                  ë.logSpacer(
+                    "trying to run {componentName}.js " + componentJS
+                  );
+                  runningComponent = componentJS;
+                  try {
+                    await ë[componentJS](vanillaPromises[customFunctionName]); // Return the promise from each component function call
+                  } catch {
+                    return;
+                  }
                 });
                 return Promise.all(callComponentFunctions);
               })
               .then(() => {
                 // Part 3: After all component functions are called, run the custom function and storeBurst
+                localStorage.setItem(
+                  "checkVanillaPromise-TurnThisOffInProduction",
+                  JSON.stringify(vanillaPromises)
+                );
+                ë.logSpacer(
+                  "trying to run {customFunctionName}.js " + customFunctionName
+                );
                 ë[customFunctionName](vanillaPromises[customFunctionName]);
                 ë.storeBurst(vanillaPromises[customFunctionName]);
               })
               .catch((error) => {
                 console.error(
-                  "An error occurred during the promise chain execution:",
+                  "An error occurred during the promise chain execution for " +
+                    runningComponent +
+                    ":",
                   error
                 );
               });

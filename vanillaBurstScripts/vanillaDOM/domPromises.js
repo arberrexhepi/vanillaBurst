@@ -52,6 +52,7 @@
 
                       if (domCheck) {
                         observer.disconnect();
+                        return vanillaPromise;
                       }
                     }
                   }

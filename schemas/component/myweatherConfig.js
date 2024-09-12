@@ -16,7 +16,7 @@
         onEvent: ["#start-weather-signal", "click"],
         signalStore: "signalStore.weatherSignal",
         init: "updateWeatherInfo",
-        count: 10,
+        count: 60,
         time: 1000,
         repeat: true,
         intermittent: "weatherRefreshDisplay",

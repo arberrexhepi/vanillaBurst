@@ -94,8 +94,6 @@
     dataSchema.url = replaceCityInUrl(dataSchema.url, randomCity);
 
     const weatherInfo = await ë.serverRender(dataSchema);
-    console.log(JSON.stringify(weatherInfo.myweatherResult));
-
     return weatherInfo.myweatherResult.value;
   }
 

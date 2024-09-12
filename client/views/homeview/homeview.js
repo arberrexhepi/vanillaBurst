@@ -1,6 +1,6 @@
 ë.frozenVanilla("homeview", function (vanillaPromise) {
   ë.logSpacer(vanillaPromise.this + " ran");
-
+  ë.logSpacer("vanillaPromise at homeview" + JSON.stringify(vanillaPromise));
   //this scoop was made by chatGPT
   // ë.vanillaMess("check scoop exist", ë.gptScoop, "check");
   // return;

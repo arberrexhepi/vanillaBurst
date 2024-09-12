@@ -11,8 +11,10 @@
           </div>
           <div class="blockquote-wrapper">
            <blockquote>
-          <small title="${ë.seo.title}">${ë.seo.title}</small>
-          <p>${ë.seo.description}</p>
+          <small title="${ë.seo[data.namespace].title}">${
+        ë.seo[data.namespace].title
+      }</small>
+          <p>${ë.seo[data.namespace].description}</p>
           <h2 class="myHeroHeaderh2">Build Quickly!</h2>
           <div id="header-button" class="action-container header-button ">
           </blockquote></div>

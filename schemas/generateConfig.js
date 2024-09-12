@@ -18,7 +18,6 @@
     url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
-
   let generateConfig = {
     generate: {
       role: "parent",
@@ -26,7 +25,6 @@
       render: "pause",
       originBurst: "generate",
       container: "viewbox",
-      ...{ seo: seo },
       components: {
         fetchComponents: {
           mynav: {
@@ -46,6 +44,7 @@
                 id: "heroHeader-component",
                 namespace: "generate",
                 container: "heroHeader-component",
+                refresh: true,
               },
             ],
           },
@@ -151,6 +150,7 @@
           <pre class="config-code"></pre>`,
         },
       },
+      ...{ seo: seo },
     },
   };
 

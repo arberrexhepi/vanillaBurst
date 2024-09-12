@@ -5,9 +5,6 @@
       role: "config",
       render: "pause",
       fetchDOM: true,
-      // functionFile: "myfooter",
-      // cssPath: "client/components/myfooter/myfooter.css",
-      // htmlPath: "client/components/myfooter/myfooter.html",
       container: "mainFooter",
       classNames: "footer",
       originBurst: {

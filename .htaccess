@@ -3,38 +3,41 @@ RewriteEngine On
 
 # Ensure mod_rewrite is available
 <IfModule mod_headers.c>
-    <FilesMatch "\.(jpg|jpeg|png|gif|svg|ico)$">
+    <FilesMatch "\.(jpg|jpeg|png|gif|svg|ico|js)$">
         Header set Cache-Control "max-age=604800, public"
     </FilesMatch>
 </IfModule>
 
 <IfModule mod_mime.c>
     AddType text/css .css
+    AddType application/javascript .js
 </IfModule>
 
 <IfModule mod_rewrite.c>
 
+    # Skip rewriting for existing files
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
 
+    # Skip rewriting for .js files
+    RewriteCond %{REQUEST_URI} \.js$ [NC]
+    RewriteRule ^ - [L]
 
     # Dynamically rewrite any path to /?burst=path
     RewriteCond %{REQUEST_URI} !^/env/vanilla\.txt$
     RewriteCond %{REQUEST_URI} !^vanilla\.txt$
     RewriteCond %{REQUEST_URI} !^/env/vanilla\.css$
     RewriteCond %{REQUEST_URI} !^vanilla\.css$
+    RewriteCond %{REQUEST_URI} !^/env/vanilla\.js$
+    RewriteCond %{REQUEST_URI} !^vanilla\.js$
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)$ /?burst=$1 [L,QSA,R=301]
 
-
-    # Skip rewriting for existing files
-    RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^ - [L]
-
     # Serve "index.html" for all other requests not accessing a physical file
-    RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|svg|ico)$ [NC]
+    RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|svg|ico|js)$ [NC]
     RewriteRule ^ index.html [L]
 
     SetEnvIf Request_URI "^/?burst=([^&]+)&name_space=([^&]+)&entry=([^&]+)$" statePath=?burst=%1&name_space=%2&entry=%3
-
 
 </IfModule>
