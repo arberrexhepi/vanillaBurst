@@ -18,7 +18,7 @@
     url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
-
+  ë.setSeo(seo);
   let documentationConfig = {
     documentation: {
       role: "parent",
@@ -26,7 +26,7 @@
       render: "pause",
       originBurst: "documentation",
       container: "viewbox",
-      ...{ seo: seo },
+      // seo: seo,
       components: {
         fetchComponents: {
           mynav: {
@@ -46,6 +46,7 @@
                 id: "heroHeader-component",
                 namespace: "documentation",
                 container: "heroHeader-component",
+                refresh: true,
               },
             ],
           },
@@ -71,6 +72,7 @@
           },
         },
       },
+      ...{ seo: seo },
     },
   };
 

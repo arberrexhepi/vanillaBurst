@@ -20,7 +20,7 @@
     `;
   ///content policy broke this sample script, will add in the UI packages instead
 
-  document.body.style.display = "grid";
+  //document.body.style.display = "grid";
 });
 
 function removeLoader() {

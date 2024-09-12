@@ -18,7 +18,7 @@
     url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
-
+  //ë.setSeo(seo);
   let homeviewConfig = {
     homeview: {
       role: "parent",
@@ -26,7 +26,6 @@
       render: "pause",
       originBurst: {},
       container: "viewbox",
-      ...{ seo: seo },
       components: {
         fetchComponents: {
           mynav: {
@@ -46,6 +45,7 @@
                 id: "heroHeader-component",
                 namespace: "homeview",
                 container: "heroHeader-component",
+                refresh: true,
               },
             ],
           },
@@ -71,8 +71,8 @@
           },
         },
       },
+      ...{ seo: seo },
     },
-
     //...sharedParts,
   };
 

@@ -1,7 +1,7 @@
 {
   "defaultAppRoute": "homeview",
 
-  "vanillaStock": true,
+  "vanillaStock": false,
   "registeredRoutes": ["homeview", "documentation", "generate"],
   "baseUrlIcons": "globals/brandAssets/assets/icons/",
   "baseUrlImages": "https://storage.googleapis.com/arberinc_public/vanillaBurst/brandAssets/images/",
@@ -24,12 +24,12 @@
     "linkBurst": true,
     "gptScoop": ["homeview"]
   },
-  "vendors": ["jquery-3.7.1.min.js"],
+  "vendors": false,
   "vanillaMessCaller": ["updateComponent"],
   "trustedSources": {
     "img-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
+
       "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
@@ -37,27 +37,20 @@
     ],
     "media-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
-    "style-src": [
-      "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
-      "https://vanillaburst.com"
-    ],
+    "style-src": ["http://vanillaburstgame", "https://vanillaburst.com"],
     "object-src": ["'none'"],
     "font-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
     "connect-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
@@ -66,19 +59,16 @@
     ],
     "manifest-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design"
     ],
     "worker-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design"
     ],
     "child-src": [
       "http://vanillaburstgame",
-      "http://127.0.0.1:5500",
       "https://vanillaburst.com",
       "https://arber.design"
     ]

@@ -198,7 +198,7 @@
 
       if (isNewElement === true) {
         if (document.body.childNodes.length > 0) {
-          document.body.insertBefore(targetElement, document.body.firstChild);
+          document.body.appendChild(targetElement);
         } else {
           document.body.appendChild(targetElement);
         }
