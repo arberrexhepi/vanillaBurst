@@ -10,7 +10,7 @@ const domainUrls = {
 };
 const baseUrls = {
   dev: "/",
-  live: "/",
+  live: "/vanillaBurst/",
 };
 
 const systemLogs = true;
