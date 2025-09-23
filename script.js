@@ -1,7 +1,7 @@
 // set app mode variables "dev" or "live"
 
-const mode = "dev";
-const versions = { dev: "0.0.07", live: "0.0.07" };
+const mode = "live";
+const versions = { dev: "0.0.08", live: "0.0.08" };
 
 // Define base URLs for different mode
 const domainUrls = {

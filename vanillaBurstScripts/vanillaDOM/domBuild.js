@@ -110,7 +110,7 @@
                 passedFunction,
               },
               async (htmlContent) => {
-                console.log(targetElement);
+                ë.logSpacer(targetElement);
 
                 await ë.updateContent(
                   htmlContent,
@@ -121,8 +121,8 @@
               }
             );
           } else {
-            console.log("updatecontent no functionhtml");
-            console.log(targetElement);
+            ë.logSpacer("updatecontent no functionhtml");
+            ë.logSpacer(targetElement);
             resolve(vanillaPromise);
           }
         } catch (error) {
@@ -193,12 +193,13 @@
       targetElement.setAttribute("nonce", ë.nonceBack());
       targetElement.classList.remove(`${container}`);
       targetElement.classList.add(`${container}-wrapper`);
+      targetElement.classList.add(`${container}Container`);
       targetElement.innerHTML = `<div id="${container}Container" class="${container}"></div>`;
       targetElement.setAttribute("data-component", true);
 
       if (isNewElement === true) {
         if (document.body.childNodes.length > 0) {
-          document.body.appendChild(targetElement);
+          document.body.insertBefore(targetElement, document.body.firstChild);
         } else {
           document.body.appendChild(targetElement);
         }

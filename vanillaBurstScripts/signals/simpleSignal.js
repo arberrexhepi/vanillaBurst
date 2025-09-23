@@ -1,38 +1,55 @@
 ë.frozenVanilla(
   "simpleSignal",
-  async function (
+  async function ({
     vanillaPromise,
-    namespace,
+    namespace = true,
     signalName,
-    init,
-    count,
-    time,
-    repeat,
-    callBack,
-    clearable
-  ) {
+    init = null,
+    count = null,
+    time = 1000,
+    repeat = false,
+    callBack = null,
+    clearable = false,
+  }) {
     let counter = 0;
 
-    if (init) {
+    let returnOnValue = false;
+    if (count === null) {
+      returnOnValue = true;
+    }
+    if (init && typeof init === "function") {
       await init();
     }
     let simpleSignal =
       JSON.parse(localStorage.getItem(signalName + "_simpleSignal")) || {};
-    count = count ? count : 999;
+
     if (!simpleSignal[signalName + "_simpleSignal"]?.id) {
       let intervalId = setInterval(async () => {
+        //console.log(vanillaPromise?.passedFunction?.originBurst?.namespace);
+        //console.log(history.state.stateTagName);
         if (
-          (
-            namespace &&
-            namespace === true &&
+          namespace === true &&
+          Array.isArray(
             vanillaPromise?.passedFunction?.originBurst?.namespace
-          ).includes(history.state.stateTagName)
+          ) &&
+          vanillaPromise.passedFunction.originBurst.namespace.includes(
+            history.state.stateTagName
+          )
         ) {
+          //console.log(vanillaPromise?.passedFunction?.originBurst?.namespace);
+
           counter++;
           if (typeof callBack === "function") {
             await callBack(counter);
+          } else {
+            ë.resetSignal(signalName, "_simpleSignal");
+            alert("callback is not a function");
           }
-          if (typeof count === "number" && counter >= count) {
+          if (
+            typeof count === "number" &&
+            counter >= count &&
+            returnOnValue !== true
+          ) {
             if (repeat) {
               counter = 0;
             } else {
@@ -42,7 +59,9 @@
             if (typeof callBack === "function") {
               await callBack();
             }
-            clearInterval(intervalId);
+            if (clearable === true) {
+              ë.resetSignal(signalName, "_simpleSignal");
+            }
           }
         }
       }, time);
@@ -58,7 +77,7 @@
         signalName + "_simpleSignal",
         JSON.stringify(simpleSignal)
       );
-    } else if (clearable && typeof clearable === "boolean") {
+    } else if (clearable === true) {
       ë.resetSignal(signalName, "_simpleSignal");
     }
   }

@@ -76,7 +76,7 @@
               data.data = await callBack(data);
 
               // Prepare for "completed" state
-              await ë.signalStore
+              await ë.intervalStore
                 .get(`${signalName}_runner`)
                 [callBackName](data);
 
@@ -135,7 +135,7 @@
               (eventData = data?.data?.eventData ? data?.data?.eventData : null)
             );
 
-            await ë.signalStore
+            await ë.intervalStore
               .get(`${signalName}_runner`)
               [intermittentName](data);
 
@@ -145,7 +145,7 @@
               signalAffectDOM(vanillaDOM, vanillaPromise, data.data.eventData);
             }
 
-            await ë.signalStore
+            await ë.intervalStore
               .get(`${signalName}_runner`)
               [intermittentName](data);
 

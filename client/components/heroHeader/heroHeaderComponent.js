@@ -1,4 +1,6 @@
 ë.frozenVanilla("heroHeaderComponent", async function (data) {
+  if (!data) return;
+
   let heroHeaderComponent = {
     [`${data.id}`]: {
       namespace: [data.namespace] || ["homeview"],

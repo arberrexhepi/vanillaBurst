@@ -80,7 +80,6 @@
                 dir = undefined,
                 path = null,
                 componentName = id,
-                refresh = false,
                 namespace = null,
                 classNames = id,
                 parent = false,
@@ -103,16 +102,16 @@
 
               let viewContainerSelector = `.${renderSchema.customFunctions[functionFile].container}-wrapper`;
               let targetContainerSelector = `.${container}`;
-              console.log("view container tag: " + viewContainerSelector);
+              ë.logSpacer("view container tag: " + viewContainerSelector);
               let viewContainer = document.querySelector(viewContainerSelector);
 
               let targetContainer = document.querySelector(
                 targetContainerSelector
               );
-              console.log(
+              ë.logSpacer(
                 "View container html :" + JSON.stringify(viewContainer)
               );
-              console.log("compontent selector: " + targetContainerSelector);
+              ë.logSpacer("compontent selector: " + targetContainerSelector);
 
               let originFunction = renderSchema.landing;
 
@@ -142,101 +141,88 @@
                 try {
                   elements = Array.from(targetContainer.querySelectorAll("*"));
                 } catch {
-                  throw new Error("targetContainer: " + targetContainer);
-                }
-                elements.forEach((element) => {
-                  if (element.id.includes(element.id.split("-")[0])) {
-                    //element.remove();
-                    element.setAttribute("nonce", ë.nonceBack());
-                  }
-                });
-
-                for (let i = 0; i < count; i++) {
-                  let elementId = count > 1 ? `${id}${i}` : id;
-
-                  let elementBuild = createSanitizedElement(
-                    elementId,
-                    sanitizedChildren,
-                    classNames
+                  console.warn(
+                    "No elements found in target container for selector: " +
+                      targetContainerSelector
                   );
-                  if (
-                    !targetContainer.hasChildNodes() ||
-                    !targetContainer.querySelector(`#${container}-component`)
-                  ) {
-                    targetContainer.setAttribute("nonce", ë.nonceBack());
-                    targetContainer.append(elementBuild);
-                  }
+                  ë.logSpacer(
+                    `%cmissing target containers in "${functionFile}" for selector: "${targetContainerSelector}". Please make sure they include this target or remove them from namespace "${vanillaPromise.renderSchema.landing}" in the namsepace`,
+                    null,
+                    "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
+                  );
+                }
+                if (elements) {
+                  elements.forEach((element) => {
+                    if (element.id.includes(element.id.split("-")[0])) {
+                      //element.remove();
+                      element.setAttribute("nonce", ë.nonceBack());
+                    }
+                  });
 
-                  // MOVE TO MAIN VANILLABURST REPO (LOCAL AND GIT)
-                  if (refresh === true) {
-                    // Update the content of the specific elements within the container
-                    const existingElement = targetContainer.querySelector(
-                      `#${container}-component`
+                  for (let i = 0; i < count; i++) {
+                    let elementId = count > 1 ? `${id}${i}` : id;
+
+                    let elementBuild = createSanitizedElement(
+                      elementId,
+                      sanitizedChildren,
+                      classNames
                     );
-                    if (existingElement) {
-                      alert("exists");
-                      // Replace the entire element to update both content and attributes
-                      targetContainer.replaceChild(
-                        elementBuild,
-                        existingElement
-                      );
-                    } else {
-                      //alert(children);
-                      targetContainer.innerHTML = ""; // Clear existing content
+
+                    if (
+                      !targetContainer.hasChildNodes() ||
+                      !targetContainer.querySelector(`#${container}-component`)
+                    ) {
+                      targetContainer.setAttribute("nonce", ë.nonceBack());
                       targetContainer.append(elementBuild);
                     }
-                    // Re-apply the nonce attribute after updating the content
-                    targetContainer.setAttribute("nonce", ë.nonceBack());
-                  }
-                  //MOVE  ABOVE TO MAIN VANILLABURST REPO (LOCAL AND GIT)
-
-                  componentHTML = await ë.sanitizeVanillaDOM(
-                    elementBuild.innerHTML
-                  );
-                  //alert(path + " at " + functionFile);
-                  if (path !== null) {
-                    ë.cssFileLoader(cssPath);
-                  }
-
-                  let existingOriginBurst =
-                    JSON.parse(localStorage.getItem("originBurst")) || {};
-                  existingOriginBurst.componentBurst =
-                    existingOriginBurst.componentBurst || {};
-
-                  let DOMtype = {
-                    type: { component: [elementId, componentHTML] },
-                  };
-
-                  let updatedOriginBurst = await ë.storeComponentBurst(
-                    existingOriginBurst,
-                    originFunction,
-                    functionFile,
-                    DOMtype
-                  );
-
-                  originBurst = updatedOriginBurst;
-                  if (vanillaPromise?.originBurst) {
-                    vanillaPromise.originBurst = originBurst;
-                  }
-
-                  // Store the updated originBurst back to localStorage
-                  localStorage.setItem(
-                    "originBurst",
-                    JSON.stringify(originBurst)
-                  );
-
-                  if (!parent && parent !== true) {
-                    if (!vanillaPromise) {
-                      vanillaPromise = {};
+                    componentHTML = await ë.sanitizeVanillaDOM(
+                      elementBuild.innerHTML
+                    );
+                    //alert(path + " at " + functionFile);
+                    if (path !== null) {
+                      ë.cssFileLoader(cssPath);
                     }
 
-                    // Ensure componentList is defined
-                    if (!vanillaPromise?.componentList) {
-                      vanillaPromise.componentList = [];
+                    let existingOriginBurst =
+                      JSON.parse(localStorage.getItem("originBurst")) || {};
+                    existingOriginBurst.componentBurst =
+                      existingOriginBurst.componentBurst || {};
+
+                    let DOMtype = {
+                      type: { component: [elementId, componentHTML] },
+                    };
+
+                    let updatedOriginBurst = await ë.storeComponentBurst(
+                      existingOriginBurst,
+                      originFunction,
+                      functionFile,
+                      DOMtype
+                    );
+
+                    originBurst = updatedOriginBurst;
+                    if (vanillaPromise?.originBurst) {
+                      vanillaPromise.originBurst = originBurst;
                     }
 
-                    // Push the componentName to the componentList
-                    vanillaPromise.componentList.push(componentName);
+                    // Store the updated originBurst back to localStorage
+                    localStorage.setItem(
+                      "originBurst",
+                      JSON.stringify(originBurst)
+                    );
+
+                    if (!parent && parent !== true) {
+                      if (!vanillaPromise) {
+                        vanillaPromise = {};
+                      }
+
+                      // Ensure componentList is defined
+                      if (!vanillaPromise?.componentList) {
+                        vanillaPromise.componentList = [];
+                      }
+
+                      // Push the componentName to the componentList
+                      vanillaPromise.componentList.push(componentName);
+                    }
                   }
                 }
               }

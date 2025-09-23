@@ -1,4 +1,6 @@
 ë.frozenVanilla("mynavComponent", async function (data) {
+  if (!data) return;
+
   let navComponent = {
     [`${data.id}`]: {
       namespace: [data.namespace] || ["homeview", "generate"],

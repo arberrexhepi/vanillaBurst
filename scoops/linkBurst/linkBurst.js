@@ -9,6 +9,7 @@
     ë.vanillaMess(scoopTag, "linkBurst", target, "string");
 
     let navLinks = document.querySelectorAll(target);
+
     let navBuilt = [];
     navLinks.forEach((link) => {
       const route = link.getAttribute("data-route");

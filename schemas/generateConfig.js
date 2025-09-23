@@ -150,6 +150,7 @@
           <pre class="config-code"></pre>`,
         },
       },
+      dependencies: ["addClipboardButton"],
       ...{ seo: seo },
     },
   };

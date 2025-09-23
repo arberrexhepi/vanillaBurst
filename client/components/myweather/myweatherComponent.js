@@ -1,4 +1,6 @@
 ë.frozenVanilla("myweatherComponent", async function (data) {
+  if (!data) return;
+
   let myweatherComponent = {
     [`${data.id}`]: {
       namespace: ["homeview", "generate"],

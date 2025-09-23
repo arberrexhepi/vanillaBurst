@@ -16,6 +16,8 @@
     html += `<li class="footer-link" data-route="${key}">${key.toUpperCase()}</li>`;
   }
 
+  console.log("vanillaPromise in myfooter:", vanillaPromise);
+
   await ë.updateComponent(
     vanillaPromise,
     {
@@ -24,7 +26,7 @@
       classNames: "dynamic-links",
       html: [html],
     },
-    "footerlinks",
+    "myfooter-componentContainer",
     `#linklist`
   );
 

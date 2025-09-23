@@ -39,9 +39,20 @@
     //////////////////////////////////////////////////////////
     let verboseCache = true;
     ///////////////////////////////////
-    let storedComponentId =
-      `${vanillaPromise?.passedFunction?.components?.[componentKey].id}-${vanillaPromise?.renderSchema?.landing}_${vanillaPromise?.this}` ||
-      undefined;
+    let checkComponentRole;
+    let defaultComponentKey;
+
+    if (vanillaPromise?.passedFunction?.role === "component") {
+      checkComponentRole = true;
+      defaultComponentKey = vanillaPromise.this + "-componentContainer";
+    }
+
+    // True/false ternary for storedComponentId
+    let storedComponentId = vanillaPromise?.passedFunction?.components?.[
+      componentKey
+    ]?.id
+      ? `${vanillaPromise.passedFunction.components[componentKey].id}-${vanillaPromise?.renderSchema?.landing}_${vanillaPromise?.this}`
+      : defaultComponentKey;
 
     ë.vanillaMess(
       "updateComponent",
@@ -225,6 +236,7 @@
       .then(async () => {
         // Convert NodeList to array
         let htmlData = rootObject?.htmlData;
+        console.log("storedComponentId", storedComponentId);
         let parentElement = document.querySelector("#" + storedComponentId);
 
         switch (htmlData.htmlDataType) {
@@ -239,10 +251,15 @@
         if (verbose === true) {
           return new Promise(async (resolve, reject) => {
             let cacheResult;
+            console.log(vanillaPromise.passedFunction);
             try {
               if (
-                vanillaPromise.passedFunction.components[componentKey].cache ===
-                false
+                vanillaPromise.passedFunction?.components?.[
+                  componentKey ?? storedComponentId
+                ]?.cache &&
+                vanillaPromise.passedFunction.components[
+                  componentKey ?? storedComponentId
+                ] === false
               ) {
                 return;
               } else {
@@ -256,6 +273,7 @@
               }
               resolve(cacheResult); // resolve the Promise with cacheResult
             } catch (error) {
+              console.error("Error in cacheComponentSpawn: " + error.message);
               console.trace();
               ë.logSpacer(console.log(error), null, null, true);
               reject(error);
@@ -267,8 +285,12 @@
           ë.logSpacer(vanillaPromise.passedFunction, null, null, true);
           ë.logSpacer(componentKey, null, null, true);
           if (
-            vanillaPromise.passedFunction.components[componentKey].cache ===
-            false
+            vanillaPromise.passedFunction?.components?.[
+              componentKey ?? storedComponentId
+            ]?.cache &&
+            vanillaPromise.passedFunction.components[
+              componentKey ?? storedComponentId
+            ] === false
           ) {
             return;
           } else {

@@ -6,8 +6,8 @@
 
   // weatherSB.time = 1000;
 
-  // Store the weather signal runner in the signalStore
-  ë.signalStore("weatherSignal_runner", {
+  // Store the weather signal runner in the intervalStore
+  ë.intervalStore("weatherSignal_runner", {
     weatherRefreshDisplay: async function (data) {
       let returnData = await handleWeatherRefreshDisplay(data, vanillaPromise);
       return returnData;

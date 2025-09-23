@@ -134,6 +134,10 @@ const config = ë.frozenVanilla(
                             result[funcName].container || funcName;
                         }
 
+                        if (result[funcName]?.cache === undefined) {
+                          result[funcName].cache = true; //default to true unless specified otherwise
+                        }
+
                         let subComponents =
                           result?.[funcName]?.components?.fetchComponents;
                         if (subComponents) {
@@ -223,6 +227,7 @@ const config = ë.frozenVanilla(
                                       `${fileId}-component`,
                                     dir: thispart[componentKey].dir || fileId,
                                     ...(thispart[componentKey] || {}),
+                                    cache: thispart[componentKey].cache || true,
                                   };
 
                                   //alert(JSON.stringify(thispart));
@@ -326,21 +331,21 @@ const config = ë.frozenVanilla(
   },
   false
 );
-
 const vanillaConfig = ë.frozenVanilla(
   "vanillaConfig",
   function vanillaConfig(landing, passedConfig, passedVendors) {
     let htmlPath;
     let cssPath;
-    let dir = passedConfig[landing].dir || `client/views/${landing}/`;
-    let functionFile = passedConfig[landing].functionFile || landing;
-    let seo = passedConfig[landing].seo;
+    let dir = passedConfig?.[landing]?.dir || `client/views/${landing}/`;
+    let functionFile = passedConfig[landing]?.functionFile || landing;
+    let legacyDOM;
+    let seo = passedConfig?.[landing]?.seo || {};
     let container;
+
     if (
       passedConfig?.[landing]?.fetchDOM &&
       passedConfig?.[landing]?.fetchDOM === true
     ) {
-      //alert(JSON.stringify(passedConfig?.[landing]) + "is requesting DOM");
       htmlPath = passedConfig?.[landing]?.htmlPath
         ? passedConfig[landing].htmlPath
         : `client/views/${landing}/${landing}.html`;
@@ -348,6 +353,16 @@ const vanillaConfig = ë.frozenVanilla(
         ? passedConfig[landing].cssPath
         : `client/views/${landing}/${landing}.css`;
       container = passedConfig?.[landing].container;
+    }
+
+    if (container === undefined) {
+      ë.logSpacer(
+        `%c[Container is undefined, please check your schema for " + ${functionFile}. Because this config has a role of parent, it requires a container to render the DOM of the route properly.]`,
+        "",
+        "background-color: red; color: white; font-weight: bold; font-size:24px;",
+        true
+      );
+      return;
     }
 
     let prependconfig = {
@@ -358,7 +373,6 @@ const vanillaConfig = ë.frozenVanilla(
       container: container,
     };
 
-    //ë.seo = seo;
     passedConfig[landing] = {
       ...prependconfig,
       ...passedConfig[landing],
@@ -393,7 +407,7 @@ const vanillaConfig = ë.frozenVanilla(
     buildConfig[landing] = {
       landing: landing,
       scripts: [
-        ...ë.vanillaBurstScripts(),
+        //...ë.vanillaBurstScripts(),
         ...Object.entries(ë.vanillaScoops)
           .filter(
             ([key, namespaces]) =>
@@ -418,6 +432,11 @@ const vanillaConfig = ë.frozenVanilla(
         ...passedConfig,
       },
     };
+
+    for (let script of buildConfig[landing].scripts) {
+      ë.loadScript(script);
+    }
+
     // Freeze the 'landing' property
     Object.defineProperty(buildConfig[landing], "landing", {
       writable: false,
