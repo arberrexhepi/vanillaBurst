@@ -32,8 +32,8 @@
               return new Promise((resolve, reject) => {
                 let observerCallback = function (mutationsList, observer) {
                   for (let mutation of mutationsList) {
-                    console.log("Mutation type:", mutation.type);
-                    console.log(
+                    ë.logSpacer("Mutation type:", mutation.type);
+                    ë.logSpacer(
                       "Mutation target innerHTML:",
                       mutation.target.innerHTML
                     );
@@ -48,7 +48,7 @@
 
                       domCheck = document.getElementById(id);
 
-                      console.log("domCheck:", domCheck);
+                      ë.logSpacer("domCheck:", domCheck);
 
                       if (domCheck) {
                         observer.disconnect();
@@ -80,22 +80,35 @@
                 renderSchema
               )
                 .then((vanillaPromise) => {
-                  try {
-                    if (config?.components) {
-                      vanillaComponents(
-                        customFunctionName,
-                        renderSchema,
-                        vanillaPromise
-                      );
-                    }
-                  } catch (error) {
-                    alert(error);
+                  let checkDOMnamespace;
+                  let hasDOMnamespace = config?.DOMnamespace ? true : false;
+
+                  if (!hasDOMnamespace) {
+                    checkDOMnamespace = true;
+                  } else {
+                    checkDOMnamespace =
+                      Array.isArray(config.DOMnamespace) &&
+                      config.DOMnamespace.includes(renderSchema.landing);
                   }
-                  // console.log(
-                  //   "first vanillaPromise log for " +
-                  //     customFunctionName +
-                  //     JSON.stringify(vanillaPromise)
-                  // );
+
+                  if (checkDOMnamespace) {
+                    try {
+                      if (config?.components) {
+                        vanillaComponents(
+                          customFunctionName,
+                          renderSchema,
+                          vanillaPromise
+                        );
+                      }
+                    } catch (error) {
+                      alert(error);
+                    }
+                    // console.log(
+                    //   "first vanillaPromise log for " +
+                    //     customFunctionName +
+                    //     JSON.stringify(vanillaPromise)
+                    // );
+                  }
                   return vanillaPromise; // Ensure this promise is returned to the next then
                 })
                 .catch((error) => {
@@ -114,7 +127,7 @@
             //     customFunctionName +
             //     JSON.stringify(vanillaPromise)
             // );
-            ë.vanillaImages(true);
+            //ë.vanillaImages(true);
 
             resolve(vanillaPromise);
           })
@@ -123,7 +136,7 @@
             reject(error);
           });
       } else {
-        ë.vanillaImages(true);
+        //ë.vanillaImages(true);
 
         resolve(vanillaPromise);
       }

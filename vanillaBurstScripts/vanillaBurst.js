@@ -157,11 +157,16 @@ let historyCount = 0;
           buildState.stateTagName,
           `/${buildState.stateTagPath}`
         );
-        let seo = ë.seo;
+        //    let seo = ë.seo;
 
-        ë.setSeo(seo);
-        ë.logSpacer("Setting SEO:", JSON.stringify(seo), null, true);
-        ë.logSpacer("Document title set to:", seo.title, null, true);
+        //ë.setSeo(seo);
+        //  ë.logSpacer("Setting SEO:", JSON.stringify(seo), null, true);
+        // ë.logSpacer(
+        //   "Document title set to:",
+        //   seo[buildState.stateTagName].title,
+        //   null,
+        //   true
+        // );
 
         ë.render(buildState.stateTagParams);
       }
@@ -184,9 +189,9 @@ let historyCount = 0;
             popState.stateTagName,
             `/${popState.stateTagPath}`
           );
-          let seo = ë.seo;
+          //  let seo = ë.seo;
 
-          ë.setSeo(seo);
+          // ë.setSeo(seo);
           ë.render(popState.stateTagParams);
         }
       });

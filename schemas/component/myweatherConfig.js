@@ -7,32 +7,6 @@
       originBurst: {
         namespace: [burstTo], //auto assign namespace to where it was included as a package, or include your own
       },
-      signal: {
-        verbose: false,
-        clearable: true,
-        name: "weatherSignal",
-        namespace: true,
-        action: "pause",
-        onEvent: ["#start-weather-signal", "click"],
-        signalStore: "signalStore.weatherSignal",
-        init: "updateWeatherInfo",
-        count: 60,
-        time: 1000,
-        repeat: true,
-        intermittent: "weatherRefreshDisplay",
-        callBack: "updateWeatherInfo",
-        vanillaDOM: {
-          component: "weatherappButtons",
-          container: ".inner_button_wrapper",
-          clear: true,
-        },
-        affectors: [
-          ["#pause-weather-signal", "click", "pause"],
-          ["#start-weather-signal", "click", "go"],
-          ["#reset-weather-signal", "click", "reset"],
-          ["#remove-weather-signal", "click", "remove", "cache"],
-        ],
-      },
       components: {
         fetchComponents: {
           myweather: { data: [{ id: "1" }] },
@@ -63,6 +37,32 @@
             "7d9df56711msh1decfb504cf86b4p1ad509jsn2795a9534f87",
           "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
         },
+      },
+      signal: {
+        verbose: false,
+        clearable: true,
+        name: "weatherSignal",
+        namespace: true,
+        action: "pause",
+        onEvent: ["#start-weather-signal", "click"],
+        signalStore: "signalStore.weatherSignal",
+        init: "updateWeatherInfo",
+        count: 60,
+        time: 1000,
+        repeat: true,
+        intermittent: "weatherRefreshDisplay",
+        callBack: "updateWeatherInfo",
+        vanillaDOM: {
+          component: "weatherappButtons",
+          container: ".inner_button_wrapper",
+          clear: true,
+        },
+        affectors: [
+          ["#pause-weather-signal", "click", "pause"],
+          ["#start-weather-signal", "click", "go"],
+          ["#reset-weather-signal", "click", "reset"],
+          ["#remove-weather-signal", "click", "remove", "cache"],
+        ],
       },
     },
   };

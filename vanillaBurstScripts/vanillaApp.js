@@ -4,7 +4,7 @@ const vanillaApp = ë.frozenVanilla(
     ë.onload = function () {
       ë.frozenVanilla("path", ë.location.pathname.replace(/^\//, ""));
       const fullPath = ë.domainUrl + ë.baseUrl;
-      console.log("fullpath" + fullPath);
+      ë.logSpacer("fullpath" + fullPath);
 
       // Load initial scripts and manage promise chains
       const configScriptPath = "vanillaBurstScripts/system/configs/config.js";
@@ -21,15 +21,15 @@ const vanillaApp = ë.frozenVanilla(
 
           const config = await configResponse.json();
           setVanillaBurstScripts(fullPath);
+
           // Assuming configScriptPath is defined and refers to the script to load
           await ë.loadScript(`${fullPath}${configScriptPath}`);
 
           // Process the config and return schemaParts
           const schemaParts = await ë.loadConfig(config);
 
-          ë.logSpacer(
+          console.log(
             `%cWelcome to ${ë.domainUrl} 🍦`,
-            null,
             "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
           );
 
@@ -51,10 +51,11 @@ const vanillaApp = ë.frozenVanilla(
         ë.logSpacer("ë.schemaParts:", schemaParts);
 
         const parts = Object.keys(schemaParts);
-        console.log(parts);
+        ë.logSpacer(parts);
         // Log parts to verify the extracted keys
         ë.logSpacer("Extracted parts (keys):", parts);
 
+        //ë.loadScript(ë.vanillaBurstScripts());
         ë.frozenVanilla("parts", parts, false);
         ë.logSpacer("Extracted parts (keys):", parts, null, true);
 
@@ -147,7 +148,6 @@ const vanillaApp = ë.frozenVanilla(
               const vendorArray = Array.isArray(vendorConfig)
                 ? vendorConfig.map((vendor) => `${fullPath}vendors/${vendor}`)
                 : [];
-
               return Object.freeze([
                 ...vendorArray,
                 fullPath + "vendors/purify.min.js",
@@ -169,6 +169,8 @@ const vanillaApp = ë.frozenVanilla(
                   "vanillaBurstScripts/functionPromises/vanillaPromise.js",
                 fullPath +
                   "vanillaBurstScripts/functionPromises/appendScript.js",
+                fullPath +
+                  "vanillaBurstScripts/system/security/vanillaAccessor/vanillaAccessor.js",
                 fullPath + "vanillaBurstScripts/singlePromise.js",
                 fullPath + "vanillaBurstScripts/originBurst.js",
                 fullPath + "vanillaBurstScripts/childFunction.js",
@@ -193,8 +195,11 @@ const vanillaApp = ë.frozenVanilla(
       // Start the promise chain
       ë.loadInitialScripts()
         .then((schemaParts) => {
-          return promiseSchemaParts(schemaParts);
+          return Promise.all(
+            ë.vanillaBurstScripts().map((script) => ë.loadScript(script))
+          ).then(() => schemaParts); // Pass schemaParts along
         })
+        .then((schemaParts) => promiseSchemaParts(schemaParts))
         .catch((error) => {
           console.error("Error in initial script loading:", error);
         });

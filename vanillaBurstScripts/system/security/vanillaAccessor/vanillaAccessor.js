@@ -5,56 +5,16 @@
   if (Array.isArray(calling)) {
     const actualCalling = calling[0];
     const externalCallback = calling[1];
-
-    // Check or store in cache
-    async function checkBrowserCache(initialValue) {
-      try {
-        if (!("caches" in window)) {
-          console.warn("Cache Storage API is not supported here.");
-          return initialValue;
-        }
-        const cacheName = "vanillaAccessorCache";
-        const cacheKey = "/vanillaAccessor/allSignals";
-        const cache = await caches.open(cacheName);
-        let dataObj = {};
-
-        // Try reading existing data
-        const response = await cache.match(cacheKey);
-        if (response) {
-          try {
-            dataObj = await response.json();
-          } catch (e) {
-            console.warn("Failed to parse existing cached data:", e);
-          }
-        }
-
-        // Update or add the signal value
-        dataObj[signal] = initialValue;
-
-        // Write back to the cache
-        await cache.put(
-          cacheKey,
-          new Response(JSON.stringify(dataObj), {
-            headers: { "Content-Type": "application/json" },
-          })
-        );
-
-        // Return just this signal's data
-        return dataObj[signal];
-      } catch (error) {
-        console.error("Error checking browser cache:", error);
-        return initialValue;
-      }
-    }
-
     const value = ë.signalStore.get(
       signal,
       ë.vanillaAccessor,
       vanillaPromise,
       actualCalling
     );
-    const valuePromise = checkBrowserCache(value);
-
+    if (value === undefined) {
+      console.debug(`Signal ${signal} not found in signalStore.`);
+      return null;
+    }
     // Subscribe the external callback so that it executes on subsequent updates
     if (
       typeof externalCallback === "function" &&
@@ -63,51 +23,22 @@
       if (ë[`${actualCalling}_subscribed`] !== true) {
         ë.signalStore.subscribe(signal, externalCallback);
         ë.frozenVanilla(`${actualCalling}_subscribed`, externalCallback, true);
+        // Immediately call the callback with the current value if it exists
+        if (value !== undefined) {
+          externalCallback(value);
+        }
       } else {
         console.debug(
           `Callback ${externalCallback} already subscribed for signal ${signal}`
         );
       }
     }
+    const updateValue = function (newVal) {
+      ë.signalStore.set(signal, newVal);
+    };
+    return [value, updateValue];
   } else {
-    async function setBrowserCache(newVal) {
-      try {
-        if (!("caches" in window)) return;
-        const cacheName = "vanillaAccessorCache";
-        const cacheKey = "/vanillaAccessor/allSignals";
-        const cache = await caches.open(cacheName);
-        let dataObj = {};
-
-        // Try reading existing data
-        const response = await cache.match(cacheKey);
-        if (response) {
-          try {
-            dataObj = await response.json();
-          } catch (e) {
-            console.warn("Failed to parse existing cached data:", e);
-          }
-        }
-
-        // Update or add the signal value, then put it back
-        dataObj[signal] = newVal;
-        await cache.put(
-          cacheKey,
-          new Response(JSON.stringify(dataObj), {
-            headers: { "Content-Type": "application/json" },
-          })
-        );
-      } catch (error) {
-        console.error("Error setting browser cache:", error);
-      }
-    }
     // Backwards compatibility for non-array "calling"
-    const storeValue = ë.signalStore.get(
-      signal,
-      ë.vanillaAccessor,
-      vanillaPromise,
-      calling
-    );
-    setBrowserCache(storeValue);
     return ë.signalStore.get(
       signal,
       ë.vanillaAccessor,
@@ -117,7 +48,7 @@
   }
 });
 
-ë.signalRunner = function (signalPack, vanillaPromise) {
+ë.frozenVanilla("signalRunner", function (signalPack, vanillaPromise) {
   console.debug("signalRunner called", { signalPack, vanillaPromise });
   if (!signalPack) {
     console.debug("No signalPack provided.");
@@ -145,9 +76,9 @@
       const groupSignals = signalPack[group];
       if (groupSignals && typeof groupSignals === "object") {
         Object.keys(groupSignals).forEach((signal) => {
-          console.log("Processing signal", signal);
+          ë.logSpacer("Processing signal", signal);
           const callback = groupSignals[signal];
-          console.log("Processing signal", signal, "with callback", callback);
+          ë.logSpacer("Processing signal", signal, "with callback", callback);
           console.debug("Processing group", group, "signal", signal);
           // Here we use the signal name from the nested object.
           const key = `${group}`;
@@ -159,7 +90,7 @@
   }
 
   return results;
-};
+});
 
 //example usage
 //set initial signal

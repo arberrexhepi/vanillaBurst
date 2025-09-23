@@ -14,7 +14,7 @@
  * @throws {Error} If an error occurs during the rendering process, it is logged to the console.
  * @throws {ConsoleWarning} If the renderSchema is not provided, a warning is logged to the console.
  */
-ë.frozenVanilla("render", async function render(renderSchema) {
+ë.frozenVanilla("render", async function render(renderSchema, vanillaPromise) {
   if (!renderSchema) {
     console.warn("There are no views defined in this app");
     return;
@@ -49,6 +49,10 @@
 
   initializeLocalStorage();
 
+  // for (let script of renderSchema.scripts) {
+  //   ë.loadScript(script);
+  // }
+
   const runRoll = true;
   const rollCall = Object.keys(renderSchema.customFunctions);
   ë.runRoll = "rollBurst";
@@ -61,11 +65,17 @@
       renderSchema,
       rollCall,
       runRoll,
-      originBurst
+      originBurst,
+      vanillaPromise
     );
 
     const loadedContainers = JSON.parse(localStorage.getItem("containers"));
+    if (!loadedContainers) {
+      throw new Error("No containers found in localStorage");
+    }
     if (loadedContainers) {
+      //IMPROVE THE FOLLOWING BY ADDING THE INFORMATION OF WHETHER TO CHECK FOR THIS in childFunciton.js because right now it doesnt know if the namespace scope requires this component at loading
+
       const promises = loadedContainers.map(
         (container) =>
           new Promise((resolve) => {
@@ -76,11 +86,13 @@
               ) {
                 clearInterval(checkExist);
                 resolve();
+              } else {
+                clearInterval(checkExist);
+                resolve();
               }
             }, 10);
           })
       );
-
       await Promise.all(promises);
 
       ë.logSpacer(
@@ -98,10 +110,10 @@
             ]?.[customFunctionName] || null;
 
           if (thisSB && thisSB.name && thisSB.init) {
-            if (!ë.signalStore.get(thisSB.name)) {
+            if (!ë.intervalStore.get(thisSB.name)) {
               ë.logSpacer("Registering signal as runner: " + thisSB.name);
 
-              ë.signalStore(thisSB.name, {
+              ë.intervalStore(thisSB.name, {
                 [thisSB.name + "_runner"]: function (thisVanillaPromise) {
                   ë.vanillaSignal({
                     vanillaPromise: thisVanillaPromise,
@@ -126,126 +138,13 @@
             }
           }
           try {
-            // Encapsulate the key pair generation and storage within a closure
-            // const KeyManager = (function () {
-            //   const keys = {};
-
-            //   return {
-            //     async generateKeyPair(name) {
-            //       const keyPair = await window.crypto.subtle.generateKey(
-            //         {
-            //           name: "RSA-OAEP",
-            //           modulusLength: 2048,
-            //           publicExponent: new Uint8Array([1, 0, 1]),
-            //           hash: { name: "SHA-256" },
-            //         },
-            //         true,
-            //         ["encrypt", "decrypt"]
-            //       );
-            //       keys[name] = keyPair.privateKey;
-            //       return keyPair.publicKey;
-            //     },
-            //     getPrivateKey(name) {
-            //       if (!keys[name]) {
-            //         throw new Error("Private key not found");
-            //       }
-            //       return keys[name];
-            //     },
-            //   };
-            // })();
-
-            // // Export the public key to a format that can be used
-            // async function exportPublicKey(key) {
-            //   const exported = await window.crypto.subtle.exportKey(
-            //     "spki",
-            //     key
-            //   );
-            //   const exportedAsString = String.fromCharCode.apply(
-            //     null,
-            //     new Uint8Array(exported)
-            //   );
-            //   const exportedAsBase64 = window.btoa(exportedAsString);
-            //   return `-----BEGIN PUBLIC KEY-----\n${exportedAsBase64}\n-----END PUBLIC KEY-----`;
-            // }
-
-            // // Verify that the public key corresponds to the stored private key
-            // ë.frozenVanilla(
-            //   "verifyKeyPair",
-            //   async function verifyKeyPair(publicKey, name) {
-            //     const privateKey = KeyManager.getPrivateKey(name);
-            //     const message = new TextEncoder().encode("test message");
-            //     const encryptedMessage = await window.crypto.subtle.encrypt(
-            //       {
-            //         name: "RSA-OAEP",
-            //       },
-            //       publicKey,
-            //       message
-            //     );
-            //     const decryptedMessage = await window.crypto.subtle.decrypt(
-            //       {
-            //         name: "RSA-OAEP",
-            //       },
-            //       privateKey,
-            //       encryptedMessage
-            //     );
-            //     return (
-            //       new TextDecoder().decode(decryptedMessage) === "test message"
-            //     );
-            //   }
-            // );
-
-            // // Generate a random number using the Web Crypto API
-            // function generateRandomNumber() {
-            //   const array = new Uint32Array(1);
-            //   window.crypto.getRandomValues(array);
-            //   return array[0];
-            // }
-
-            // // Define the accessKey function
-            // ë.frozenVanilla("accessKey", function (property, value) {
-            //   // Example implementation
-            //   if (property === "key") {
-            //     // Process the key value
-            //     console.log("Processing key:", value);
-            //     // Perform some operation with the key
-            //     // For example, storing it in an internal object
-            //     this.internalStorage = this.internalStorage || {};
-            //     this.internalStorage[property] = value;
-            //   }
-            // });
-
-            // // Example usage
-            // (async () => {
-            //   let randomKey = generateRandomNumber();
-            //   ë.accessKey("key", randomKey);
-
-            //   const keyName = customFunctionName;
-            //   const publicKey = await KeyManager.generateKeyPair(keyName);
-            //   const exportedPublicKey = await exportPublicKey(publicKey);
-
-            //   console.log("Random Key:", randomKey);
-            //   console.log("Public Key:", exportedPublicKey);
-
-            //   // const isVerified = await verifyKeyPair(publicKey, keyName);
-            //   // console.log("Key Pair Verified:", isVerified);
-
-            //   // const isVerified = await ë.verifyKeyPair(
-            //   //   publicKey,
-            //   //   customFunctionName
-            //   // );
-            // })
-            // Access the componentList array
-            // if (!vanillaPromises?.[customFunctionName]?.publicKey) {
-            //   vanillaPromises[customFunctionName]["publicKey"] = publicKey;
-            //   alert(vanillaPromises[customFunctionName].publicKey);
-            // }
-
-            // vanillaPromises[customFunctionName]["publicKey"] = publicKey;
-
             let componentList =
               vanillaPromises[customFunctionName].componentList;
 
             // Remove duplicates by converting to a Set and then back to an array
+
+            ë.signalStore.setAllowedCaller(ë.vanillaAccessor);
+
             vanillaPromises[customFunctionName].componentList = [
               ...new Set(componentList),
             ];
@@ -258,6 +157,7 @@
                 `${ë.fullPath}client/components/${componentJS}/${componentJS}.js`
               );
             });
+
             let runningComponent;
             Promise.all(loadScriptsPromises)
               .then(() => {
@@ -272,32 +172,116 @@
                   runningComponent = componentJS;
                   try {
                     await ë[componentJS](vanillaPromises[customFunctionName]); // Return the promise from each component function call
+                    await ë[`${componentJS}Component`](
+                      null,
+                      vanillaPromises[customFunctionName]
+                    );
                   } catch {
+                    throw new Error(
+                      "JS File reference or errors found at: " + componentJS
+                    );
                     return;
                   }
                 });
+
                 return Promise.all(callComponentFunctions);
               })
               .then(() => {
                 // Part 3: After all component functions are called, run the custom function and storeBurst
-                localStorage.setItem(
-                  "checkVanillaPromise-TurnThisOffInProduction",
-                  JSON.stringify(vanillaPromises)
-                );
+                // localStorage.setItem(
+                //   "checkVanillaPromise-TurnThisOffInProduction",
+                //   JSON.stringify(vanillaPromises)
+                // );
                 ë.logSpacer(
                   "trying to run {customFunctionName}.js " + customFunctionName
                 );
-                ë[customFunctionName](vanillaPromises[customFunctionName]);
-                ë.storeBurst(vanillaPromises[customFunctionName]);
-              })
-              .catch((error) => {
-                console.error(
-                  "An error occurred during the promise chain execution for " +
-                    runningComponent +
-                    ":",
-                  error
-                );
+                try {
+                  const checkSecretCookie = getCookie("secret");
+                  if (!checkSecretCookie) {
+                    const secret = ë.nonce();
+                    const days = 1; // Define the number of days for the cookie to expire
+                    const date = new Date();
+                    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Set the expiration time
+                    const expires = "expires=" + date.toUTCString();
+                    const secure =
+                      window.location.protocol === "https:" ? "Secure; " : "";
+                    document.cookie =
+                      "secret=" +
+                      encodeURIComponent(secret) +
+                      "; " +
+                      expires +
+                      "; path=/; " +
+                      secure +
+                      "SameSite=Strict";
+                  }
+
+                  function getCookie(name) {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) {
+                      return decodeURIComponent(parts.pop().split(";").shift());
+                    }
+                    return null;
+                  }
+
+                  const retrievedSecret = getCookie("secret");
+
+                  if (retrievedSecret) {
+                    vanillaPromises[customFunctionName]["secret"] =
+                      retrievedSecret;
+                    ë.signalStore.set(
+                      customFunctionName,
+                      vanillaPromises[customFunctionName]
+                    );
+                    ë.signalStore.set(
+                      "signalStore",
+                      vanillaPromises[customFunctionName]
+                    );
+
+                    if (
+                      vanillaPromises[customFunctionName].renderSchema
+                        .customFunctions[customFunctionName]?.namespace &&
+                      vanillaPromises[
+                        customFunctionName
+                      ].renderSchema.customFunctions[
+                        customFunctionName
+                      ]?.namespace.includes(
+                        vanillaPromises[customFunctionName].renderSchema.landing
+                      )
+                    ) {
+                      ë[customFunctionName](
+                        vanillaPromises[customFunctionName]
+                      );
+
+                      ë.storeBurst(vanillaPromises[customFunctionName]);
+                    } else if (
+                      vanillaPromises[customFunctionName].renderSchema
+                        .customFunctions[customFunctionName]?.namespace ===
+                      undefined
+                    ) {
+                      ë[customFunctionName](
+                        vanillaPromises[customFunctionName]
+                      );
+
+                      ë.storeBurst(vanillaPromises[customFunctionName]);
+                    }
+                  } else {
+                    console.error("Failed to retrieve the secret cookie.");
+                  }
+                } catch (error) {
+                  console.error(
+                    "Error at : " + customFunctionName + " :" + error.message
+                  );
+                }
               });
+            // .catch((error) => {
+            //   console.error(
+            //     "An error occurred during the promise chain execution for " +
+            //       runningComponent +
+            //       ":",
+            //     error
+            //   );
+            // });
           } catch {
             ë.vanillaMess(
               `[${customFunctionName}.js]`,
@@ -309,10 +293,16 @@
           if (thisSB?.name && thisSB.init) {
             let signalName = thisSB.name;
             let thisVanillaPromise = vanillaPromises[customFunctionName];
-            if (ë.signalStore.get(signalName)) {
-              ë.signalStore
+
+            try {
+              ë.intervalStore
                 .get(signalName)
                 [`${signalName}_runner`](thisVanillaPromise);
+            } catch (error) {
+              console.error(
+                "Error starting signal runner for " + signalName,
+                error
+              );
             }
           }
         } catch (error) {
@@ -343,6 +333,16 @@
         "color: #F3E5AB; font-weight: bold; font-size: 30px; background-color: #333; padding: 10px; border-radius: 5px;"
       );
       localStorage.removeItem("stateBurst");
+      // Object.values(vanillaPromises).forEach((value) => {
+      //   ë.signalStore.set(`${value.landing}`, value);
+      //   Object.values(value.renderSchema.customFunctions).forEach(
+      //     (customFunction) => {
+      //       ë.signalStore.set(`${customFunction.functionFile}`, customFunction);
+      //     }
+      //   );
+      // });
+    } else {
+      throw new Error("No containers found in localStorage");
     }
   } catch (error) {
     console.error("An error occurred during:" + landingReference, error);

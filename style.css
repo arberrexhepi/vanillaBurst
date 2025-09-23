@@ -266,6 +266,13 @@ pre {
 
 }
 
+/* if pre somehwere nested within a pre */
+pre pre {
+    width: auto !important;
+
+}
+
+
 
 .help-card {
     background-color: #fdb635;

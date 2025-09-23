@@ -1,30 +1,16 @@
-ë.frozenVanilla("myfooterConfig", function () {
+ë.frozenVanilla("myfooterConfig", function (burstTo) {
   ///this is as basic as a Shared package function aka Scoop can get!
   let myfooterConfig = {
     myfooter: {
-      role: "config",
+      role: "component",
       render: "pause",
       fetchDOM: true,
-      container: "mainFooter",
+      container: "myfooter-component",
       classNames: "footer",
       originBurst: {
         namespace: ["homeview"],
       },
-      components: {
-        footerlinks: {
-          id: "footerlinks",
-          count: "1",
-          componentName: "myfooter",
-          container: "myfooter-wrapper",
-          dir: "myfooter/",
-          classNames: "footerlinks",
-          cache: true,
-          children: `
-          <ul id="linklist">
-          <!--links will show up here-->
-          </ul>`,
-        },
-      },
+      components: {},
     },
   };
 

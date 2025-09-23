@@ -86,13 +86,13 @@
   }
   // console.log("vanillaDOM", JSON.stringify(vanillaDOM));
   // console.log("signalName:", signalName);
-  // console.log("Signal:", ë.signalStore.get(signalName));
-  // console.log("Function:", ë.signalStore.get(`${signalName}_runner`)[init]);
+  // console.log("Signal:", ë.intervalStore.get(signalName));
+  // console.log("Function:", ë.intervalStore.get(`${signalName}_runner`)[init]);
   // console.log(
   //   "Function:",
-  //   ë.signalStore.get(`${signalName}_runner`)[intermittent]
+  //   ë.intervalStore.get(`${signalName}_runner`)[intermittent]
   // );
-  // console.log("Function:", ë.signalStore.get(`${signalName}_runner`)[callBack]);
+  // console.log("Function:", ë.intervalStore.get(`${signalName}_runner`)[callBack]);
 
   if (signalName === "timeSignal" && !time) {
     time = 100;
@@ -128,7 +128,7 @@
         }
 
         if (init && typeof init === "function") {
-          ë.signalStore.get(signalName)[init]("init", eventData);
+          ë.intervalStore.get(signalName)[init]("init", eventData);
         }
         return {
           action: affectAction || initAction,
@@ -165,17 +165,17 @@
           if (
             intermittent &&
             intermittent !== null &&
-            typeof ë.signalStore.get(`${signalName}_runner`)[intermittent] ===
+            typeof ë.intervalStore.get(`${signalName}_runner`)[intermittent] ===
               "function"
           ) {
-            intermittentReturn = await ë.signalStore
+            intermittentReturn = await ë.intervalStore
               .get(`${signalName}_runner`)
               [intermittent](data);
           } else {
             ë.vanillaMess(
               "signal",
               `[vanillaSignal, signalName: ${signalName}] Missing Intermittent: ${intermittent}`,
-              ë.signalStore.get(`${signalName}_runner`)[intermittent],
+              ë.intervalStore.get(`${signalName}_runner`)[intermittent],
               "array"
             );
             return;
@@ -222,13 +222,13 @@
         if (
           !callBack ||
           callBack === null ||
-          typeof ë.signalStore.get(`${signalName}_runner`)[callBack] !==
+          typeof ë.intervalStore.get(`${signalName}_runner`)[callBack] !==
             "function"
         ) {
           ë.vanillaMess(
             "signal",
             `[vanillaSignal, signalName: ${signalName}] Missing callBack: ${callBack}`,
-            ë.signalStore.get(`${signalName}_runner`)[callBack],
+            ë.intervalStore.get(`${signalName}_runner`)[callBack],
             "array"
           );
           return;

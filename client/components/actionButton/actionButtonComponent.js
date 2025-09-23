@@ -1,4 +1,6 @@
 ë.frozenVanilla("actionButtonComponent", async function (data) {
+  if (!data) return;
+
   let actionButtonComponent = {
     [`${data.id}`]: {
       namespace: [data.namespace] || ["homeview", "generate"],

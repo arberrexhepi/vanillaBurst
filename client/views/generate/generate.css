@@ -83,3 +83,79 @@ small {
     display: block;
     margin: auto;
 }
+
+/* Syntax Highlighting Styles */
+.syntax-highlighted-code {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    line-height: 1.5;
+}
+
+.code-block {
+    background-color: var(--color-code-dark) !important;
+    color: var(--color-vanilla-light);
+    padding: 2vh;
+    border-radius: 1vh;
+    margin-bottom: 2vh;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Syntax highlighting color scheme */
+.syntax-keyword {
+    color: #569cd6;
+    /* Blue for keywords like function, let, const */
+    font-weight: bold;
+}
+
+.syntax-string {
+    color: #ce9178;
+    /* Orange for strings */
+}
+
+.syntax-function {
+    color: #dcdcaa;
+    /* Yellow for function names */
+    font-weight: 600;
+}
+
+.syntax-property {
+    color: #9cdcfe;
+    /* Light blue for object properties */
+}
+
+.syntax-comment {
+    color: #6a9955;
+    /* Green for comments */
+    font-style: italic;
+}
+
+.syntax-number {
+    color: #b5cea8;
+    /* Light green for numbers */
+}
+
+.syntax-special {
+    color: #c586c0;
+    /* Purple for special objects like ë */
+    font-weight: bold;
+}
+
+.syntax-punctuation {
+    color: #d4d4d4;
+    /* Light gray for brackets, semicolons */
+}
+
+.syntax-boolean {
+    color: #569cd6;
+    /* Blue for true, false, null, undefined */
+    font-weight: bold;
+}
+
+/* Enhanced code styling */
+.syntax-highlighted-code .code-block:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}

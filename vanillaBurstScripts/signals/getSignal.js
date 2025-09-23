@@ -1,7 +1,7 @@
 ë.frozenVanilla("getSignal", function (signalName, type, verbose) {
   let storeSignalName;
   if (type && type === "_simpleSignal") {
-    storeSignalName = signalname + "_simpleSignal";
+    storeSignalName = signalName + "_simpleSignal";
   } else if (type && type === "_signal") {
     storeSignalName = signalName + "_signal";
   }

@@ -18,7 +18,7 @@
     url: ë.domainUrl + ë.stateTagPath, // Replace with the actual URL of the page, currently out of scope, will fix!
     siteName: "vanillaBurst",
   };
-  //ë.setSeo(seo);
+
   let homeviewConfig = {
     homeview: {
       role: "parent",

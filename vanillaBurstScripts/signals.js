@@ -1,9 +1,10 @@
 function defineSignalStore() {
-  if (typeof window.signalStore === "undefined") {
+  if (typeof ë.signalStore === "undefined") {
     const storage = {};
+    const subscribers = {}; // Added declaration for subscribers
 
-    Object.defineProperty(window, "signalStore", {
-      value: function signalStore(prop, value, setAsWindowProp = true) {
+    const signalStore = (function () {
+      function set(prop, value) {
         const frozenValue =
           typeof value === "function"
             ? Object.freeze(value.bind(this))
@@ -22,53 +23,189 @@ function defineSignalStore() {
         // Store the frozen value
         storage[prop] = frozenValue;
 
-        if (
-          setAsWindowProp &&
-          (typeof window[prop] === "undefined" ||
-            Object.getOwnPropertyDescriptor(window, prop).writable)
-        ) {
-          Object.defineProperty(window, prop, {
-            value: frozenValue,
-            writable: false,
-            configurable: false,
+        // Notify any subscribers for this signal
+        if (subscribers[prop]) {
+          subscribers[prop].forEach((cb) => {
+            if (typeof cb === "function") {
+              cb(frozenValue);
+            }
           });
         }
+
         return frozenValue;
-      },
-      writable: false,
-      configurable: false,
-    });
+      }
 
-    // Add a method to get values from the storage
-    window.signalStore.get = function (prop) {
-      return storage[prop];
-    };
+      function get(prop, caller, secret, calling) {
+        // console.log("Caller:", caller);
+        // console.log("Allowed Caller:", allowedCaller);
+        ë.logSpacer("Secret:", secret?.secret);
+        ë.logSpacer("Calling:", calling);
+        //ë.logSpacer("Storage:", storage);
 
-    // Add a method to set values in the storage
-    window.signalStore.set = function (prop, value) {
-      const frozenValue =
-        typeof value === "function"
-          ? Object.freeze(value.bind(this))
-          : Object.freeze(value);
-      storage[prop] = frozenValue;
-      return frozenValue;
-    };
+        // Check if the caller is allowed to access the value
+        if (caller === allowedCaller) {
+          const storedPromise = storage[calling];
+          ë.logSpacer(
+            "logging storedpromise_vanillaPromise for " +
+              calling +
+              " " +
+              JSON.stringify(storedPromise, null, 2)
+          );
+          ë.logSpacer("secret check " + JSON.stringify(secret?.secret));
+          if (secret?.secret) {
+            secret = secret.secret;
+          } else {
+            function getCookie(name) {
+              const value = `; ${document.cookie}`;
+              const parts = value.split(`; ${name}=`);
+              if (parts.length === 2) {
+                return decodeURIComponent(parts.pop().split(";").shift());
+              }
+              return null;
+            }
 
-    window.signalStore.remove = function (prop) {
-      delete storage[prop];
-    };
+            secret = getCookie("secret");
+            if (!secret) {
+              ë.logSpacer("Secret cookie not found.");
+              return null;
+            }
+          }
+          ë.logSpacer(secret + " " + calling);
+
+          if (storedPromise && storedPromise.secret === secret) {
+            return storage[prop];
+          } else {
+            ë.logSpacer(
+              "Mismatched secret: Unauthorized access to signalStore for " +
+                prop +
+                "by " +
+                calling
+            );
+          }
+        } else {
+          ë.logSpacer(
+            "Caller not allowed: Unauthorized access to signalStore for " +
+              prop +
+              "by " +
+              caller
+          );
+        }
+      }
+
+      function subscribe(prop, callback) {
+        if (!subscribers[prop]) {
+          subscribers[prop] = [];
+        }
+        subscribers[prop].push(callback);
+      }
+
+      function unsubscribe(prop, callback) {
+        if (subscribers[prop]) {
+          subscribers[prop] = subscribers[prop].filter((cb) => cb !== callback);
+        }
+      }
+      function adminGet(prop) {
+        return storage[prop];
+      }
+
+      function remove(prop) {
+        delete storage[prop];
+      }
+
+      // Store the allowed caller
+      let allowedCaller = null;
+
+      return {
+        set,
+        get,
+        adminGet,
+        subscribe,
+        unsubscribe,
+        remove,
+        setAllowedCaller: function (caller) {
+          allowedCaller = caller;
+        },
+      };
+    })();
+
+    // Attach signalStore to ë
+    ë.frozenVanilla("signalStore", signalStore);
   }
 }
 
 try {
   defineSignalStore();
 } catch (error) {
-  console.error(
+  ë.logSpacer(
     "Oops, looks like we've mixed up signals, we'll try preparing it again!",
     error
   );
   window.location.reload();
 }
+
+// ... rest of your signals.js code ...
+ë.clearSignal = function (signal, callback) {
+  let unsubscribed = false;
+  let removed = false;
+  let deletedSubscribedProp = false;
+
+  // Extract callback function name if possible
+  const callbackName = callback && callback.name ? callback.name : null;
+  const subscribedProp = callbackName
+    ? `${signal}_${callbackName}_subscribed`
+    : `${signal}_subscribed`;
+
+  // Always try to unsubscribe
+  if (typeof ë.signalStore.unsubscribe === "function" && callback) {
+    try {
+      ë.signalStore.unsubscribe(signal, callback);
+      unsubscribed = true;
+      console.log(
+        `[clearSignal] Unsubscribed from signal: ${signal} with callback: ${callbackName}`
+      );
+    } catch (e) {
+      console.error(
+        `[clearSignal] Failed to unsubscribe from signal: ${signal} with callback: ${callbackName}`,
+        e
+      );
+    }
+  } else if (!callback) {
+    console.warn(
+      `[clearSignal] No callback provided for unsubscribing from signal: ${signal}`
+    );
+  }
+
+  // Always try to remove the signal
+  if (typeof ë.signalStore.remove === "function") {
+    try {
+      ë.signalStore.remove(signal);
+      removed = true;
+      console.log(`[clearSignal] Removed signal: ${signal}`);
+    } catch (e) {
+      console.error(`[clearSignal] Failed to remove signal: ${signal}`, e);
+    }
+  }
+
+  // Remove the _subscribed prop from ë if it exists (with callback name if available)
+  if (Object.prototype.hasOwnProperty.call(ë, subscribedProp)) {
+    try {
+      delete ë[subscribedProp];
+      deletedSubscribedProp = true;
+      console.log(`[clearSignal] Deleted property: ${subscribedProp} from ë`);
+    } catch (e) {
+      // fallback for non-configurable properties
+      ë[subscribedProp] = undefined;
+      console.warn(
+        `[clearSignal] Could not delete property: ${subscribedProp} from ë, set to undefined instead.`,
+        e
+      );
+    }
+  }
+
+  if (!unsubscribed && !removed && !deletedSubscribedProp) {
+    console.warn(`[clearSignal] No actions performed for signal: ${signal}`);
+  }
+};
 
 ë.frozenVanilla("tsunami", function (namespace, functionName) {
   if (Array.isArray(functionName)) {
@@ -90,7 +227,7 @@ try {
     try {
       signalBurst = JSON.parse(localStorage.getItem("signalBurst"));
     } catch (e) {
-      console.error("Failed to parse signalBurst from localStorage:", e);
+      ë.logSpacer("Failed to parse signalBurst from localStorage:", e);
       signalBurst = {};
     }
 
@@ -99,7 +236,7 @@ try {
         JSON.parse(localStorage.getItem("originBurst")) ||
         vanillaPromise.originBurst;
     } catch (e) {
-      console.error("Failed to parse originBurst from localStorage:", e);
+      ë.logSpacer("Failed to parse originBurst from localStorage:", e);
       originBurst = {};
     }
 
@@ -196,51 +333,75 @@ async function encryptData(data) {
   return { key, iv, encryptedData };
 }
 
-///thinking about this update where an signal controls signalBurst
+function defineIntervalStore() {
+  if (typeof window.intervalStore === "undefined") {
+    const storage = {};
 
-// ë.signalInterval(
-//   "myBurstWatcher",
-//   () => {
-//     // Check the condition here
-//     // For example, you could check if a certain value in vanillaPromise.passedFunction has changed
-//     if (vanillaPromise.passedFunction?.someValue !== previousValue) {
-//       // If the condition is met, return true to start the signal
-//       return true;
-//     } else {
-//       // If the condition is not met, return false to prevent the signal from starting
-//       return false;
-//     }
-//   },
-//   1000, // Interval duration
-//   true, // Repeat
-//   () => {
-//     // Callback function to be executed on each signal
-//     // This is where you would put the logic for your background process
-//     // For example, you could call myBurst with an action to clear the cache
-//     ë.myBurst({
-//       signal: "clearCache",
-//       landing: vanillaPromise.renderSchema.landing,
-//       origin: "myBurstWatcher",
-//       target: "signalBurst",
-//       action: "clear",
-//     });
-//   },
-//   "clear",
-//   () => {
-//     // This function will be executed when the signal is cleared
-//   }
-// );
+    Object.defineProperty(window, "intervalStore", {
+      value: function intervalStore(prop, value, setAsWindowProp = true) {
+        const frozenValue =
+          typeof value === "function"
+            ? Object.freeze(value.bind(this))
+            : Object.freeze(value);
 
-//simplify the call lower level
-// ë.clearBurst = function(landing, origin, target, action) {
-//   ë.myBurst({
-//     signal: "clearCache",
-//     landing: landing,
-//     origin: origin,
-//     target: target,
-//     action: action,
-//   });
-// };
+        // If the value is an object, add get and set methods to it
+        if (typeof frozenValue === "object" && frozenValue !== null) {
+          frozenValue.get = function (name) {
+            return this[name];
+          };
+          frozenValue.set = function (name, func) {
+            this[name] = func;
+          };
+        }
 
-///simplify the call option 2 -- simplifying even further for lowest level, active coding use
-// ë.clearBurst(vanillaPromise.renderSchema.landing, 'myBurstWatcher', 'signalBurst', 'clear');
+        // Store the frozen value
+        storage[prop] = frozenValue;
+
+        if (
+          setAsWindowProp &&
+          (typeof window[prop] === "undefined" ||
+            Object.getOwnPropertyDescriptor(window, prop).writable)
+        ) {
+          Object.defineProperty(window, prop, {
+            value: frozenValue,
+            writable: false,
+            configurable: false,
+          });
+        }
+        return frozenValue;
+      },
+      writable: false,
+      configurable: false,
+    });
+
+    // Add a method to get values from the storage
+    window.intervalStore.get = function (prop) {
+      return storage[prop];
+    };
+
+    // Add a method to set values in the storage
+    window.intervalStore.set = function (prop, value) {
+      const frozenValue =
+        typeof value === "function"
+          ? Object.freeze(value.bind(this))
+          : Object.freeze(value);
+      storage[prop] = frozenValue;
+      return frozenValue;
+    };
+
+    window.intervalStore.remove = function (prop) {
+      delete storage[prop];
+    };
+  }
+  ë.frozenVanilla("intervalStore", intervalStore);
+}
+
+try {
+  defineIntervalStore();
+} catch (error) {
+  console.error(
+    "Oops, looks like we've mixed up signals, we'll try preparing it again!",
+    error
+  );
+  window.location.reload();
+}
