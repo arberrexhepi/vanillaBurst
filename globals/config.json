@@ -29,28 +29,28 @@
   "trustedSources": {
     "img-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://cdn.weatherapi.com"
     ],
     "media-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
-    "style-src": ["http://vanillaburstgame", "https://vanillaburst.com"],
+    "style-src": ["http://vanillaburstgame", "https://www.vanillaburst.com"],
     "object-src": ["'none'"],
     "font-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com"
     ],
     "connect-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design",
       "https://storage.googleapis.com",
       "https://weatherapi-com.p.rapidapi.com",
@@ -58,17 +58,17 @@
     ],
     "manifest-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design"
     ],
     "worker-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design"
     ],
     "child-src": [
       "http://vanillaburstgame",
-      "https://vanillaburst.com",
+      "https://www.vanillaburst.com",
       "https://arber.design"
     ]
   }
